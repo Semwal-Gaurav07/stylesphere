@@ -111,3 +111,5 @@ REST_FRAMEWORK = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ALLOWED_HOSTS = ['stylesphere-store.onrender.com', '.onrender.com', 'localhost', '127.0.0.1', '*']
