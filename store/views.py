@@ -1,10 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
-from .models import Category, Product, OrderItem
+from decimal import Decimal
+from .models import Category, Product, OrderItem, Coupon, Review, Wishlist
 from .cart import Cart
-from .forms import CartAddProductForm, OrderCreateForm
+from .forms import CartAddProductForm, OrderCreateForm, CouponApplyForm, ReviewForm
 
 def product_list(request, category_slug=None):
     category = None
@@ -34,6 +36,10 @@ def product_list(request, category_slug=None):
     elif sort == 'newest':
         products = products.order_by('-created')
 
+    user_wishlist_ids = []
+    if request.user.is_authenticated:
+        user_wishlist_ids = list(Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True))
+
     return render(request, 'store/product/list.html', {
         'category': category,
         'categories': categories,
@@ -41,15 +47,25 @@ def product_list(request, category_slug=None):
         'query': query,
         'min_price': min_price,
         'max_price': max_price,
-        'sort': sort
+        'sort': sort,
+        'user_wishlist_ids': user_wishlist_ids
     })
 
 def product_detail(request, id, slug):
     product = get_object_or_404(Product, id=id, slug=slug, available=True)
     cart_product_form = CartAddProductForm()
+    review_form = ReviewForm()
+    reviews = product.reviews.all()
+    in_wishlist = False
+    if request.user.is_authenticated:
+        in_wishlist = Wishlist.objects.filter(user=request.user, product=product).exists()
+
     return render(request, 'store/product/detail.html', {
         'product': product,
-        'cart_product_form': cart_product_form
+        'cart_product_form': cart_product_form,
+        'review_form': review_form,
+        'reviews': reviews,
+        'in_wishlist': in_wishlist
     })
 
 @require_POST
@@ -76,14 +92,71 @@ def cart_detail(request):
             'quantity': item['quantity'],
             'override': True
         })
-    return render(request, 'store/cart/detail.html', {'cart': cart})
+    coupon_apply_form = CouponApplyForm()
+    coupon_id = request.session.get('coupon_id')
+    coupon = None
+    discount = 0
+    if coupon_id:
+        coupon = Coupon.objects.filter(id=coupon_id).first()
+        if coupon:
+            discount = coupon.discount_percent
+
+    return render(request, 'store/cart/detail.html', {
+        'cart': cart,
+        'coupon_apply_form': coupon_apply_form,
+        'coupon': coupon,
+        'discount': discount
+    })
+
+@require_POST
+def coupon_apply(request):
+    form = CouponApplyForm(request.POST)
+    if form.is_valid():
+        code = form.cleaned_data['code'].strip().upper()
+        try:
+            coupon = Coupon.objects.get(code__iexact=code, active=True)
+            request.session['coupon_id'] = coupon.id
+            messages.success(request, f'Coupon "{coupon.code}" applied! You get {coupon.discount_percent}% off.')
+        except Coupon.DoesNotExist:
+            request.session['coupon_id'] = None
+            messages.error(request, 'Invalid or expired promo code.')
+    return redirect('store:cart_detail')
+
+@login_required
+@require_POST
+def review_add(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    form = ReviewForm(request.POST)
+    if form.is_valid():
+        review = form.save(commit=False)
+        review.product = product
+        review.user = request.user
+        review.save()
+        messages.success(request, 'Your review has been submitted!')
+    return redirect(product.get_absolute_url())
+
+@login_required
+def wishlist_toggle(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    wishlist_item = Wishlist.objects.filter(user=request.user, product=product).first()
+    if wishlist_item:
+        wishlist_item.delete()
+        messages.info(request, f'Removed {product.name} from your Wishlist.')
+    else:
+        Wishlist.objects.create(user=request.user, product=product)
+        messages.success(request, f'Added {product.name} to your Wishlist!')
+    return redirect(request.META.get('HTTP_REFERER', 'store:product_list'))
+
+@login_required
+def wishlist_detail(request):
+    wishlist_items = Wishlist.objects.filter(user=request.user)
+    return render(request, 'store/wishlist/detail.html', {'wishlist_items': wishlist_items})
 
 def order_create(request):
     cart = Cart(request)
     if len(cart) == 0:
         return redirect('store:product_list')
 
-    # Require user to create an account or sign in before placing an order
     if not request.user.is_authenticated:
         messages.info(request, 'Please create an account or sign in to complete your order.')
         return redirect('/accounts/register/?next=/orders/create/')
@@ -100,11 +173,19 @@ def order_create(request):
             'postal_code': request.user.profile.postal_code,
         })
 
+    coupon_id = request.session.get('coupon_id')
+    discount = 0
+    if coupon_id:
+        coupon = Coupon.objects.filter(id=coupon_id).first()
+        if coupon:
+            discount = coupon.discount_percent
+
     if request.method == 'POST':
         form = OrderCreateForm(request.POST)
         if form.is_valid():
             order = form.save(commit=False)
             order.user = request.user
+            order.discount = discount
             order.save()
             for item in cart:
                 OrderItem.objects.create(
@@ -114,8 +195,13 @@ def order_create(request):
                     quantity=item['quantity']
                 )
             cart.clear()
+            request.session['coupon_id'] = None
             request.session['order_id'] = order.id
             return redirect('payment:process')
     else:
         form = OrderCreateForm(initial=initial_data)
-    return render(request, 'store/orders/create.html', {'cart': cart, 'form': form})
+    return render(request, 'store/orders/create.html', {
+        'cart': cart,
+        'form': form,
+        'discount': discount
+    })

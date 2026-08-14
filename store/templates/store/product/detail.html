@@ -11,7 +11,7 @@
     </ol>
 </nav>
 
-<div class="card p-3 p-md-4">
+<div class="card p-3 p-md-4 mb-4">
     <div class="row g-4 align-items-center">
         <div class="col-12 col-md-6 text-center">
             <div class="bg-white p-3 rounded-3" style="max-height: 380px;">
@@ -23,16 +23,39 @@
             </div>
         </div>
         <div class="col-12 col-md-6">
-            <span class="badge bg-secondary mb-2">{{ product.category.name }}</span>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-secondary">{{ product.category.name }}</span>
+                <a href="{% url 'store:wishlist_toggle' product.id %}" class="btn btn-outline-danger btn-sm">
+                    {% if in_wishlist %}
+                        <i class="bi bi-heart-fill"></i> Saved in Wishlist
+                    {% else %}
+                        <i class="bi bi-heart"></i> Add to Wishlist
+                    {% endif %}
+                </a>
+            </div>
+            
             <h2 class="fw-bold fs-3">{{ product.name }}</h2>
+            
+            <div class="text-warning mb-2 fs-5">
+                <i class="bi bi-star-fill"></i> <strong>{{ product.get_average_rating }}</strong> / 5.0 
+                <span class="text-muted small">({{ reviews.count }} reviews)</span>
+            </div>
+
             <h3 class="text-success fw-bold my-3 fs-2">${{ product.price }}</h3>
+            
+            {% if product.stock <= 3 and product.stock > 0 %}
+                <div class="alert alert-warning py-1 small fw-bold">
+                    🔥 Hurry! Only {{ product.stock }} items left in stock.
+                </div>
+            {% endif %}
+
             <p class="text-muted">{{ product.description }}</p>
 
             <form action="{% url 'store:cart_add' product.id %}" method="post" class="mt-4">
                 {% csrf_token %}
                 <div class="row g-2 align-items-center">
                     <div class="col-auto">
-                        <label for="id_quantity" class="col-form-label fw-bold">Quantity:</label>
+                        <label for="id_quantity" class="col-form-label fw-bold">Qty:</label>
                     </div>
                     <div class="col-auto">
                         {{ cart_product_form.quantity }}
@@ -44,6 +67,58 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Customer Reviews Section -->
+<div class="card p-3 p-md-4">
+    <h4 class="fw-bold mb-4">Customer Reviews & Ratings</h4>
+    
+    <div class="row g-4">
+        <div class="col-md-5">
+            <div class="card p-3 bg-body-tertiary">
+                <h6 class="fw-bold mb-2">Write a Review</h6>
+                {% if user.is_authenticated %}
+                    <form action="{% url 'store:review_add' product.id %}" method="post">
+                        {% csrf_token %}
+                        <label class="form-label small fw-bold">Your Rating:</label>
+                        {{ review_form.rating }}
+                        <label class="form-label small fw-bold">Review Description:</label>
+                        {{ review_form.comment }}
+                        <button type="submit" class="btn btn-primary btn-sm w-100">Submit Review</button>
+                    </form>
+                {% else %}
+                    <p class="text-muted small">Please <a href="{% url 'accounts:login' %}?next={{ request.path }}">sign in</a> to write a review.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            {% if reviews %}
+                <div class="list-group list-group-flush">
+                    {% for review in reviews %}
+                        <div class="list-group-item px-0 py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">{{ review.user.username }}</span>
+                                <span class="text-muted small">{{ review.created|date:"M d, Y" }}</span>
+                            </div>
+                            <div class="text-warning small my-1">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= review.rating %}
+                                        <i class="bi bi-star-fill"></i>
+                                    {% else %}
+                                        <i class="bi bi-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <p class="mb-0 text-muted">{{ review.comment }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted py-4">No reviews yet for this product. Be the first to write one!</p>
+            {% endif %}
         </div>
     </div>
 </div>

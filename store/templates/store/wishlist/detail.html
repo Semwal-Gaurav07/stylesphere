@@ -1,0 +1,49 @@
+{% extends "store/base.html" %}
+
+{% block title %}My Wishlist{% endblock %}
+
+{% block content %}
+<h3 class="fw-bold mb-3"><i class="bi bi-heart-fill text-danger me-2"></i>My Saved Items</h3>
+
+{% if wishlist_items %}
+    <div class="row row-cols-2 row-cols-md-4 g-3">
+        {% for item in wishlist_items %}
+            {% with product=item.product %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="product-img-wrap p-2">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                            {% else %}
+                                <div class="text-muted small">No Image</div>
+                            {% endif %}
+                        </div>
+                        <div class="card-body p-3 d-flex flex-column">
+                            <h6 class="card-title fw-bold mb-1">
+                                <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-body text-truncate d-block">
+                                    {{ product.name }}
+                                </a>
+                            </h6>
+                            <span class="text-success fw-bold fs-5 mb-2">${{ product.price }}</span>
+                            <div class="mt-auto d-flex gap-2">
+                                <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-primary flex-grow-1">View Item</a>
+                                <a href="{% url 'store:wishlist_toggle' product.id %}" class="btn btn-sm btn-outline-danger" title="Remove">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endwith %}
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="card p-5 text-center">
+        <div class="fs-1 text-muted mb-2"><i class="bi bi-heart"></i></div>
+        <h5>Your Wishlist is empty.</h5>
+        <div class="mt-3">
+            <a href="{% url 'store:product_list' %}" class="btn btn-primary">Discover Products</a>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

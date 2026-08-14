@@ -16,7 +16,6 @@
 <div class="row">
     <!-- Sidebar Filters -->
     <div class="col-md-3 mb-4 collapse d-md-block" id="filterSidebar">
-        <!-- Categories -->
         <div class="card p-3 mb-3">
             <h6 class="fw-bold mb-2">Categories</h6>
             <div class="list-group list-group-flush">
@@ -31,7 +30,6 @@
             </div>
         </div>
 
-        <!-- Filter & Sort Form -->
         <div class="card p-3">
             <h6 class="fw-bold mb-3">Filter & Sort</h6>
             <form method="get" action="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'store:product_list' %}{% endif %}">
@@ -73,12 +71,20 @@
             <span class="text-muted small">{{ products|length }} items</span>
         </div>
 
-        <!-- 2 Columns on Mobile, 3 Columns on Tablet/Desktop -->
         <div class="row row-cols-2 row-cols-md-3 g-2 g-md-3">
             {% for product in products %}
                 <div class="col">
                     <div class="card h-100 position-relative">
-                        <!-- Clickable Product Image -->
+                        <!-- Wishlist Toggle Heart -->
+                        <a href="{% url 'store:wishlist_toggle' product.id %}" class="wishlist-btn" title="Save to Wishlist">
+                            {% if product.id in user_wishlist_ids %}
+                                <i class="bi bi-heart-fill text-danger"></i>
+                            {% else %}
+                                <i class="bi bi-heart text-muted"></i>
+                            {% endif %}
+                        </a>
+
+                        <!-- Product Image Link -->
                         <a href="{{ product.get_absolute_url }}" class="d-block text-decoration-none">
                             <div class="product-img-wrap p-2">
                                 {% if product.image %}
@@ -91,15 +97,23 @@
 
                         <!-- Card Body -->
                         <div class="card-body p-2 p-md-3 d-flex flex-column">
+                            <!-- Star Rating -->
+                            <div class="text-warning small mb-1">
+                                <i class="bi bi-star-fill"></i> {{ product.get_average_rating }}
+                            </div>
+
                             <h6 class="card-title fw-bold mb-1">
                                 <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-body text-truncate d-block">
                                     {{ product.name }}
                                 </a>
                             </h6>
-                            
-                            <p class="card-text text-muted small flex-grow-1 d-none d-sm-block mb-2">
-                                {{ product.description|truncatewords:8 }}
-                            </p>
+
+                            <!-- Low Stock Warning Badge -->
+                            {% if product.stock <= 3 and product.stock > 0 %}
+                                <div class="badge bg-danger-subtle text-danger small mb-2 text-start p-1">
+                                    ⚡ Only {{ product.stock }} left in stock!
+                                </div>
+                            {% endif %}
 
                             <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
                                 <span class="price-tag fw-bold text-success fs-5">₨{{ product.price }}</span>
