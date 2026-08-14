@@ -10,6 +10,9 @@ from store.models import Order
 def register(request):
     if request.user.is_authenticated:
         return redirect('store:product_list')
+    
+    next_url = request.GET.get('next') or request.POST.get('next') or 'store:product_list'
+
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
@@ -17,15 +20,20 @@ def register(request):
             new_user.set_password(form.cleaned_data['password'])
             new_user.save()
             Profile.objects.create(user=new_user)
-            messages.success(request, 'Account created successfully! You can now log in.')
-            return redirect('accounts:login')
+            # Automatically log the user in
+            login(request, new_user)
+            messages.success(request, f'Welcome, {new_user.username}! Your account has been created.')
+            return redirect(next_url)
     else:
         form = UserRegistrationForm()
-    return render(request, 'accounts/register.html', {'form': form})
+    return render(request, 'accounts/register.html', {'form': form, 'next': next_url})
 
 def user_login(request):
     if request.user.is_authenticated:
         return redirect('store:product_list')
+    
+    next_url = request.GET.get('next') or request.POST.get('next') or 'store:product_list'
+
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -35,12 +43,11 @@ def user_login(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, f'Welcome back, {user.username}!')
-                next_url = request.GET.get('next') or 'store:product_list'
                 return redirect(next_url)
         messages.error(request, 'Invalid username or password.')
     else:
         form = AuthenticationForm()
-    return render(request, 'accounts/login.html', {'form': form})
+    return render(request, 'accounts/login.html', {'form': form, 'next': next_url})
 
 @login_required
 def user_logout(request):
@@ -63,7 +70,7 @@ def profile(request):
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=profile)
 
-    orders = Order.objects.filter(email=request.user.email)
+    orders = Order.objects.filter(user=request.user)
     return render(request, 'accounts/profile.html', {
         'u_form': u_form,
         'p_form': p_form,

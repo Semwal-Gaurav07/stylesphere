@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
@@ -43,6 +44,7 @@ class Product(models.Model):
 
 
 class Order(models.Model):
+    user = models.ForeignKey(User, related_name='orders', on_delete=models.SET_NULL, null=True, blank=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField()
@@ -52,6 +54,7 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
+    payment_method = models.CharField(max_length=50, default='Cash on Delivery')
 
     class Meta:
         ordering = ['-created']

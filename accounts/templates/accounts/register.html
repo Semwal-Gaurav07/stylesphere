@@ -4,21 +4,23 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-6 col-lg-5">
         <div class="card p-4 shadow-sm">
             <h3 class="fw-bold mb-3 text-center">Create an Account</h3>
             <form method="post">
                 {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
+                
                 <div class="mb-3">
                     <label class="form-label fw-bold">Username</label>
                     {{ form.username }}
                 </div>
                 <div class="row g-2 mb-3">
-                    <div class="col-md-6">
+                    <div class="col-6">
                         <label class="form-label fw-bold">First Name</label>
                         {{ form.first_name }}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-6">
                         <label class="form-label fw-bold">Last Name</label>
                         {{ form.last_name }}
                     </div>
@@ -35,10 +37,10 @@
                     <label class="form-label fw-bold">Confirm Password</label>
                     {{ form.password_confirm }}
                 </div>
-                <button type="submit" class="btn btn-success w-100 py-2 fs-6">Register Account</button>
+                <button type="submit" class="btn btn-success w-100 py-2 fs-6">Sign Up & Continue</button>
             </form>
             <hr class="my-4">
-            <p class="text-center mb-0">Already have an account? <a href="{% url 'accounts:login' %}" class="fw-bold text-decoration-none">Sign In</a></p>
+            <p class="text-center mb-0">Already have an account? <a href="{% url 'accounts:login' %}{% if next %}?next={{ next }}{% endif %}" class="fw-bold text-decoration-none">Sign In</a></p>
         </div>
     </div>
 </div>

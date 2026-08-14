@@ -1,34 +1,49 @@
 {% extends "store/base.html" %}
 
-{% block title %}Checkout Payment{% endblock %}
+{% block title %}Choose Payment Method{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-6 col-lg-5">
         <div class="card p-4 shadow-sm text-center">
-            <h3 class="fw-bold mb-3">Complete Your Payment</h3>
-            <p class="lead">Order <strong>#{{ order.id }}</strong></p>
+            <h4 class="fw-bold mb-2">Select Payment Method</h4>
+            <p class="text-muted">Order ID: <strong>#{{ order.id }}</strong></p>
+            
             <div class="alert alert-info py-2 my-3">
-                Total Amount Due: <strong class="fs-4 text-success">${{ order.get_total_cost }}</strong>
+                Total Due: <strong class="fs-4 text-success">${{ order.get_total_cost }}</strong>
             </div>
 
-            <p class="text-muted small">Select your preferred payment method:</p>
-
+            <!-- Option 1: Cash on Delivery -->
             <form method="post" action="{% url 'payment:process' %}" class="my-3">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-success btn-lg w-100 mb-2">
-                    💳 Pay via Credit / Debit Card (Stripe)
+                <input type="hidden" name="payment_type" value="cod">
+                <button type="submit" class="btn btn-warning btn-lg w-100 py-3 fw-bold text-dark shadow-sm">
+                    💵 Cash on Delivery (COD)
+                    <div class="small fw-normal text-muted">Pay in cash when order arrives at your door</div>
                 </button>
             </form>
 
+            <div class="my-3 text-muted">— OR PAY ONLINE —</div>
+
+            <!-- Option 2: Stripe (Card) -->
+            <form method="post" action="{% url 'payment:process' %}" class="mb-2">
+                {% csrf_token %}
+                <input type="hidden" name="payment_type" value="online">
+                <button type="submit" class="btn btn-outline-primary w-100 py-2">
+                    💳 Credit / Debit Card
+                </button>
+            </form>
+
+            <!-- Option 3: UPI / Razorpay -->
             <form method="post" action="{% url 'payment:process' %}" class="mb-3">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-primary btn-lg w-100">
-                    ⚡ Pay via Razorpay / UPI / Netbanking
+                <input type="hidden" name="payment_type" value="online">
+                <button type="submit" class="btn btn-outline-success w-100 py-2">
+                    ⚡ UPI / Netbanking
                 </button>
             </form>
 
-            <a href="{% url 'payment:canceled' %}" class="text-danger text-decoration-none small">Cancel Payment</a>
+            <a href="{% url 'payment:canceled' %}" class="text-danger text-decoration-none small">Cancel Order</a>
         </div>
     </div>
 </div>
