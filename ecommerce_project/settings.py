@@ -7,11 +7,8 @@ SECRET_KEY = 'django-insecure-ecommerce-secret-key-change-in-production'
 
 DEBUG = True
 CSRF_TRUSTED_ORIGINS = [
-    'https://*.onrender.com',      # Added for Render
-    'https://*.trycloudflare.com',
-    'https://*.pinggy.net',
-    'https://*.pinggy-free.link',
-    'https://*.ngrok-free.app',
+    'https://stylesphere-store.onrender.com',
+    'https://*.onrender.com',
     'http://127.0.0.1:8000',
     'http://localhost:8000',
 ]
@@ -98,7 +95,7 @@ LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'store:product_list'
 LOGOUT_REDIRECT_URL = 'store:product_list'
 
-# Payment Configurations (Replace with production keys)
+# Payment Configurations (Replace with production keys) 
 STRIPE_PUBLISHABLE_KEY = 'pk_test_sample_stripe_key'
 STRIPE_SECRET_KEY = 'sk_test_sample_stripe_key'
 RAZORPAY_KEY_ID = 'rzp_test_sample_key_id'
