@@ -24,7 +24,7 @@
                                     {{ product.name }}
                                 </a>
                             </h6>
-                            <span class="text-success fw-bold fs-5 mb-2">${{ product.price }}</span>
+                            <span class="text-success fw-bold fs-5 mb-2">₨{{ product.price }}</span>
                             <div class="mt-auto d-flex gap-2">
                                 <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-primary flex-grow-1">View Item</a>
                                 <a href="{% url 'store:wishlist_toggle' product.id %}" class="btn btn-sm btn-outline-danger" title="Remove">
