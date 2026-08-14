@@ -1,0 +1,85 @@
+{% extends "store/base.html" %}
+
+{% block title %}My Account & Orders{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-md-5">
+        <div class="card p-4 shadow-sm">
+            <h4 class="fw-bold mb-3">Profile Details</h4>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label fw-bold">First Name</label>
+                    {{ u_form.first_name }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Last Name</label>
+                    {{ u_form.last_name }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Email Address</label>
+                    {{ u_form.email }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Phone Number</label>
+                    {{ p_form.phone_number }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Shipping Address</label>
+                    {{ p_form.address }}
+                </div>
+                <div class="row g-2 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">City</label>
+                        {{ p_form.city }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Postal Code</label>
+                        {{ p_form.postal_code }}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Update Profile</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card p-4 shadow-sm">
+            <h4 class="fw-bold mb-3">My Order History</h4>
+            {% if orders %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Order #</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                                <tr>
+                                    <td><strong>#{{ order.id }}</strong></td>
+                                    <td>{{ order.created|date:"M d, Y" }}</td>
+                                    <td>
+                                        {% if order.paid %}
+                                            <span class="badge bg-success">Paid</span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark">Pending Payment</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="fw-bold">${{ order.get_total_cost }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">You haven't placed any orders yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "store/base.html" %}
+
+{% block title %}Payment Successful{% endblock %}
+
+{% block content %}
+<div class="card p-5 text-center shadow-sm">
+    <div class="text-success fs-1 mb-3">✅</div>
+    <h2 class="fw-bold text-success">Payment Successful!</h2>
+    <p class="lead mt-2">Your payment has been successfully processed and verified.</p>
+    <div class="mt-4">
+        <a href="{% url 'store:product_list' %}" class="btn btn-primary px-4 py-2 me-2">Return to Shop</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary px-4 py-2">View Order History</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

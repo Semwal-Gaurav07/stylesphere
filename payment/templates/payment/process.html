@@ -1,0 +1,35 @@
+{% extends "store/base.html" %}
+
+{% block title %}Checkout Payment{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4 shadow-sm text-center">
+            <h3 class="fw-bold mb-3">Complete Your Payment</h3>
+            <p class="lead">Order <strong>#{{ order.id }}</strong></p>
+            <div class="alert alert-info py-2 my-3">
+                Total Amount Due: <strong class="fs-4 text-success">${{ order.get_total_cost }}</strong>
+            </div>
+
+            <p class="text-muted small">Select your preferred payment method:</p>
+
+            <form method="post" action="{% url 'payment:process' %}" class="my-3">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-lg w-100 mb-2">
+                    💳 Pay via Credit / Debit Card (Stripe)
+                </button>
+            </form>
+
+            <form method="post" action="{% url 'payment:process' %}" class="mb-3">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-lg w-100">
+                    ⚡ Pay via Razorpay / UPI / Netbanking
+                </button>
+            </form>
+
+            <a href="{% url 'payment:canceled' %}" class="text-danger text-decoration-none small">Cancel Payment</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
