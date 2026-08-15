@@ -4,7 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 from decimal import Decimal
-from .models import Category, Product, OrderItem, Coupon, Review, Wishlist
+from datetime import datetime, timedelta
+from .models import Category, Product, Order, OrderItem, Coupon, Review, Wishlist
 from .cart import Cart
 from .forms import CartAddProductForm, OrderCreateForm, CouponApplyForm, ReviewForm
 
@@ -55,6 +56,7 @@ def product_list(request, category_slug=None):
 
 def product_detail(request, id, slug):
     product = get_object_or_404(Product, id=id, slug=slug, available=True)
+    related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
     cart_product_form = CartAddProductForm()
     review_form = ReviewForm()
     reviews = product.reviews.all()
@@ -62,29 +64,38 @@ def product_detail(request, id, slug):
     if request.user.is_authenticated:
         in_wishlist = Wishlist.objects.filter(user=request.user, product=product).exists()
 
+    # Dynamic delivery estimate (3-4 days from today)
+    delivery_date = (datetime.now() + timedelta(days=3)).strftime("%A, %b %d")
+
     return render(request, 'store/product/detail.html', {
         'product': product,
+        'related_products': related_products,
         'cart_product_form': cart_product_form,
         'review_form': review_form,
         'reviews': reviews,
-        'in_wishlist': in_wishlist
+        'in_wishlist': in_wishlist,
+        'delivery_date': delivery_date
     })
 
 @require_POST
 def cart_add(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
-    form = CartAddProductForm(request.POST)
-    if form.is_valid():
-        cd = form.cleaned_data
-        cart.add(product=product, quantity=cd['quantity'], override_quantity=cd['override'])
+    quantity = int(request.POST.get('quantity', 1))
+    size = request.POST.get('size', 'M')
+    override = request.POST.get('override') == 'True'
+    buy_now = request.POST.get('buy_now') == 'true'
+
+    cart.add(product=product, quantity=quantity, size=size, override_quantity=override)
+
+    if buy_now:
+        return redirect('store:order_create')
     return redirect('store:cart_detail')
 
 @require_POST
-def cart_remove(request, product_id):
+def cart_remove(request, item_key):
     cart = Cart(request)
-    product = get_object_or_404(Product, id=product_id)
-    cart.remove(product)
+    cart.remove(item_key)
     return redirect('store:cart_detail')
 
 def cart_detail(request):
@@ -194,7 +205,8 @@ def order_create(request):
                     order=order,
                     product=item['product'],
                     price=item['price'],
-                    quantity=item['quantity']
+                    quantity=item['quantity'],
+                    size=item['size']
                 )
             cart.clear()
             request.session['coupon_id'] = None
@@ -207,3 +219,8 @@ def order_create(request):
         'form': form,
         'discount': discount
     })
+
+@login_required
+def order_invoice(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    return render(request, 'store/orders/invoice.html', {'order': order})

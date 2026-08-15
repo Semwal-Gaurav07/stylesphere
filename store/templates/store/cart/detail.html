@@ -1,35 +1,49 @@
 {% extends "store/base.html" %}
 
-{% block title %}Your Cart{% endblock %}
+{% block title %}Shopping Cart - Style Sphere{% endblock %}
 
 {% block content %}
 <h3 class="fw-bold mb-3">Shopping Cart</h3>
 
 {% if cart %}
+    <!-- Free Shipping Progress Bar Meter -->
+    <div class="card p-3 mb-4 shadow-sm border-0 bg-primary-subtle text-primary-emphasis">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+            {% if cart.get_free_shipping_needed == 0 %}
+                <span class="fw-bold text-success"><i class="bi bi-check-circle-fill me-1"></i> You have unlocked FREE Delivery!</span>
+            {% else %}
+                <span class="fw-bold"><i class="bi bi-truck me-1"></i> Add ₹{{ cart.get_free_shipping_needed }} more to unlock FREE Delivery!</span>
+            {% endif %}
+            <span class="small fw-bold">{{ cart.get_free_shipping_percent }}%</span>
+        </div>
+        <div class="progress" style="height: 8px;">
+            <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{ cart.get_free_shipping_percent }}%"></div>
+        </div>
+    </div>
+
     <div class="row g-4">
         <div class="col-lg-8">
-            <div class="card p-3 p-md-4 mb-3">
+            <div class="card p-3 p-md-4 mb-3 shadow-sm">
                 {% for item in cart %}
                     {% with product=item.product %}
                         <div class="border-bottom py-3">
                             <div class="d-flex justify-content-between align-items-start">
-                                <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-body fw-bold">
-                                    {{ product.name }}
-                                </a>
-                                <form action="{% url 'store:cart_remove' product.id %}" method="post">
+                                <div>
+                                    <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-body fw-bold fs-6">
+                                        {{ product.name }}
+                                    </a>
+                                    <div class="badge bg-secondary-subtle text-secondary small mt-1">Size: {{ item.size }}</div>
+                                </div>
+                                <form action="{% url 'store:cart_remove' item.item_key %}" method="post">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-sm text-danger p-0 ms-2"><i class="bi bi-trash fs-5"></i></button>
                                 </form>
                             </div>
-                            <div class="d-flex justify-content-between align-items-center mt-2">
-                                <form action="{% url 'store:cart_add' product.id %}" method="post" class="d-flex align-items-center">
-                                    {% csrf_token %}
-                                    <span class="small text-muted me-2">Qty:</span>
-                                    <div class="me-2">{{ item.update_quantity_form.quantity }}</div>
-                                    {{ item.update_quantity_form.override }}
-                                    <input type="submit" value="Update" class="btn btn-sm btn-outline-secondary">
-                                </form>
-                                <span class="fw-bold text-success">${{ item.total_price }}</span>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div class="small text-muted">
+                                    Quantity: <strong>{{ item.quantity }}</strong>
+                                </div>
+                                <span class="fw-bold text-success fs-5">₹{{ item.total_price }}</span>
                             </div>
                         </div>
                     {% endwith %}
@@ -39,8 +53,8 @@
         </div>
 
         <div class="col-lg-4">
-            <!-- Coupon Code Card -->
-            <div class="card p-3 mb-3">
+            <!-- Promo Code Box -->
+            <div class="card p-3 mb-3 shadow-sm">
                 <h6 class="fw-bold mb-2">Have a Promo Code?</h6>
                 <form action="{% url 'store:coupon_apply' %}" method="post" class="d-flex gap-2">
                     {% csrf_token %}
@@ -55,11 +69,15 @@
             </div>
 
             <!-- Order Summary Card -->
-            <div class="card p-3">
-                <h5 class="fw-bold mb-3">Cart Summary</h5>
+            <div class="card p-3 shadow-sm">
+                <h5 class="fw-bold mb-3">Order Summary</h5>
                 <div class="d-flex justify-content-between mb-2">
                     <span>Subtotal:</span>
-                    <span>${{ cart.get_total_price }}</span>
+                    <span>₹{{ cart.get_total_price }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Delivery:</span>
+                    <span>{% if cart.get_free_shipping_needed == 0 %}<strong class="text-success">FREE</strong>{% else %}₹99{% endif %}</span>
                 </div>
                 {% if discount > 0 %}
                     <div class="d-flex justify-content-between mb-2 text-success">
@@ -70,20 +88,20 @@
                 <hr>
                 <div class="d-flex justify-content-between fs-5 fw-bold mb-3">
                     <span>Total:</span>
-                    <span class="text-success">${{ cart.get_total_price }}</span>
+                    <span class="text-success">₹{{ cart.get_total_price }}</span>
                 </div>
-                <a href="{% url 'store:order_create' %}" class="btn btn-success btn-lg w-100 py-2">
+                <a href="{% url 'store:order_create' %}" class="btn btn-success btn-lg w-100 py-2 fw-bold shadow-sm">
                     Proceed to Checkout →
                 </a>
             </div>
         </div>
     </div>
 {% else %}
-    <div class="card p-5 text-center">
+    <div class="card p-5 text-center shadow-sm">
         <div class="fs-1 text-muted mb-2">🛒</div>
         <h5>Your cart is currently empty.</h5>
         <div class="mt-3">
-            <a href="{% url 'store:product_list' %}" class="btn btn-primary">Browse Products</a>
+            <a href="{% url 'store:product_list' %}" class="btn btn-primary">Browse Trending Streetwear</a>
         </div>
     </div>
 {% endif %}

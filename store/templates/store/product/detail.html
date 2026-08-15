@@ -1,95 +1,211 @@
 {% extends "store/base.html" %}
 
-{% block title %}{{ product.name }}{% endblock %}
+{% block title %}{{ product.name }} - Style Sphere{% endblock %}
 
 {% block content %}
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb small">
-        <li class="breadcrumb-item"><a href="{% url 'store:product_list' %}" class="text-decoration-none">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ product.category.get_absolute_url }}" class="text-decoration-none">{{ product.category.name }}</a></li>
-        <li class="breadcrumb-item active text-truncate" style="max-width: 150px;">{{ product.name }}</li>
+        <li class="breadcrumb-item"><a href="{% url 'store:product_list' %}" class="text-decoration-none text-muted">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ product.category.get_absolute_url }}" class="text-decoration-none text-muted">{{ product.category.name }}</a></li>
+        <li class="breadcrumb-item active text-truncate fw-bold" style="max-width: 200px;">{{ product.name }}</li>
     </ol>
 </nav>
 
-<div class="card p-3 p-md-4 mb-4">
-    <div class="row g-4 align-items-center">
+<div class="card p-3 p-md-4 mb-4 shadow-sm">
+    <div class="row g-4">
+        <!-- Product Image Showcase -->
         <div class="col-12 col-md-6 text-center">
-            <div class="bg-white p-3 rounded-3" style="max-height: 380px;">
+            <div class="bg-white p-3 rounded-4 border position-relative" style="min-height: 380px; display: flex; align-items: center; justify-content: center;">
                 {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid" style="max-height: 340px; object-fit: contain;">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded-3" style="max-height: 400px; object-fit: contain;">
                 {% else %}
                     <div class="py-5 text-muted">No Image Available</div>
                 {% endif %}
             </div>
         </div>
+
+        <!-- Product Specs & Purchase Options -->
         <div class="col-12 col-md-6">
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="badge bg-secondary">{{ product.category.name }}</span>
-                <a href="{% url 'store:wishlist_toggle' product.id %}" class="btn btn-outline-danger btn-sm">
+                <span class="badge bg-primary-subtle text-primary px-3 py-2 text-uppercase fw-bold">{{ product.category.name }}</span>
+                <a href="{% url 'store:wishlist_toggle' product.id %}" class="btn btn-outline-danger btn-sm rounded-pill px-3">
                     {% if in_wishlist %}
-                        <i class="bi bi-heart-fill"></i> Saved in Wishlist
+                        <i class="bi bi-heart-fill text-danger me-1"></i> Saved
                     {% else %}
-                        <i class="bi bi-heart"></i> Add to Wishlist
+                        <i class="bi bi-heart me-1"></i> Wishlist
                     {% endif %}
                 </a>
             </div>
             
-            <h2 class="fw-bold fs-3">{{ product.name }}</h2>
+            <h1 class="fw-bold fs-3 mb-2">{{ product.name }}</h1>
             
-            <div class="text-warning mb-2 fs-5">
-                <i class="bi bi-star-fill"></i> <strong>{{ product.get_average_rating }}</strong> / 5.0 
-                <span class="text-muted small">({{ reviews.count }} reviews)</span>
+            <!-- Live Social Proof & Ratings -->
+            <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <span class="badge bg-warning text-dark px-2 py-1">
+                    <i class="bi bi-star-fill"></i> {{ product.get_average_rating }}
+                </span>
+                <span class="text-muted small">({{ reviews.count }} Verified Reviews)</span>
+                <span class="badge bg-danger-subtle text-danger small">
+                    <i class="bi bi-fire"></i> 18 bought in last 24h
+                </span>
             </div>
 
-            <h3 class="text-success fw-bold my-3 fs-2">₨{{ product.price }}</h3>
-            
-            {% if product.stock <= 3 and product.stock > 0 %}
-                <div class="alert alert-warning py-1 small fw-bold">
-                    🔥 Hurry! Only {{ product.stock }} items left in stock.
-                </div>
-            {% endif %}
+            <!-- Price in INR -->
+            <div class="d-flex align-items-baseline gap-3 my-3">
+                <span class="text-success fw-bold display-6">₹{{ product.price }}</span>
+                <span class="text-muted text-decoration-line-through fs-5">₹{{ product.price|add:600 }}</span>
+                <span class="badge bg-success-subtle text-success fw-bold">35% OFF</span>
+            </div>
+            <div class="small text-muted mb-3">Inclusive of all taxes • Free Shipping on orders over ₹999</div>
 
-            <p class="text-muted">{{ product.description }}</p>
-
-            <form action="{% url 'store:cart_add' product.id %}" method="post" class="mt-4">
+            <!-- Size Selector & Purchase Form -->
+            <form action="{% url 'store:cart_add' product.id %}" method="post" id="purchaseForm">
                 {% csrf_token %}
-                <div class="row g-2 align-items-center">
-                    <div class="col-auto">
-                        <label for="id_quantity" class="col-form-label fw-bold">Qty:</label>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label class="form-label small fw-bold mb-0">Select Size:</label>
+                        <span class="text-primary small text-decoration-underline" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#sizeChartModal">
+                            <i class="bi bi-rulers me-1"></i>Size Guide
+                        </span>
                     </div>
-                    <div class="col-auto">
-                        {{ cart_product_form.quantity }}
+                    <div class="d-flex gap-2">
+                        <input type="radio" class="btn-check" name="size" id="sizeS" value="S" autocomplete="off">
+                        <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeS">S</label>
+
+                        <input type="radio" class="btn-check" name="size" id="sizeM" value="M" autocomplete="off" checked>
+                        <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeM">M</label>
+
+                        <input type="radio" class="btn-check" name="size" id="sizeL" value="L" autocomplete="off">
+                        <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeL">L</label>
+
+                        <input type="radio" class="btn-check" name="size" id="sizeXL" value="XL" autocomplete="off">
+                        <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeXL">XL</label>
+
+                        <input type="radio" class="btn-check" name="size" id="sizeXXL" value="XXL" autocomplete="off">
+                        <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeXXL">XXL</label>
                     </div>
-                    <div class="col-12 col-sm-auto mt-3 mt-sm-0">
-                        <button type="submit" class="btn btn-success btn-lg w-100 px-4">
-                            <i class="bi bi-cart-plus me-1"></i> Add to Cart
+                </div>
+
+                <div class="row g-2 align-items-center mb-3">
+                    <div class="col-3">
+                        <label class="form-label small fw-bold mb-1">Qty:</label>
+                        <select name="quantity" class="form-select form-select-sm">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-9 d-flex gap-2">
+                        <!-- Add to Cart Button -->
+                        <button type="submit" name="buy_now" value="false" class="btn btn-dark btn-lg flex-grow-1 fw-bold py-2 shadow-sm">
+                            <i class="bi bi-bag-plus me-1"></i> Add to Cart
+                        </button>
+                        
+                        <!-- Instant Buy Now Button -->
+                        <button type="submit" name="buy_now" value="true" class="btn btn-warning btn-lg flex-grow-1 fw-bold py-2 shadow-sm text-dark">
+                            ⚡ Buy Now
                         </button>
                     </div>
                 </div>
             </form>
+
+            <!-- Delivery Estimate Box -->
+            <div class="card p-3 bg-body-tertiary my-3 border rounded-3">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-truck fs-5 text-primary"></i>
+                    <strong class="small">Get it by {{ delivery_date }}</strong>
+                </div>
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" placeholder="Enter Pincode (e.g. 131001)" maxlength="6">
+                    <button class="btn btn-dark btn-sm" type="button" onclick="alert('Delivery available in 3-4 days! Cash on Delivery active.')">Check</button>
+                </div>
+                <div class="small text-muted mt-2">
+                    💵 Cash on Delivery Available • 🔄 30-Day Easy Returns & Exchanges
+                </div>
+            </div>
+
+            <!-- Product Specs Accordion -->
+            <div class="accordion accordion-flush mt-3 border rounded-3" id="productDetailsAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold py-2 small" type="button" data-bs-toggle="collapse" data-bs-target="#descTab">
+                            <i class="bi bi-card-text me-2"></i>Product Details
+                        </button>
+                    </h2>
+                    <div id="descTab" class="accordion-collapse collapse show">
+                        <div class="accordion-body small text-muted">
+                            {{ product.description }}
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold py-2 small" type="button" data-bs-toggle="collapse" data-bs-target="#specsTab">
+                            <i class="bi bi-info-circle me-2"></i>Material & Fit
+                        </button>
+                    </h2>
+                    <div id="specsTab" class="accordion-collapse collapse">
+                        <div class="accordion-body small text-muted">
+                            <ul class="mb-0 ps-3">
+                                <li><strong>Fabric:</strong> 100% French Terry Cotton (240 GSM Bio-Washed)</li>
+                                <li><strong>Fit:</strong> Drop-Shoulder Relaxed Streetwear Oversized Fit</li>
+                                <li><strong>Country of Origin:</strong> India 🇮🇳</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Size Chart Modal -->
+<div class="modal fade" id="sizeChartModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Size Guide (Inches)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-sm text-center small">
+                    <thead class="table-light">
+                        <tr><th>Size</th><th>Chest (in)</th><th>Length (in)</th><th>Shoulder (in)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>S</td><td>40"</td><td>27"</td><td>19"</td></tr>
+                        <tr><td>M</td><td>42"</td><td>28"</td><td>20"</td></tr>
+                        <tr><td>L</td><td>44"</td><td>29"</td><td>21"</td></tr>
+                        <tr><td>XL</td><td>46"</td><td>30"</td><td>22"</td></tr>
+                        <tr><td>XXL</td><td>48"</td><td>31"</td><td>23"</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Customer Reviews Section -->
-<div class="card p-3 p-md-4">
+<div class="card p-3 p-md-4 mb-4 shadow-sm">
     <h4 class="fw-bold mb-4">Customer Reviews & Ratings</h4>
     
     <div class="row g-4">
         <div class="col-md-5">
-            <div class="card p-3 bg-body-tertiary">
+            <div class="card p-3 bg-body-tertiary border">
                 <h6 class="fw-bold mb-2">Write a Review</h6>
                 {% if user.is_authenticated %}
                     <form action="{% url 'store:review_add' product.id %}" method="post">
                         {% csrf_token %}
-                        <label class="form-label small fw-bold">Your Rating:</label>
+                        <label class="form-label small fw-bold">Rating:</label>
                         {{ review_form.rating }}
-                        <label class="form-label small fw-bold">Review Description:</label>
+                        <label class="form-label small fw-bold">Your Feedback:</label>
                         {{ review_form.comment }}
-                        <button type="submit" class="btn btn-primary btn-sm w-100">Submit Review</button>
+                        <button type="submit" class="btn btn-primary btn-sm w-100 py-2 fw-bold">Submit Review</button>
                     </form>
                 {% else %}
-                    <p class="text-muted small">Please <a href="{% url 'accounts:login' %}?next={{ request.path }}">sign in</a> to write a review.</p>
+                    <p class="text-muted small mb-0">Please <a href="{% url 'accounts:login' %}?next={{ request.path }}">sign in</a> to write a review.</p>
                 {% endif %}
             </div>
         </div>
@@ -100,24 +216,23 @@
                     {% for review in reviews %}
                         <div class="list-group-item px-0 py-3">
                             <div class="d-flex justify-content-between align-items-center">
-                                <span class="fw-bold">{{ review.user.username }}</span>
+                                <span class="fw-bold"><i class="bi bi-person-check text-success me-1"></i>{{ review.user.username }}</span>
                                 <span class="text-muted small">{{ review.created|date:"M d, Y" }}</span>
                             </div>
                             <div class="text-warning small my-1">
                                 {% for i in "12345" %}
-                                    {% if forloop.counter <= review.rating %}
-                                        <i class="bi bi-star-fill"></i>
-                                    {% else %}
-                                        <i class="bi bi-star"></i>
-                                    {% endif %}
+                                    {% if forloop.counter <= review.rating %}<i class="bi bi-star-fill"></i>{% else %}<i class="bi bi-star"></i>{% endif %}
                                 {% endfor %}
                             </div>
-                            <p class="mb-0 text-muted">{{ review.comment }}</p>
+                            <p class="mb-0 text-muted small">{{ review.comment }}</p>
                         </div>
                     {% endfor %}
                 </div>
             {% else %}
-                <p class="text-muted py-4">No reviews yet for this product. Be the first to write one!</p>
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-chat-left-heart fs-1 d-block mb-2 text-primary"></i>
+                    <p class="mb-0">No reviews yet for this product. Be the first to share your thoughts!</p>
+                </div>
             {% endif %}
         </div>
     </div>

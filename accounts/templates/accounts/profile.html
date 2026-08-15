@@ -57,12 +57,17 @@
                                 <span class="fw-bold">Order #{{ order.id }}</span>
                                 <span class="text-muted small ms-2">({{ order.created|date:"M d, Y" }})</span>
                             </div>
-                            <span class="fw-bold text-success fs-5">${{ order.get_total_cost }}</span>
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="fw-bold text-success fs-5">₹{{ order.get_total_cost }}</span>
+                                <a href="{% url 'store:order_invoice' order.id %}" target="_blank" class="btn btn-outline-dark btn-sm">
+                                    📄 Invoice
+                                </a>
+                            </div>
                         </div>
 
                         <div class="small mb-3">
                             <strong>Payment:</strong> {{ order.payment_method }} 
-                            {% if order.paid %}<span class="badge bg-success ms-1">Paid</span>{% else %}<span class="badge bg-warning text-dark ms-1">Unpaid</span>{% endif %}
+                            {% if order.paid %}<span class="badge bg-success ms-1">Paid</span>{% else %}<span class="badge bg-warning text-dark ms-1">Unpaid (COD)</span>{% endif %}
                             {% if order.discount %}<span class="badge bg-info text-dark ms-1">{{ order.discount }}% Off Applied</span>{% endif %}
                         </div>
 

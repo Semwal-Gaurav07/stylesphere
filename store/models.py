@@ -97,8 +97,8 @@ class Order(models.Model):
         subtotal = self.get_subtotal_cost()
         if self.discount:
             discount_amount = subtotal * (Decimal(self.discount) / Decimal(100))
-            return subtotal - discount_amount
-        return subtotal
+            return int(subtotal - discount_amount)
+        return int(subtotal)
 
 
 class OrderItem(models.Model):
@@ -106,9 +106,10 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, related_name='order_items', on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
+    size = models.CharField(max_length=10, default='M')
 
     def __str__(self):
-        return str(self.id)
+        return f'{self.product.name} ({self.size})'
 
     def get_cost(self):
         return self.price * self.quantity
