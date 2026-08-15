@@ -18,7 +18,7 @@
                     <span class="badge bg-danger mb-2 px-3 py-2 text-uppercase">New Drop</span>
                     <h1 class="fw-bold display-6">Oversized Streetwear & Fandom Merch</h1>
                     <p class="lead small text-light mb-3">Explore the newest streetwear drops, heavy-gauge hoodies, and graphic tees.</p>
-                    <a href="#productGrid" class="btn btn-warning btn-lg px-4 fw-bold">Explore Collection</a>
+                    <a href="#trendingSection" class="btn btn-warning btn-lg px-4 fw-bold">Explore Trending</a>
                 </div>
             </div>
             <div class="carousel-item" style="background: linear-gradient(135deg, #0f172a 0%, #059669 100%); min-height: 260px;">
@@ -26,7 +26,7 @@
                     <span class="badge bg-warning text-dark mb-2 px-3 py-2 text-uppercase">Exclusive Offer</span>
                     <h1 class="fw-bold display-6">Cash on Delivery Available Across India</h1>
                     <p class="lead small text-light mb-3">Get 10% off your first order with coupon code <strong>FIRST10</strong>.</p>
-                    <a href="#productGrid" class="btn btn-light btn-lg px-4 fw-bold">Shop Now</a>
+                    <a href="#productGrid" class="btn btn-light btn-lg px-4 fw-bold">Shop Catalog</a>
                 </div>
             </div>
         </div>
@@ -46,7 +46,7 @@
                 <div class="cat-bubble-img d-flex align-items-center justify-content-center fs-4 bg-primary text-white">
                     🔥
                 </div>
-                <span class="cat-bubble-text">All Items</span>
+                <span class="cat-bubble-text">All</span>
             </a>
             {% for c in categories %}
                 <a href="{{ c.get_absolute_url }}" class="cat-bubble">
@@ -59,14 +59,69 @@
         </div>
     </div>
 
-    <!-- Featured Collaborations / Fandom Grid -->
+    <!-- Dedicated Trending Products Showcase Section -->
+    <div class="mb-5" id="trendingSection">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0">🔥 Trending Drops & Best Sellers</h5>
+            <a href="#productGrid" class="small text-decoration-none fw-bold text-primary">View All →</a>
+        </div>
+        
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-2 g-md-3">
+            {% for product in trending_products %}
+                <div class="col">
+                    <div class="card h-100 position-relative border shadow-sm">
+                        <span class="position-absolute top-0 start-0 badge bg-danger m-2" style="z-index: 4;">
+                            HOT
+                        </span>
+                        
+                        <a href="{% url 'store:wishlist_toggle' product.id %}" class="wishlist-btn" title="Wishlist">
+                            {% if product.id in user_wishlist_ids %}
+                                <i class="bi bi-heart-fill text-danger"></i>
+                            {% else %}
+                                <i class="bi bi-heart text-muted"></i>
+                            {% endif %}
+                        </a>
+
+                        <a href="{{ product.get_absolute_url }}" class="d-block text-decoration-none">
+                            <div class="product-img-wrap p-2" style="height: 160px;">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                {% else %}
+                                    <div class="text-muted small py-4">No Image</div>
+                                {% endif %}
+                            </div>
+                        </a>
+
+                        <div class="card-body p-2 d-flex flex-column">
+                            <div class="text-warning small mb-1" style="font-size: 0.75rem;">
+                                <i class="bi bi-star-fill"></i> {{ product.get_average_rating }}
+                            </div>
+                            <h6 class="card-title fw-bold mb-1" style="font-size: 0.85rem;">
+                                <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-body text-truncate d-block">
+                                    {{ product.name }}
+                                </a>
+                            </h6>
+                            <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
+                                <span class="fw-bold text-success fs-6">${{ product.price }}</span>
+                                <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-primary px-2 py-0" style="font-size: 0.75rem;">
+                                    Buy
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Official Collaborations / Fandom Grid -->
     <div class="mb-4">
-        <h5 class="fw-bold mb-3">Trending Collections</h5>
+        <h5 class="fw-bold mb-3">Official Fandoms & Collaborations</h5>
         <div class="row g-2 g-md-3">
             <div class="col-6 col-md-3">
                 <div class="fandom-badge" style="background: linear-gradient(135deg, #7f1d1d, #dc2626);">
                     <i class="bi bi-fire fs-2 mb-1 d-block"></i>
-                    ANIME DROPS
+                    ANIME MERCH
                 </div>
             </div>
             <div class="col-6 col-md-3">
@@ -94,7 +149,7 @@
 <!-- Mobile Filter Toggle Button -->
 <div class="d-md-none mb-3" id="productGrid">
     <button class="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#filterSidebar">
-        <span><i class="bi bi-funnel me-1"></i> Filter Products</span>
+        <span><i class="bi bi-funnel me-1"></i> Filter Catalog</span>
         <i class="bi bi-chevron-down"></i>
     </button>
 </div>
@@ -148,7 +203,7 @@
         </div>
     </div>
 
-    <!-- Product Grid -->
+    <!-- Main Product Catalog Grid -->
     <div class="col-md-9">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="fw-bold mb-0">
@@ -157,7 +212,7 @@
                 {% elif query %}
                     Search: "{{ query }}"
                 {% else %}
-                    Top Picks of the Week
+                    Explore Full Catalog
                 {% endif %}
             </h5>
             <span class="text-muted small">{{ products|length }} items</span>
@@ -167,7 +222,6 @@
             {% for product in products %}
                 <div class="col">
                     <div class="card h-100 position-relative">
-                        <!-- Wishlist Toggle Heart -->
                         <a href="{% url 'store:wishlist_toggle' product.id %}" class="wishlist-btn" title="Wishlist">
                             {% if product.id in user_wishlist_ids %}
                                 <i class="bi bi-heart-fill text-danger"></i>
@@ -176,7 +230,6 @@
                             {% endif %}
                         </a>
 
-                        <!-- Product Image Link -->
                         <a href="{{ product.get_absolute_url }}" class="d-block text-decoration-none">
                             <div class="product-img-wrap p-2">
                                 {% if product.image %}
@@ -187,7 +240,6 @@
                             </div>
                         </a>
 
-                        <!-- Card Body -->
                         <div class="card-body p-2 p-md-3 d-flex flex-column">
                             <div class="text-warning small mb-1">
                                 <i class="bi bi-star-fill"></i> {{ product.get_average_rating }}

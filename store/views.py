@@ -12,6 +12,7 @@ def product_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
     products = Product.objects.filter(available=True)
+    trending_products = Product.objects.filter(available=True)[:6]
 
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
@@ -44,6 +45,7 @@ def product_list(request, category_slug=None):
         'category': category,
         'categories': categories,
         'products': products,
+        'trending_products': trending_products,
         'query': query,
         'min_price': min_price,
         'max_price': max_price,
