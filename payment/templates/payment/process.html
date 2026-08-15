@@ -1,6 +1,6 @@
 {% extends "store/base.html" %}
 
-{% block title %}Choose Payment Method{% endblock %}
+{% block title %}Choose Payment Method - Style Sphere{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -10,7 +10,7 @@
             <p class="text-muted">Order ID: <strong>#{{ order.id }}</strong></p>
             
             <div class="alert alert-info py-2 my-3">
-                Total Due: <strong class="fs-4 text-success">${{ order.get_total_cost }}</strong>
+                Total Due: <strong class="fs-4 text-success">₹{{ order.get_total_cost }}</strong>
             </div>
 
             <!-- Option 1: Cash on Delivery -->
@@ -19,27 +19,27 @@
                 <input type="hidden" name="payment_type" value="cod">
                 <button type="submit" class="btn btn-warning btn-lg w-100 py-3 fw-bold text-dark shadow-sm">
                     💵 Cash on Delivery (COD)
-                    <div class="small fw-normal text-muted">Pay in cash when order arrives at your door</div>
+                    <div class="small fw-normal text-muted">Pay ₹{{ order.get_total_cost }} cash at your doorstep</div>
                 </button>
             </form>
 
             <div class="my-3 text-muted">— OR PAY ONLINE —</div>
 
-            <!-- Option 2: Stripe (Card) -->
+            <!-- Option 2: UPI / Razorpay -->
             <form method="post" action="{% url 'payment:process' %}" class="mb-2">
+                {% csrf_token %}
+                <input type="hidden" name="payment_type" value="online">
+                <button type="submit" class="btn btn-outline-success w-100 py-2 fw-bold">
+                    ⚡ Pay via UPI / GPay / PhonePe / NetBanking
+                </button>
+            </form>
+
+            <!-- Option 3: Credit / Debit Card -->
+            <form method="post" action="{% url 'payment:process' %}" class="mb-3">
                 {% csrf_token %}
                 <input type="hidden" name="payment_type" value="online">
                 <button type="submit" class="btn btn-outline-primary w-100 py-2">
                     💳 Credit / Debit Card
-                </button>
-            </form>
-
-            <!-- Option 3: UPI / Razorpay -->
-            <form method="post" action="{% url 'payment:process' %}" class="mb-3">
-                {% csrf_token %}
-                <input type="hidden" name="payment_type" value="online">
-                <button type="submit" class="btn btn-outline-success w-100 py-2">
-                    ⚡ UPI / Netbanking
                 </button>
             </form>
 

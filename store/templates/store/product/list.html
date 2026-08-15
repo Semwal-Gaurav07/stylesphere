@@ -102,7 +102,7 @@
                                 </a>
                             </h6>
                             <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
-                                <span class="fw-bold text-success fs-6">${{ product.price }}</span>
+                                <span class="fw-bold text-success fs-6">₹{{ product.price }}</span>
                                 <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-primary px-2 py-0" style="font-size: 0.75rem;">
                                     Buy
                                 </a>
@@ -178,12 +178,12 @@
 
                 <div class="row g-2 mb-3">
                     <div class="col-6">
-                        <label class="form-label small text-muted">Min ($)</label>
+                        <label class="form-label small text-muted">Min (₹)</label>
                         <input type="number" name="min_price" class="form-control form-control-sm" value="{{ min_price|default:'' }}" placeholder="0">
                     </div>
                     <div class="col-6">
-                        <label class="form-label small text-muted">Max ($)</label>
-                        <input type="number" name="max_price" class="form-control form-control-sm" value="{{ max_price|default:'' }}" placeholder="500">
+                        <label class="form-label small text-muted">Max (₹)</label>
+                        <input type="number" name="max_price" class="form-control form-control-sm" value="{{ max_price|default:'' }}" placeholder="2999">
                     </div>
                 </div>
 
@@ -262,7 +262,7 @@
                             {% endif %}
 
                             <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
-                                <span class="price-tag fw-bold text-success fs-5">${{ product.price }}</span>
+                                <span class="price-tag fw-bold text-success fs-5">₹{{ product.price }}</span>
                                 <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-outline-primary px-2 px-md-3">
                                     View
                                 </a>
