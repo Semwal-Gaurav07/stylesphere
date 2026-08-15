@@ -1,50 +1,165 @@
 {% extends "store/base.html" %}
 
-{% block title %}Choose Payment Method - Style Sphere{% endblock %}
+{% block title %}Complete Payment - Style Sphere{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6 col-lg-5">
-        <div class="card p-4 shadow-sm text-center">
-            <h4 class="fw-bold mb-2">Select Payment Method</h4>
-            <p class="text-muted">Order ID: <strong>#{{ order.id }}</strong></p>
-            
-            <div class="alert alert-info py-2 my-3">
-                Total Due: <strong class="fs-4 text-success">₹{{ order.get_total_cost }}</strong>
+    <div class="col-md-7 col-lg-6">
+        <div class="card p-4 shadow-sm border-0">
+            <!-- Order Header -->
+            <div class="text-center mb-3">
+                <span class="badge bg-secondary mb-1">Order #{{ order.id }}</span>
+                <h3 class="fw-bold mb-1">Choose Payment Method</h3>
+                <div class="alert alert-info py-2 my-3 d-flex justify-content-between align-items-center">
+                    <span>Total Amount Payable:</span>
+                    <strong class="fs-4 text-success">₹{{ order.get_total_cost }}</strong>
+                </div>
             </div>
 
-            <!-- Option 1: Cash on Delivery -->
-            <form method="post" action="{% url 'payment:process' %}" class="my-3">
-                {% csrf_token %}
-                <input type="hidden" name="payment_type" value="cod">
-                <button type="submit" class="btn btn-warning btn-lg w-100 py-3 fw-bold text-dark shadow-sm">
-                    💵 Cash on Delivery (COD)
-                    <div class="small fw-normal text-muted">Pay ₹{{ order.get_total_cost }} cash at your doorstep</div>
-                </button>
-            </form>
+            <!-- Payment Options Accordion -->
+            <div class="accordion shadow-sm" id="paymentOptionsAccordion">
+                <!-- Option 1: Credit / Debit Card -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#cardPay">
+                            <i class="bi bi-credit-card-2-front text-primary fs-5 me-2"></i> Credit / Debit Card
+                        </button>
+                    </h2>
+                    <div id="cardPay" class="accordion-collapse collapse show" data-bs-parent="#paymentOptionsAccordion">
+                        <div class="accordion-body bg-body-tertiary">
+                            <form method="post" action="{% url 'payment:process' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="payment_type" value="card">
 
-            <div class="my-3 text-muted">— OR PAY ONLINE —</div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Cardholder Name</label>
+                                    <input type="text" name="card_name" class="form-control" placeholder="Name on card" required>
+                                </div>
 
-            <!-- Option 2: UPI / Razorpay -->
-            <form method="post" action="{% url 'payment:process' %}" class="mb-2">
-                {% csrf_token %}
-                <input type="hidden" name="payment_type" value="online">
-                <button type="submit" class="btn btn-outline-success w-100 py-2 fw-bold">
-                    ⚡ Pay via UPI / GPay / PhonePe / NetBanking
-                </button>
-            </form>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Card Number</label>
+                                    <div class="input-group">
+                                        <input type="text" name="card_number" id="cardNumInput" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                                        <span class="input-group-text bg-white"><i class="bi bi-credit-card"></i></span>
+                                    </div>
+                                </div>
 
-            <!-- Option 3: Credit / Debit Card -->
-            <form method="post" action="{% url 'payment:process' %}" class="mb-3">
-                {% csrf_token %}
-                <input type="hidden" name="payment_type" value="online">
-                <button type="submit" class="btn btn-outline-primary w-100 py-2">
-                    💳 Credit / Debit Card
-                </button>
-            </form>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label small fw-bold">Expiry Date</label>
+                                        <input type="text" name="card_expiry" id="expiryInput" class="form-control" placeholder="MM/YY" maxlength="5" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small fw-bold">CVV</label>
+                                        <input type="password" name="card_cvv" class="form-control" placeholder="123" maxlength="4" required>
+                                    </div>
+                                </div>
 
-            <a href="{% url 'payment:canceled' %}" class="text-danger text-decoration-none small">Cancel Order</a>
+                                <div class="d-flex align-items-center gap-1 small text-muted mb-3">
+                                    <i class="bi bi-shield-lock-fill text-success"></i> 256-Bit SSL Bank Grade Encryption
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-2 shadow-sm">
+                                    🔒 Pay ₹{{ order.get_total_cost }} Securely
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Option 2: UPI / QR Code -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#upiPay">
+                            <i class="bi bi-qr-code text-success fs-5 me-2"></i> UPI / GPay / PhonePe / QR
+                        </button>
+                    </h2>
+                    <div id="upiPay" class="accordion-collapse collapse" data-bs-parent="#paymentOptionsAccordion">
+                        <div class="accordion-body bg-body-tertiary">
+                            <form method="post" action="{% url 'payment:process' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="payment_type" value="upi">
+
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Enter UPI ID / VPA</label>
+                                    <div class="input-group">
+                                        <input type="text" name="upi_id" class="form-control" placeholder="username@okhdfcbank / mobile@ybl" required>
+                                        <button class="btn btn-dark" type="submit">Verify & Pay</button>
+                                    </div>
+                                </div>
+
+                                <div class="text-center my-3 text-muted small">— OR SCAN QR CODE —</div>
+
+                                <div class="text-center p-3 bg-white rounded-3 border mb-3">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR" alt="UPI QR Code" class="img-fluid mb-2">
+                                    <div class="small text-muted">Scan using any UPI App (GPay, PhonePe, Paytm)</div>
+                                </div>
+
+                                <button type="submit" class="btn btn-success btn-lg w-100 fw-bold py-2">
+                                    ⚡ Complete UPI Payment (₹{{ order.get_total_cost }})
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Option 3: Cash on Delivery (COD) -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#codPay">
+                            <i class="bi bi-cash-coin text-warning fs-5 me-2"></i> Cash on Delivery (COD)
+                        </button>
+                    </h2>
+                    <div id="codPay" class="accordion-collapse collapse" data-bs-parent="#paymentOptionsAccordion">
+                        <div class="accordion-body bg-body-tertiary text-center">
+                            <p class="small text-muted mb-3">
+                                Pay in cash when the delivery courier arrives at your doorstep.
+                            </p>
+                            <form method="post" action="{% url 'payment:process' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="payment_type" value="cod">
+                                <button type="submit" class="btn btn-warning btn-lg w-100 fw-bold text-dark shadow-sm py-2">
+                                    💵 Confirm Order with Cash on Delivery
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cancel link -->
+            <div class="text-center mt-4">
+                <a href="{% url 'payment:canceled' %}" class="text-danger small text-decoration-none">Cancel & Return to Cart</a>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Card formatting JavaScript -->
+<script>
+    const cardInput = document.getElementById('cardNumInput');
+    if (cardInput) {
+        cardInput.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+            let formatted = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) formatted += ' ';
+                formatted += value[i];
+            }
+            e.target.value = formatted;
+        });
+    }
+
+    const expiryInput = document.getElementById('expiryInput');
+    if (expiryInput) {
+        expiryInput.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                e.target.value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            } else {
+                e.target.value = value;
+            }
+        });
+    }
+</script>
 {% endblock %}
