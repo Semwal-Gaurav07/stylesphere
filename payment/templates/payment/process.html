@@ -6,7 +6,7 @@
 <div class="row justify-content-center">
     <div class="col-md-7 col-lg-6">
         <div class="card p-4 shadow-sm border-0">
-            <!-- Order Header -->
+            <!-- Header -->
             <div class="text-center mb-3">
                 <span class="badge bg-secondary mb-1">Order #{{ order.id }}</span>
                 <h3 class="fw-bold mb-1">Choose Payment Method</h3>
@@ -18,14 +18,71 @@
 
             <!-- Payment Options Accordion -->
             <div class="accordion shadow-sm" id="paymentOptionsAccordion">
-                <!-- Option 1: Credit / Debit Card -->
+                
+                <!-- Option 1: Direct UPI / Google Pay / PhonePe / Paytm -->
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#cardPay">
+                        <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#upiPay">
+                            <i class="bi bi-phone text-success fs-5 me-2"></i> UPI / Google Pay / PhonePe / QR
+                        </button>
+                    </h2>
+                    <div id="upiPay" class="accordion-collapse collapse show" data-bs-parent="#paymentOptionsAccordion">
+                        <div class="accordion-body bg-body-tertiary">
+                            <p class="small text-muted mb-2">Tap an app below to pay directly on your mobile phone:</p>
+
+                            <!-- Mobile UPI Deep-Link Intent Buttons -->
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <a href="upi://pay?pa=9781855165@upi&pn=Style%20Sphere&am={{ order.get_total_cost }}&cu=INR&tn=Order%20{{ order.id }}" class="btn btn-outline-dark w-100 py-2 d-flex align-items-center justify-content-center gap-2 bg-white shadow-sm">
+                                        <i class="bi bi-google text-primary"></i> <span class="fw-bold">Google Pay</span>
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <a href="upi://pay?pa=9781855165@upi&pn=Style%20Sphere&am={{ order.get_total_cost }}&cu=INR&tn=Order%20{{ order.id }}" class="btn btn-outline-dark w-100 py-2 d-flex align-items-center justify-content-center gap-2 bg-white shadow-sm">
+                                        <span class="fw-bold" style="color: #5f259f;"><i class="bi bi-wallet2"></i> PhonePe</span>
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <a href="upi://pay?pa=9781855165@upi&pn=Style%20Sphere&am={{ order.get_total_cost }}&cu=INR&tn=Order%20{{ order.id }}" class="btn btn-outline-dark w-100 py-2 d-flex align-items-center justify-content-center gap-2 bg-white shadow-sm">
+                                        <span class="fw-bold" style="color: #00baf2;"><i class="bi bi-lightning-charge-fill"></i> Paytm</span>
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <a href="upi://pay?pa=9781855165@upi&pn=Style%20Sphere&am={{ order.get_total_cost }}&cu=INR&tn=Order%20{{ order.id }}" class="btn btn-outline-dark w-100 py-2 d-flex align-items-center justify-content-center gap-2 bg-white shadow-sm">
+                                        <span class="fw-bold text-success"><i class="bi bi-qr-code"></i> Any UPI App</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="text-center my-3 text-muted small">— OR SCAN QR CODE —</div>
+
+                            <!-- Dynamic Scan QR Code -->
+                            <div class="text-center p-3 bg-white rounded-3 border mb-3">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR" alt="UPI QR Code" class="img-fluid mb-2">
+                                <div class="small text-muted">UPI ID: <strong>9781855165@upi</strong></div>
+                            </div>
+
+                            <!-- Confirmation Form -->
+                            <form method="post" action="{% url 'payment:process' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="payment_type" value="upi">
+                                <input type="hidden" name="upi_id" value="Google Pay / UPI App">
+                                <button type="submit" class="btn btn-success btn-lg w-100 fw-bold py-2 shadow-sm">
+                                    ✅ I Have Completed the UPI Payment
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Option 2: Credit / Debit Card -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#cardPay">
                             <i class="bi bi-credit-card-2-front text-primary fs-5 me-2"></i> Credit / Debit Card
                         </button>
                     </h2>
-                    <div id="cardPay" class="accordion-collapse collapse show" data-bs-parent="#paymentOptionsAccordion">
+                    <div id="cardPay" class="accordion-collapse collapse" data-bs-parent="#paymentOptionsAccordion">
                         <div class="accordion-body bg-body-tertiary">
                             <form method="post" action="{% url 'payment:process' %}">
                                 {% csrf_token %}
@@ -56,47 +113,11 @@
                                 </div>
 
                                 <div class="d-flex align-items-center gap-1 small text-muted mb-3">
-                                    <i class="bi bi-shield-lock-fill text-success"></i> 256-Bit SSL Bank Grade Encryption
+                                    <i class="bi bi-shield-lock-fill text-success"></i> 256-Bit Bank Grade SSL Encrypted
                                 </div>
 
                                 <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-2 shadow-sm">
                                     🔒 Pay ₹{{ order.get_total_cost }} Securely
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Option 2: UPI / QR Code -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#upiPay">
-                            <i class="bi bi-qr-code text-success fs-5 me-2"></i> UPI / GPay / PhonePe / QR
-                        </button>
-                    </h2>
-                    <div id="upiPay" class="accordion-collapse collapse" data-bs-parent="#paymentOptionsAccordion">
-                        <div class="accordion-body bg-body-tertiary">
-                            <form method="post" action="{% url 'payment:process' %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="payment_type" value="upi">
-
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Enter UPI ID / VPA</label>
-                                    <div class="input-group">
-                                        <input type="text" name="upi_id" class="form-control" placeholder="username@okhdfcbank / mobile@ybl" required>
-                                        <button class="btn btn-dark" type="submit">Verify & Pay</button>
-                                    </div>
-                                </div>
-
-                                <div class="text-center my-3 text-muted small">— OR SCAN QR CODE —</div>
-
-                                <div class="text-center p-3 bg-white rounded-3 border mb-3">
-                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR" alt="UPI QR Code" class="img-fluid mb-2">
-                                    <div class="small text-muted">Scan using any UPI App (GPay, PhonePe, Paytm)</div>
-                                </div>
-
-                                <button type="submit" class="btn btn-success btn-lg w-100 fw-bold py-2">
-                                    ⚡ Complete UPI Payment (₹{{ order.get_total_cost }})
                                 </button>
                             </form>
                         </div>
@@ -113,7 +134,7 @@
                     <div id="codPay" class="accordion-collapse collapse" data-bs-parent="#paymentOptionsAccordion">
                         <div class="accordion-body bg-body-tertiary text-center">
                             <p class="small text-muted mb-3">
-                                Pay in cash when the delivery courier arrives at your doorstep.
+                                Pay ₹{{ order.get_total_cost }} in cash when the delivery courier arrives at your doorstep.
                             </p>
                             <form method="post" action="{% url 'payment:process' %}">
                                 {% csrf_token %}
@@ -125,6 +146,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <!-- Cancel link -->
