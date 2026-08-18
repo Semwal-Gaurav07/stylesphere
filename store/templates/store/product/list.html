@@ -1,116 +1,69 @@
 {% extends "store/base.html" %}
 
 {% block title %}
-    {% if category %}{{ category.name }} - Style Sphere{% else %}Style Sphere - 3D Streetwear Studio{% endif %}
+    {% if category %}{{ category.name }} - Style Sphere{% else %}Style Sphere - Official Streetwear & Anime Drops{% endif %}
 {% endblock %}
 
 {% block content %}
 {% if not category and not query %}
-    <!-- 3D Interactive Hero Studio -->
-    <div class="interactive-hero-studio mb-5 rounded-5 overflow-hidden position-relative shadow-lg" id="interactiveStudio">
-        <div class="studio-ambient-bg" id="studioBg"></div>
-
-        <div class="row align-items-center position-relative p-4 p-md-5" style="z-index: 5; min-height: 520px;">
-            <!-- Left: Floating Product Spec & Controls -->
-            <div class="col-lg-6 mb-4 mb-lg-0 text-start text-white">
-                <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill luxury-pill mb-3">
-                    <i class="bi bi-stars text-warning"></i>
-                    <span class="small fw-bold text-uppercase tracking-wider">3D STUDIO // FLAGSHIP DROP</span>
-                </div>
-                
-                <h1 class="display-4 fw-extrabold mb-2 text-white" id="heroProductTitle">
-                    Naruto: Itachi Oversized Tee
-                </h1>
-                
-                <div class="d-flex align-items-center gap-3 my-3">
-                    <span class="fs-2 fw-bold text-success" id="heroProductPrice">₹899</span>
-                    <span class="text-white-50 text-decoration-line-through fs-5">₹1,499</span>
-                    <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold">40% OFF</span>
-                </div>
-
-                <p class="text-light-50 small mb-4 col-md-11" id="heroProductDesc">
-                    240 GSM heavy-gauge French Terry cotton with high-density DTF back print and drop-shoulder tailoring.
-                </p>
-
-                <!-- Interactive Colorway Swatches -->
-                <div class="mb-4">
-                    <label class="small text-uppercase fw-bold tracking-wider text-white-50 d-block mb-2">
-                        Select Silhouette Colorway:
-                    </label>
-                    <div class="d-flex gap-3 align-items-center">
-                        <button type="button" class="color-swatch-btn active" style="--swatch-color: #1e1b4b;" onclick="switchHeroSilhouette(0)" title="Onyx Night"></button>
-                        <button type="button" class="color-swatch-btn" style="--swatch-color: #831843;" onclick="switchHeroSilhouette(1)" title="Deadpool Crimson"></button>
-                        <button type="button" class="color-swatch-btn" style="--swatch-color: #064e3b;" onclick="switchHeroSilhouette(2)" title="Hunter Green"></button>
-                        <button type="button" class="color-swatch-btn" style="--swatch-color: #1e293b;" onclick="switchHeroSilhouette(3)" title="Korean Slate"></button>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="d-flex flex-wrap gap-3">
-                    <a href="{% url 'store:product_list' %}" id="heroProductLink" class="btn btn-light btn-lg px-4 py-2 fw-bold rounded-pill shadow">
-                        Shop Now →
-                    </a>
-                    <a href="#productGrid" class="btn btn-outline-light btn-lg px-4 py-2 fw-bold rounded-pill">
-                        Explore Collection
-                    </a>
+    <!-- Compact Mobile & Desktop Hero Carousel -->
+    <div id="heroDropCarousel" class="carousel slide mb-4 rounded-4 overflow-hidden shadow-sm" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroDropCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#heroDropCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#heroDropCarousel" data-bs-slide-to="2"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active" style="background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 60%, #e11d48 100%); min-height: 220px;">
+                <div class="p-4 p-md-5 text-white d-flex flex-column justify-content-center align-items-start" style="min-height: 220px;">
+                    <span class="badge bg-danger mb-2 px-3 py-1 rounded-pill text-uppercase fw-bold">DROP 2026 // VOL. 01</span>
+                    <h2 class="fw-extrabold display-6 mb-1">Oversized Streetwear & Anime Tees</h2>
+                    <p class="small text-light mb-3 col-md-8">240 GSM heavy-gauge bio-washed French Terry cotton. Drop-shoulder drape.</p>
+                    <a href="#productGrid" class="btn btn-warning btn-sm px-4 py-2 rounded-pill fw-bold text-dark shadow">Shop Now →</a>
                 </div>
             </div>
-
-            <!-- Right: 3D Floating Interactive Showcase with Tilt & Ambient Reflections -->
-            <div class="col-lg-6 text-center position-relative">
-                <div class="showcase-3d-stage" id="showcaseStage">
-                    <div class="stage-pedestal"></div>
-                    <!-- Floating Depth Badges -->
-                    <div class="floating-badge-chip chip-top-left">
-                        <i class="bi bi-shield-check text-success"></i> 240 GSM French Terry
-                    </div>
-                    <div class="floating-badge-chip chip-bottom-right">
-                        <i class="bi bi-lightning-charge-fill text-warning"></i> Ready to Dispatch
-                    </div>
-                    
-                    <!-- Dynamic 3D Product Image -->
-                    <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800" 
-                         alt="Flagship Drop" 
-                         id="heroStageImg" 
-                         class="showcase-stage-img img-fluid">
+            <div class="carousel-item" style="background: linear-gradient(135deg, #0f172a 0%, #064e3b 60%, #059669 100%); min-height: 220px;">
+                <div class="p-4 p-md-5 text-white d-flex flex-column justify-content-center align-items-start" style="min-height: 220px;">
+                    <span class="badge bg-warning text-dark mb-2 px-3 py-1 rounded-pill text-uppercase fw-bold">FREE DELIVERY</span>
+                    <h2 class="fw-extrabold display-6 mb-1">Cash on Delivery Across India</h2>
+                    <p class="small text-light mb-3 col-md-8">Use coupon code <strong>FIRST10</strong> for flat 10% discount on your order.</p>
+                    <a href="#productGrid" class="btn btn-light btn-sm px-4 py-2 rounded-pill fw-bold shadow">Explore Drops →</a>
+                </div>
+            </div>
+            <div class="carousel-item" style="background: linear-gradient(135deg, #831843 0%, #be123c 60%, #fb7185 100%); min-height: 220px;">
+                <div class="p-4 p-md-5 text-white d-flex flex-column justify-content-center align-items-start" style="min-height: 220px;">
+                    <span class="badge bg-dark mb-2 px-3 py-1 rounded-pill text-uppercase fw-bold">WINTERWEAR</span>
+                    <h2 class="fw-extrabold display-6 mb-1">400 GSM Heavyweight Hoodies</h2>
+                    <p class="small text-light mb-3 col-md-8">Brushed inner fleece for premium warmth and structured hood shape.</p>
+                    <a href="{% url 'store:product_list_by_category' 'hoodies-jackets' %}" class="btn btn-dark btn-sm px-4 py-2 rounded-pill fw-bold shadow">Shop Hoodies →</a>
                 </div>
             </div>
         </div>
-
-        <!-- 4-Column Colorway Bar -->
-        <div class="colorway-split-bar d-none d-md-flex">
-            <div class="colorway-col" onclick="switchHeroSilhouette(0)" style="background: rgba(30, 27, 75, 0.6);">
-                <span>01 // Itachi Graphic</span>
-            </div>
-            <div class="colorway-col" onclick="switchHeroSilhouette(1)" style="background: rgba(131, 24, 67, 0.6);">
-                <span>02 // Deadpool Heavy</span>
-            </div>
-            <div class="colorway-col" onclick="switchHeroSilhouette(2)" style="background: rgba(6, 78, 59, 0.6);">
-                <span>03 // Urban Bomber</span>
-            </div>
-            <div class="colorway-col" onclick="switchHeroSilhouette(3)" style="background: rgba(30, 41, 59, 0.6);">
-                <span>04 // Korean Joggers</span>
-            </div>
-        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroDropCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroDropCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
     </div>
 
     <!-- Category Story Bubbles -->
-    <div class="mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold mb-0 text-uppercase tracking-wider fs-6 text-muted">Shop By Category</h5>
-            <span class="small text-muted">Swipe categories</span>
+    <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+            <h6 class="fw-bold mb-0 text-uppercase tracking-wider text-muted" style="font-size: 0.75rem;">Categories</h6>
+            <span class="text-muted" style="font-size: 0.72rem;">Swipe to explore</span>
         </div>
         <div class="cat-bubble-container">
             <a href="{% url 'store:product_list' %}" class="cat-bubble">
-                <div class="cat-bubble-img d-flex align-items-center justify-content-center fs-4 bg-primary text-white shadow-sm">
+                <div class="cat-bubble-img ring-all fs-4">
                     🔥
                 </div>
-                <span class="cat-bubble-text">All Items</span>
+                <span class="cat-bubble-text">All</span>
             </a>
             {% for c in categories %}
                 <a href="{{ c.get_absolute_url }}" class="cat-bubble">
-                    <div class="cat-bubble-img d-flex align-items-center justify-content-center fs-4 bg-body-tertiary shadow-sm">
-                        🛍️
+                    <div class="cat-bubble-img {% cycle 'ring-tshirts' 'ring-hoodies' 'ring-bottoms' 'ring-sneakers' 'ring-shirts' 'ring-acc' %} fs-4">
+                        {% if 't-shirt' in c.slug %}👕{% elif 'hoodie' in c.slug %}🧥{% elif 'jogger' in c.slug or 'cargo' in c.slug %}👖{% elif 'sneaker' in c.slug %}👟{% elif 'shirt' in c.slug %}👔{% else %}🎒{% endif %}
                     </div>
                     <span class="cat-bubble-text">{{ c.name }}</span>
                 </a>
@@ -118,105 +71,81 @@
         </div>
     </div>
 
-    <!-- Trending Showcase Grid with Hover Zoom -->
-    <div class="mb-5" id="trendingSection">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <span class="badge bg-danger px-3 py-1 text-uppercase fw-bold rounded-pill mb-1">HOT DROPS</span>
-                <h3 class="fw-bold mb-0">Trending Streetwear Silhouettes</h3>
-            </div>
-            <a href="#productGrid" class="small text-decoration-none fw-bold text-primary">View All Pieces →</a>
-        </div>
-        
-        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3">
-            {% for product in trending_products %}
-                <div class="col">
-                    <div class="card h-100 position-relative border-0 shadow-sm rounded-4 overflow-hidden glow-hover-card">
-                        <a href="{% url 'store:wishlist_toggle' product.id %}" class="wishlist-btn" title="Wishlist">
-                            {% if product.id in user_wishlist_ids %}
-                                <i class="bi bi-heart-fill text-danger"></i>
-                            {% else %}
-                                <i class="bi bi-heart text-muted"></i>
-                            {% endif %}
-                        </a>
-
-                        <a href="{{ product.get_absolute_url }}" class="d-block text-decoration-none">
-                            <div class="product-img-wrap p-2" style="height: 170px;">
-                                {% if product.image %}
-                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-zoom-img">
-                                {% else %}
-                                    <div class="text-muted small py-4">No Image</div>
-                                {% endif %}
-                            </div>
-                        </a>
-
-                        <div class="card-body p-2 p-md-3 d-flex flex-column">
-                            <div class="text-warning small mb-1" style="font-size: 0.75rem;">
-                                <i class="bi bi-star-fill"></i> {{ product.get_average_rating }}
-                            </div>
-                            <h6 class="card-title fw-bold mb-1" style="font-size: 0.85rem;">
-                                <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-body text-truncate d-block">
-                                    {{ product.name }}
-                                </a>
-                            </h6>
-                            <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
-                                <span class="fw-bold text-success fs-6">₹{{ product.price }}</span>
-                                <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-primary rounded-pill px-2 py-0" style="font-size: 0.75rem;">
-                                    View
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Fandom & Theme Collaborations -->
+    <div class="mb-4">
+        <div class="row g-2">
+            <div class="col-6 col-md-3">
+                <div class="fandom-badge-box badge-anime">
+                    <i class="bi bi-fire fs-3 mb-1 d-block"></i>
+                    ANIME MERCH
                 </div>
-            {% endfor %}
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="fandom-badge-box badge-marvel">
+                    <i class="bi bi-shield-shaded fs-3 mb-1 d-block"></i>
+                    MARVEL STUDIOS
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="fandom-badge-box badge-gaming">
+                    <i class="bi bi-controller fs-3 mb-1 d-block"></i>
+                    GAMING & GEEK
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="fandom-badge-box badge-originals">
+                    <i class="bi bi-gem fs-3 mb-1 d-block"></i>
+                    TSS ORIGINALS
+                </div>
+            </div>
         </div>
     </div>
 {% endif %}
 
-<!-- Main Product Catalog -->
+<!-- Mobile Filter Collapsible Trigger -->
 <div class="d-md-none mb-3" id="productGrid">
-    <button class="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#filterSidebar">
-        <span><i class="bi bi-funnel me-1"></i> Filter Products</span>
+    <button class="btn btn-outline-secondary btn-sm w-100 rounded-pill d-flex justify-content-between align-items-center py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#filterSidebar">
+        <span><i class="bi bi-funnel me-1"></i> Filter & Sort Products</span>
         <i class="bi bi-chevron-down"></i>
     </button>
 </div>
 
-<div class="row">
+<div class="row g-3">
     <!-- Sidebar Filters -->
-    <div class="col-md-3 mb-4 collapse d-md-block" id="filterSidebar">
-        <div class="card p-3 mb-3">
-            <h6 class="fw-bold mb-2">Categories</h6>
+    <div class="col-md-3 collapse d-md-block" id="filterSidebar">
+        <div class="card p-3 mb-3 rounded-4">
+            <h6 class="fw-bold mb-2 small text-uppercase">Categories</h6>
             <div class="list-group list-group-flush">
-                <a href="{% url 'store:product_list' %}" class="list-group-item list-group-item-action py-2 px-2 {% if not category %}active fw-bold{% endif %}">
-                    All Drops
+                <a href="{% url 'store:product_list' %}" class="list-group-item list-group-item-action py-2 px-2 border-0 rounded-3 small {% if not category %}active fw-bold{% endif %}">
+                    All Products
                 </a>
                 {% for c in categories %}
-                    <a href="{{ c.get_absolute_url }}" class="list-group-item list-group-item-action py-2 px-2 {% if category.slug == c.slug %}active fw-bold{% endif %}">
+                    <a href="{{ c.get_absolute_url }}" class="list-group-item list-group-item-action py-2 px-2 border-0 rounded-3 small {% if category.slug == c.slug %}active fw-bold{% endif %}">
                         {{ c.name }}
                     </a>
                 {% endfor %}
             </div>
         </div>
 
-        <div class="card p-3">
-            <h6 class="fw-bold mb-3">Price & Sort</h6>
+        <div class="card p-3 rounded-4">
+            <h6 class="fw-bold mb-3 small text-uppercase">Filter & Sort</h6>
             <form method="get" action="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'store:product_list' %}{% endif %}">
                 {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
 
                 <div class="row g-2 mb-3">
                     <div class="col-6">
                         <label class="form-label small text-muted">Min (₹)</label>
-                        <input type="number" name="min_price" class="form-control form-control-sm" value="{{ min_price|default:'' }}" placeholder="0">
+                        <input type="number" name="min_price" class="form-control form-control-sm rounded-3" value="{{ min_price|default:'' }}" placeholder="0">
                     </div>
                     <div class="col-6">
                         <label class="form-label small text-muted">Max (₹)</label>
-                        <input type="number" name="max_price" class="form-control form-control-sm" value="{{ max_price|default:'' }}" placeholder="2999">
+                        <input type="number" name="max_price" class="form-control form-control-sm rounded-3" value="{{ max_price|default:'' }}" placeholder="2999">
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label small text-muted">Sort By</label>
-                    <select name="sort" class="form-select form-select-sm">
+                    <select name="sort" class="form-select form-select-sm rounded-3">
                         <option value="">Top Featured</option>
                         <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
                         <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
@@ -224,26 +153,27 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-sm btn-primary w-100 mb-2">Apply Filters</button>
-                <a href="{% url 'store:product_list' %}" class="btn btn-sm btn-outline-secondary w-100">Reset</a>
+                <button type="submit" class="btn btn-sm btn-primary w-100 mb-2 rounded-pill fw-bold">Apply</button>
+                <a href="{% url 'store:product_list' %}" class="btn btn-sm btn-outline-secondary w-100 rounded-pill">Reset</a>
             </form>
         </div>
     </div>
 
-    <!-- Catalog Grid -->
+    <!-- Product Catalog Grid (2 Columns on Mobile, 3 Columns on Tablet/Desktop) -->
     <div class="col-md-9">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="fw-bold mb-0">
-                {% if category %}{{ category.name }}{% elif query %}Search: "{{ query }}"{% else %}Full Streetwear Catalog{% endif %}
+                {% if category %}{{ category.name }}{% elif query %}Search: "{{ query }}"{% else %}Streetwear Drops{% endif %}
             </h5>
-            <span class="text-muted small">{{ products|length }} pieces</span>
+            <span class="text-muted small">{{ products|length }} items</span>
         </div>
 
-        <div class="row row-cols-2 row-cols-md-3 g-3">
+        <div class="row row-cols-2 row-cols-md-3 g-2 g-md-3">
             {% for product in products %}
                 <div class="col">
-                    <div class="card h-100 position-relative border-0 shadow-sm rounded-4 overflow-hidden glow-hover-card">
-                        <a href="{% url 'store:wishlist_toggle' product.id %}" class="wishlist-btn" title="Wishlist">
+                    <div class="product-card">
+                        <!-- Wishlist Button -->
+                        <a href="{% url 'store:wishlist_toggle' product.id %}" class="wishlist-pill-btn" title="Wishlist">
                             {% if product.id in user_wishlist_ids %}
                                 <i class="bi bi-heart-fill text-danger"></i>
                             {% else %}
@@ -251,40 +181,36 @@
                             {% endif %}
                         </a>
 
+                        <!-- Product Image Link -->
                         <a href="{{ product.get_absolute_url }}" class="d-block text-decoration-none">
-                            <div class="product-img-wrap p-2">
+                            <div class="product-card-img-wrap">
                                 {% if product.image %}
-                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-zoom-img">
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
                                 {% else %}
                                     <div class="text-muted small py-4">No Image</div>
                                 {% endif %}
                             </div>
                         </a>
 
-                        <div class="card-body p-2 p-md-3 d-flex flex-column">
-                            <div class="text-warning small mb-1">
+                        <!-- Card Body -->
+                        <div class="product-card-body">
+                            <div class="text-warning small mb-1" style="font-size: 0.72rem;">
                                 <i class="bi bi-star-fill"></i> {{ product.get_average_rating }}
                             </div>
 
-                            <h6 class="card-title fw-bold mb-1">
-                                <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-body text-truncate d-block">
-                                    {{ product.name }}
-                                </a>
-                            </h6>
-                            
-                            <p class="card-text text-muted small flex-grow-1 d-none d-sm-block mb-2">
-                                {{ product.description|truncatewords:6 }}
-                            </p>
+                            <a href="{{ product.get_absolute_url }}" class="product-title-link">
+                                {{ product.name }}
+                            </a>
 
                             {% if product.stock <= 3 and product.stock > 0 %}
-                                <div class="badge bg-danger-subtle text-danger small mb-2 text-start p-1">
+                                <div class="badge bg-danger-subtle text-danger small mb-2 text-start p-1" style="font-size: 0.68rem;">
                                     ⚡ Only {{ product.stock }} left!
                                 </div>
                             {% endif %}
 
-                            <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
-                                <span class="price-tag fw-bold text-success fs-5">₹{{ product.price }}</span>
-                                <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-outline-primary px-3 rounded-pill">
+                            <div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top border-secondary-subtle">
+                                <span class="product-price-tag">₹{{ product.price }}</span>
+                                <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-outline-primary px-3 py-1 rounded-pill" style="font-size: 0.75rem;">
                                     View
                                 </a>
                             </div>
@@ -299,95 +225,4 @@
         </div>
     </div>
 </div>
-
-<!-- 3D Hero Colorway Switcher & Parallax Tilt JS -->
-<script>
-    const silhouettes = [
-        {
-            title: "Naruto: Itachi Oversized Tee",
-            price: "₹899",
-            desc: "240 GSM heavy-gauge French Terry cotton with high-density DTF back print and drop-shoulder tailoring.",
-            img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800",
-            bg: "linear-gradient(135deg, #0b0f19 0%, #1e1b4b 60%, #312e81 100%)",
-            link: "/product/1/naruto-itachi-oversized-tee/"
-        },
-        {
-            title: "Deadpool: Merc with a Mouth Hoodie",
-            price: "₹1,499",
-            desc: "400 GSM heavyweight brushed fleece with dual-colorblock storm hood and kangaroo pocket.",
-            img: "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=800",
-            bg: "linear-gradient(135deg, #180509 0%, #831843 60%, #9f1239 100%)",
-            link: "/product/6/deadpool-merc-pullover/"
-        },
-        {
-            title: "Urban Bomber Jacket: Hunter Green",
-            price: "₹2,499",
-            desc: "Water-resistant matte nylon shell with insulated quilted orange lining and utility arm pocket.",
-            img: "https://images.unsplash.com/photo-1544441893-675973e31985?w=800",
-            bg: "linear-gradient(135deg, #022c22 0%, #064e3b 60%, #047857 100%)",
-            link: "/product/7/urban-bomber-jacket-green/"
-        },
-        {
-            title: "Korean Baggy Fit Joggers: Slate",
-            price: "₹1,199",
-            desc: "Relaxed Korean baggy cut with heavy-ribbed drawstring waistband and deep cargo pockets.",
-            img: "https://images.unsplash.com/photo-1552902865-b72c031ac5ea?w=800",
-            bg: "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #334155 100%)",
-            link: "/product/8/korean-baggy-joggers-offwhite/"
-        }
-    ];
-
-    function switchHeroSilhouette(index) {
-        const item = silhouettes[index];
-        if (!item) return;
-
-        document.querySelectorAll('.color-swatch-btn').forEach((btn, i) => {
-            btn.classList.toggle('active', i === index);
-        });
-
-        const studioBg = document.getElementById('studioBg');
-        if (studioBg) studioBg.style.background = item.bg;
-
-        const titleEl = document.getElementById('heroProductTitle');
-        const priceEl = document.getElementById('heroProductPrice');
-        const descEl = document.getElementById('heroProductDesc');
-        const imgEl = document.getElementById('heroStageImg');
-        const linkEl = document.getElementById('heroProductLink');
-
-        if (titleEl) titleEl.innerText = item.title;
-        if (priceEl) priceEl.innerText = item.price;
-        if (descEl) descEl.innerText = item.desc;
-        if (linkEl) linkEl.href = item.link;
-
-        if (imgEl) {
-            imgEl.style.opacity = '0';
-            imgEl.style.transform = 'scale(0.9) translateY(20px)';
-            setTimeout(() => {
-                imgEl.src = item.img;
-                imgEl.style.opacity = '1';
-                imgEl.style.transform = 'scale(1) translateY(0)';
-            }, 200);
-        }
-    }
-
-    // 3D Parallax Tilt
-    const stage = document.getElementById('showcaseStage');
-    if (stage) {
-        stage.addEventListener('mousemove', (e) => {
-            const rect = stage.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            const img = document.getElementById('heroStageImg');
-            if (img) {
-                img.style.transform = `perspective(800px) rotateY(${x * 0.05}deg) rotateX(${-y * 0.05}deg) scale(1.05)`;
-            }
-        });
-        stage.addEventListener('mouseleave', () => {
-            const img = document.getElementById('heroStageImg');
-            if (img) {
-                img.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg) scale(1)';
-            }
-        });
-    }
-</script>
 {% endblock %}

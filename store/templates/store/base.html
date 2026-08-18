@@ -3,11 +3,11 @@
 <html lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Style Sphere - Official Merch & Streetwear{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% block title %}Style Sphere - Official Streetwear & Merch{% endblock %}</title>
 
     <!-- SEO & OpenGraph Tags -->
-    <meta name="description" content="Shop official merchandise, oversized t-shirts, streetwear, hoodies, and joggers at Style Sphere. Cash on Delivery available.">
+    <meta name="description" content="Shop official merchandise, oversized t-shirts, streetwear, hoodies, and joggers at Style Sphere. Fast dispatch and Cash on Delivery available across India.">
     <meta property="og:title" content="Style Sphere - Curated Streetwear & Apparel">
     <meta property="og:description" content="Shop the latest trends with Cash on Delivery and instant checkout.">
     <meta property="og:image" content="https://stylesphere-store.onrender.com/static/images/stylesphere_logo_primary.png">
@@ -37,150 +37,270 @@
     <style>
         :root {
             --font-family-base: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
         }
-        body { font-family: var(--font-family-base); background-color: #f8f9fc; color: #1e293b; }
         
-        /* Animated Multi-Color Gradient Ticker */
-        .top-ticker {
-            background: linear-gradient(-45deg, #ff0844, #ffb199, #7928ca, #ff0080, #0070f3, #00dfd8);
-            background-size: 400% 400%;
-            animation: gradientTicker 12s ease infinite;
-            color: #ffffff;
-            font-size: 0.82rem;
-            padding: 7px 0;
-            font-weight: 700;
-            text-align: center;
-            letter-spacing: 0.3px;
-        }
-        @keyframes gradientTicker {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Prevent Horizontal Scroll on Mobile */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            font-family: var(--font-family-base);
+            background-color: #f8f9fc;
+            color: #0f172a;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Frosted Glass Navbar -->
-        .navbar-frosted {
-            background: rgba(255, 255, 255, 0.92) !important;
+        /* Top Announcement Ticker */
+        .top-ticker {
+            background: linear-gradient(90deg, #1e1b4b 0%, #4338ca 50%, #e11d48 100%);
+            color: #ffffff;
+            font-size: 0.75rem;
+            padding: 6px 10px;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* App-Like Header Navbar */
+        .navbar-app {
+            background: rgba(255, 255, 255, 0.95) !important;
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 8px 0;
+            z-index: 1030;
         }
-        .navbar-brand img { height: 38px; }
+        .navbar-brand img { height: 34px; }
         
         .subnav-link {
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             text-transform: uppercase;
             color: inherit;
             text-decoration: none;
-            padding: 6px 16px;
+            padding: 5px 14px;
             border-radius: 20px;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
         }
         .subnav-link:hover, .subnav-link.active {
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(236, 72, 153, 0.15));
+            background: rgba(79, 70, 229, 0.1);
             color: #4f46e5;
-            transform: translateY(-1px);
         }
 
-        /* Category Story Bubbles with Vivid Colorful Rings */
-        .cat-bubble-container { display: flex; gap: 20px; overflow-x: auto; padding: 15px 5px; scrollbar-width: none; }
+        /* Mobile Search Bar */
+        .search-input-pill {
+            border-radius: 25px;
+            background: #f1f5f9;
+            border: 1px solid transparent;
+            font-size: 0.85rem;
+            padding: 8px 16px;
+            transition: all 0.2s;
+        }
+        .search-input-pill:focus {
+            background: #ffffff;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        /* Category Story Bubbles */
+        .cat-bubble-container {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 10px 4px 16px 4px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
         .cat-bubble-container::-webkit-scrollbar { display: none; }
-        .cat-bubble { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit; min-width: 82px; text-align: center; }
-        
+        .cat-bubble {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            min-width: 72px;
+            text-align: center;
+        }
         .cat-bubble-img {
-            width: 74px;
-            height: 74px;
+            width: 66px;
+            height: 66px;
             border-radius: 50%;
-            padding: 3px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.1);
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 2px;
         }
-        .cat-bubble:hover .cat-bubble-img {
-            transform: scale(1.12) rotate(3deg);
-            box-shadow: 0 8px 22px rgba(0,0,0,0.2);
+        .cat-bubble:hover .cat-bubble-img { transform: scale(1.08); }
+        .cat-bubble-text {
+            font-size: 0.72rem;
+            font-weight: 800;
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+            line-height: 1.1;
         }
-        .cat-bubble-text { font-size: 0.78rem; font-weight: 800; margin-top: 7px; text-transform: uppercase; letter-spacing: 0.3px; }
 
-        /* Colorful Category Rings */
-        .ring-all { background: linear-gradient(135deg, #ff0080, #7928ca); color: #fff; }
-        .ring-tshirts { background: linear-gradient(135deg, #ff416c, #ff4b2b); color: #fff; }
-        .ring-hoodies { background: linear-gradient(135deg, #8a2387, #e94057, #f27121); color: #fff; }
-        .ring-bottoms { background: linear-gradient(135deg, #11998e, #38ef7d); color: #fff; }
-        .ring-sneakers { background: linear-gradient(135deg, #00c6ff, #0072ff); color: #fff; }
-        .ring-shirts { background: linear-gradient(135deg, #f7971e, #ffd200); color: #fff; }
-        .ring-acc { background: linear-gradient(135deg, #f857a6, #ff5858); color: #fff; }
+        /* Vivid Category Rings */
+        .ring-all { background: linear-gradient(135deg, #ec4899, #8b5cf6); color: #fff; }
+        .ring-tshirts { background: linear-gradient(135deg, #f43f5e, #fb923c); color: #fff; }
+        .ring-hoodies { background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff; }
+        .ring-bottoms { background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff; }
+        .ring-sneakers { background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: #fff; }
+        .ring-shirts { background: linear-gradient(135deg, #f59e0b, #eab308); color: #fff; }
+        .ring-acc { background: linear-gradient(135deg, #d946ef, #ec4899); color: #fff; }
 
-        /* Cards & Hover Animations */
-        .card { border-radius: 16px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.04); transition: transform 0.25s ease, box-shadow 0.25s ease; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 12px 28px rgba(79, 70, 229, 0.15); }
-        .product-img-wrap { width: 100%; height: 210px; display: flex; align-items: center; justify-content: center; background: #fff; border-radius: 16px 16px 0 0; overflow: hidden; position: relative; }
-        .product-img-wrap img { max-height: 100%; max-width: 100%; object-fit: contain; transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
-        .card:hover .product-img-wrap img { transform: scale(1.09); }
-        
-        .wishlist-btn { position: absolute; top: 10px; right: 10px; z-index: 5; background: rgba(255,255,255,0.92); border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.15s; }
-        .wishlist-btn:hover { transform: scale(1.2); }
-        .cart-badge { background: linear-gradient(135deg, #ff0844, #ff4e50); font-size: 0.75rem; }
-
-        /* Colorful Fandom Badges */
-        .fandom-badge-box {
-            border-radius: 16px;
+        /* Mobile-First 2-Column Product Cards */
+        .product-card {
+            border-radius: 14px;
+            border: none;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.12);
+        }
+        .product-card-img-wrap {
+            width: 100%;
+            height: 180px;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
             position: relative;
+        }
+        .product-card-img-wrap img {
+            max-height: 90%;
+            max-width: 90%;
+            object-fit: contain;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .product-card:hover .product-card-img-wrap img {
+            transform: scale(1.08);
+        }
+        .product-card-body {
+            padding: 10px 12px 14px 12px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .product-title-link {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: inherit;
+            text-decoration: none;
+            line-height: 1.25;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 2.1em;
+            margin-bottom: 6px;
+        }
+        .product-price-tag {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #16a34a;
+        }
+        .wishlist-pill-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            z-index: 5;
+            background: rgba(255,255,255,0.92);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: transform 0.15s;
+        }
+        .wishlist-pill-btn:hover { transform: scale(1.15); }
+        .cart-badge { background: linear-gradient(135deg, #f43f5e, #e11d48); font-size: 0.7rem; }
+
+        /* Fandom Boxes */
+        .fandom-badge-box {
+            border-radius: 14px;
             color: #ffffff;
             text-align: center;
-            padding: 28px 16px;
+            padding: 22px 12px;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            letter-spacing: 0.5px;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
         }
-        .fandom-badge-box:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-        }
-        .badge-anime { background: linear-gradient(135deg, #e11d48 0%, #fb7185 100%); }
-        .badge-marvel { background: linear-gradient(135deg, #2563eb 0%, #38bdf8 100%); }
-        .badge-gaming { background: linear-gradient(135deg, #059669 0%, #34d399 100%); }
-        .badge-originals { background: linear-gradient(135deg, #7c3aed 0%, #c084fc 100%); }
+        .fandom-badge-box:hover { transform: translateY(-3px); }
+        .badge-anime { background: linear-gradient(135deg, #e11d48, #fb7185); }
+        .badge-marvel { background: linear-gradient(135deg, #2563eb, #60a5fa); }
+        .badge-gaming { background: linear-gradient(135deg, #059669, #34d399); }
+        .badge-originals { background: linear-gradient(135deg, #7c3aed, #c084fc); }
 
-        /* Colorful Trust Badges Section */
-        .trust-badge-box {
-            border-radius: 16px;
-            padding: 22px;
+        /* Trust Badges */
+        .trust-badge-card {
+            border-radius: 14px;
+            padding: 16px 12px;
             text-align: center;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            transition: transform 0.2s;
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            height: 100%;
         }
-        .trust-badge-box:hover { transform: translateY(-3px); }
-        .trust-cod { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); color: #92400e; }
-        .trust-returns { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1e40af; }
-        .trust-secure { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); color: #166534; }
-        .trust-express { background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); color: #9d174d; }
+        .trust-cod { background: #fffbeb; color: #92400e; }
+        .trust-returns { background: #eff6ff; color: #1e40af; }
+        .trust-secure { background: #f0fdf4; color: #166534; }
+        .trust-express { background: #fdf2f8; color: #9d174d; }
 
         /* Floating WhatsApp Button */
-        .whatsapp-float { position: fixed; bottom: 25px; right: 25px; background: linear-gradient(135deg, #25d366, #128c7e); color: #fff; border-radius: 50px; font-size: 30px; box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4); z-index: 1000; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.2s; }
-        .whatsapp-float:hover { transform: scale(1.12); color: #fff; }
+        .whatsapp-float {
+            position: fixed;
+            bottom: 74px;
+            right: 16px;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: #fff;
+            border-radius: 50px;
+            font-size: 26px;
+            box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
+            z-index: 1020;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .whatsapp-float:hover { transform: scale(1.1); color: #fff; }
 
-        /* Mobile App-Style Bottom Nav */
+        /* Mobile App Bottom Nav Bar */
         .mobile-bottom-nav {
             position: fixed;
             bottom: 0; left: 0; right: 0;
-            height: 62px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            height: 58px;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border-top: 1px solid rgba(0, 0, 0, 0.08);
             display: flex;
             justify-content: space-around;
             align-items: center;
-            z-index: 1040;
-            padding: 4px 0;
+            z-index: 1030;
+            padding: 2px 0;
         }
         .mobile-nav-item {
             display: flex;
@@ -188,280 +308,53 @@
             align-items: center;
             text-decoration: none;
             color: #64748b;
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             font-weight: 700;
             position: relative;
             transition: color 0.15s;
         }
-        .mobile-nav-item i { font-size: 1.25rem; margin-bottom: 2px; }
+        .mobile-nav-item i { font-size: 1.2rem; margin-bottom: 2px; }
         .mobile-nav-item.active, .mobile-nav-item:hover { color: #4f46e5; }
-        
+
         @media (max-width: 768px) {
-            body { padding-bottom: 70px; }
-            .whatsapp-float { bottom: 75px; right: 18px; width: 50px; height: 50px; font-size: 26px; }
-            .product-img-wrap { height: 155px; }
+            body { padding-bottom: 64px; }
+            .product-card-img-wrap { height: 145px; }
+            .product-title-link { font-size: 0.8rem; }
+            .product-price-tag { font-size: 0.92rem; }
         }
 
-        /* Dark Mode Styling */
-        [data-bs-theme="dark"] body { background-color: #080c16; color: #f1f5f9; }
-        [data-bs-theme="dark"] .navbar-frosted { background: rgba(14, 20, 34, 0.92) !important; border-bottom: 1px solid #1e293b; }
-        [data-bs-theme="dark"] .mobile-bottom-nav { background: rgba(14, 20, 34, 0.95); border-top: 1px solid #1e293b; }
-        [data-bs-theme="dark"] .card { background-color: #111a2e; border: 1px solid #1e293b; color: #f1f5f9; }
-        [data-bs-theme="dark"] .product-img-wrap { background-color: #1a243a; }
-        [data-bs-theme="dark"] .wishlist-btn { background: rgba(30,41,59,0.95); color: #fff; }
-        [data-bs-theme="dark"] .trust-cod { background: linear-gradient(135deg, #451a03 0%, #78350f 100%); color: #fef3c7; border-color: #92400e; }
-        [data-bs-theme="dark"] .trust-returns { background: linear-gradient(135deg, #172554 0%, #1e3a8a 100%); color: #dbeafe; border-color: #1e40af; }
-        [data-bs-theme="dark"] .trust-secure { background: linear-gradient(135deg, #052e16 0%, #065f46 100%); color: #dcfce7; border-color: #047857; }
-        [data-bs-theme="dark"] .trust-express { background: linear-gradient(135deg, #500724 0%, #831843 100%); color: #fce7f3; border-color: #9d174d; }
+        @media (min-width: 769px) {
+            .whatsapp-float { bottom: 25px; right: 25px; width: 55px; height: 55px; font-size: 30px; }
+        }
+
+        /* Dark Mode Overrides */
+        [data-bs-theme="dark"] body { background-color: #090d16; color: #f1f5f9; }
+        [data-bs-theme="dark"] .navbar-app { background: rgba(14, 20, 34, 0.95) !important; border-bottom: 1px solid #1e293b; }
+        [data-bs-theme="dark"] .mobile-bottom-nav { background: rgba(14, 20, 34, 0.96); border-top: 1px solid #1e293b; }
+        [data-bs-theme="dark"] .product-card { background-color: #111a2e; border: 1px solid #1e293b; color: #f1f5f9; }
+        [data-bs-theme="dark"] .product-card-img-wrap { background-color: #1a243a; }
+        [data-bs-theme="dark"] .search-input-pill { background: #1a243a; color: #fff; }
+        [data-bs-theme="dark"] .wishlist-pill-btn { background: rgba(30,41,59,0.95); color: #fff; }
+        [data-bs-theme="dark"] .trust-cod { background: #451a03; color: #fef3c7; }
+        [data-bs-theme="dark"] .trust-returns { background: #172554; color: #dbeafe; }
+        [data-bs-theme="dark"] .trust-secure { background: #052e16; color: #dcfce7; }
+        [data-bs-theme="dark"] .trust-express { background: #500724; color: #fce7f3; }
         [data-bs-theme="light"] .logo-light { display: inline-block !important; }
         [data-bs-theme="light"] .logo-dark { display: none !important; }
         [data-bs-theme="dark"] .logo-light { display: none !important; }
         [data-bs-theme="dark"] .logo-dark { display: inline-block !important; }
         [data-bs-theme="dark"] .text-dark, [data-bs-theme="dark"] a.text-dark { color: #f1f5f9 !important; }
-
-        /* Cinematic 3D Floating Stage & Giant Typography Styles */
-        .cinematic-stage-container {
-            position: relative;
-            background: #080c14;
-            min-height: 520px;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-        }
-        .stage-bg-morph {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at 60% 40%, #4338ca 0%, #1e1b4b 50%, #080c14 100%);
-            transition: background 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 1;
-        }
-        .stage-mesh-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-            background-size: 24px 24px;
-            opacity: 0.4;
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        .giant-watermark-text {
-            position: absolute;
-            top: 45%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: clamp(5rem, 16vw, 15rem);
-            font-weight: 900;
-            letter-spacing: 0.15em;
-            color: #ffffff;
-            opacity: 0.09;
-            white-space: nowrap;
-            user-select: none;
-            pointer-events: none;
-            z-index: 3;
-            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            text-transform: uppercase;
-        }
-
-        .floating-orbit-item {
-            position: absolute;
-            z-index: 9;
-            pointer-events: none;
-        }
-        .orbit-badge {
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            color: #fff;
-            font-size: 0.75rem;
-            font-weight: 800;
-            padding: 7px 15px;
-            border-radius: 30px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-            animation: floatBobbing 4s ease-in-out infinite alternate;
-        }
-        .orbit-item-1 { top: 12%; left: 42%; }
-        .orbit-item-1 .orbit-badge { animation-delay: 0s; }
-        .orbit-item-2 { top: 22%; right: 8%; }
-        .orbit-item-2 .orbit-badge { animation-delay: 1.2s; }
-        .orbit-item-3 { bottom: 18%; left: 45%; }
-        .orbit-item-3 .orbit-badge { animation-delay: 2.1s; }
-        .orbit-item-4 { bottom: 25%; right: 12%; }
-        .orbit-item-4 .orbit-badge { animation-delay: 3s; }
-
-        @keyframes floatBobbing {
-            0% { transform: translateY(0px) rotate(0deg); }
-            100% { transform: translateY(-12px) rotate(1.5deg); }
-        }
-
-        .hero-3d-stage-wrapper {
-            position: relative;
-            width: 100%; height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .stage-shadow-pedestal {
-            position: absolute;
-            bottom: 20px;
-            width: 320px;
-            height: 45px;
-            background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 75%);
-            border-radius: 50%;
-            z-index: 4;
-        }
-        .stage-light-beam {
-            position: absolute;
-            top: -20px;
-            width: 380px;
-            height: 380px;
-            background: radial-gradient(circle at center, rgba(99, 102, 241, 0.35) 0%, transparent 70%);
-            border-radius: 50%;
-            filter: blur(40px);
-            z-index: 3;
-            pointer-events: none;
-        }
-        .floating-centerpiece-img {
-            max-height: 360px;
-            object-fit: contain;
-            position: relative;
-            z-index: 7;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
-            filter: drop-shadow(0 25px 35px rgba(0, 0, 0, 0.75));
-            animation: centerpieceFloat 4.5s ease-in-out infinite alternate;
-        }
-        @keyframes centerpieceFloat {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(-10px); }
-        }
-
-        .swatch-circle {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            background-color: var(--swatch-hex);
-            cursor: pointer;
-            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s;
-        }
-        .swatch-circle.active, .swatch-circle:hover {
-            transform: scale(1.3);
-            border-color: #ffffff;
-            box-shadow: 0 0 18px var(--swatch-hex);
-        }
-        .btn-glow-white {
-            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
-            color: #0b0f19 !important;
-            border: none;
-            box-shadow: 0 6px 22px rgba(255, 255, 255, 0.35);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-glow-white:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.6);
-        }
-        .btn-glass {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            color: #fff !important;
-            backdrop-filter: blur(10px);
-            transition: all 0.2s;
-        }
-        .btn-glass:hover {
-            background: rgba(255, 255, 255, 0.22);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-        .live-pulse {
-            width: 8px;
-            height: 8px;
-            background: #22c55e;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #22c55e;
-        }
-
-        .cinematic-colorway-ribbon {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 48px;
-            border-top: 1px solid rgba(255, 255, 255, 0.12);
-            z-index: 10;
-        }
-        .colorway-segment {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--segment-bg);
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 0.75rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .colorway-segment:hover {
-            background: rgba(255, 255, 255, 0.25) !important;
-            color: #ffffff;
-        }
-
-        /* Product Detail Page 3D Stage */
-        .cinematic-detail-stage {
-            min-height: 420px;
-            background: radial-gradient(circle at center, #312e81 0%, #0b0f19 80%);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            position: relative;
-        }
-        [data-bs-theme="light"] .cinematic-detail-stage {
-            background: radial-gradient(circle at center, #e0e7ff 0%, #f1f5f9 80%);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-        }
-        .stage-ambient-glow {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 1;
-        }
-        .giant-watermark-detail {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: clamp(3.5rem, 10vw, 7rem);
-            font-weight: 900;
-            letter-spacing: 0.2em;
-            color: rgba(255, 255, 255, 0.09);
-            user-select: none;
-            pointer-events: none;
-            z-index: 2;
-            white-space: nowrap;
-        }
-        [data-bs-theme="light"] .giant-watermark-detail {
-            color: rgba(79, 70, 229, 0.1);
-        }
-        .floating-detail-img {
-            max-height: 340px;
-            object-fit: contain;
-            position: relative;
-            z-index: 6;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.55));
-            animation: centerpieceFloat 4.5s ease-in-out infinite alternate;
-        }
-        .detail-orbit-1 { top: 15px; left: 15px; }
-        .detail-orbit-2 { bottom: 25px; left: 15px; }
-        .detail-orbit-3 { bottom: 25px; right: 15px; }
     </style>
 </head>
 <body>
-    <!-- Top Animated Gradient Ticker -->
+    <!-- Top Announcement Ticker -->
     <div class="top-ticker">
-        🔥 FESTIVAL DROP: Use code <span class="badge bg-warning text-dark fw-bold">FIRST10</span> for 10% OFF | Free Express Delivery on orders over ₹999
+        🔥 USE CODE <span class="badge bg-warning text-dark fw-bold">FIRST10</span> FOR 10% OFF • FREE DELIVERY ON ₹999+
     </div>
 
     <!-- Main Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light navbar-frosted sticky-top py-2">
-        <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light navbar-app sticky-top">
+        <div class="container px-3">
             <a class="navbar-brand py-0 d-flex align-items-center" href="{% url 'store:product_list' %}">
                 <img src="{% static 'images/stylesphere_logo_primary.png' %}" alt="Style Sphere" class="logo-light">
                 <img src="{% static 'images/stylesphere_logo_white.png' %}" alt="Style Sphere" class="logo-dark">
@@ -470,31 +363,30 @@
             <!-- Search Bar (Desktop) -->
             <form class="d-none d-lg-flex mx-auto col-lg-5" action="{% url 'store:product_list' %}" method="get">
                 <div class="input-group">
-                    <input class="form-control rounded-start-pill ps-3" type="search" name="q" placeholder="Search T-Shirts, Hoodies, Joggers, Sneakers..." value="{{ query|default:'' }}">
-                    <button class="btn btn-primary rounded-end-pill px-3" type="submit"><i class="bi bi-search"></i></button>
+                    <input class="form-control search-input-pill" type="search" name="q" placeholder="Search T-Shirts, Hoodies, Joggers, Sneakers..." value="{{ query|default:'' }}">
                 </div>
             </form>
 
             <!-- Actions (Theme + Wishlist + Cart + Profile) -->
             <div class="d-flex align-items-center gap-2 ms-auto">
-                <button id="themeToggleBtn" class="btn btn-outline-secondary btn-sm px-2" type="button" title="Toggle Theme">
+                <button id="themeToggleBtn" class="btn btn-outline-secondary btn-sm rounded-circle p-2" type="button" title="Toggle Theme" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
                     <i id="themeIcon" class="bi bi-moon-stars"></i>
                 </button>
 
-                <a href="{% url 'store:wishlist_detail' %}" class="btn btn-outline-danger btn-sm px-2 position-relative" title="Wishlist">
+                <a href="{% url 'store:wishlist_detail' %}" class="btn btn-outline-danger btn-sm rounded-circle p-2 position-relative d-none d-sm-flex" title="Wishlist" style="width: 36px; height: 36px; align-items: center; justify-content: center;">
                     <i class="bi bi-heart"></i>
                     {% if user.is_authenticated and user.wishlist.count > 0 %}
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.62rem;">
                             {{ user.wishlist.count }}
                         </span>
                     {% endif %}
                 </a>
 
-                <a href="{% url 'store:cart_detail' %}" class="btn btn-outline-dark btn-sm position-relative px-2 px-md-3">
+                <a href="{% url 'store:cart_detail' %}" class="btn btn-outline-dark btn-sm position-relative rounded-pill px-3 py-1 d-flex align-items-center">
                     <i class="bi bi-bag me-1"></i> <span class="d-none d-sm-inline">Cart</span>
                     {% with total_items=cart|length %}
                         {% if total_items > 0 %}
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge">
+                            <span class="badge rounded-pill cart-badge ms-1">
                                 {{ total_items }}
                             </span>
                         {% endif %}
@@ -503,10 +395,10 @@
 
                 {% if user.is_authenticated %}
                     <div class="dropdown d-none d-sm-block">
-                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <button class="btn btn-primary btn-sm rounded-pill dropdown-toggle px-3" type="button" data-bs-toggle="dropdown">
                             <i class="bi bi-person-circle me-1"></i> {{ user.username }}
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-4">
                             <li><a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="bi bi-truck me-2"></i>My Orders & Tracking</a></li>
                             <li><a class="dropdown-item" href="{% url 'store:wishlist_detail' %}"><i class="bi bi-heart me-2 text-danger"></i>My Wishlist</a></li>
                             <li><a class="dropdown-item" href="{% url 'api:product-list' %}"><i class="bi bi-code-slash me-2"></i>REST API</a></li>
@@ -515,24 +407,21 @@
                         </ul>
                     </div>
                 {% else %}
-                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary btn-sm px-2 px-md-3 d-none d-sm-inline-block">Sign In</a>
-                    <a href="{% url 'accounts:register' %}" class="btn btn-success btn-sm px-2 px-md-3 d-none d-sm-inline-block">Sign Up</a>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3 d-none d-sm-inline-block">Sign In</a>
+                    <a href="{% url 'accounts:register' %}" class="btn btn-success btn-sm rounded-pill px-3 d-none d-sm-inline-block">Sign Up</a>
                 {% endif %}
             </div>
         </div>
 
-        <!-- Mobile Search Row -->
-        <div class="container d-lg-none mt-2">
+        <!-- Mobile Search Bar -->
+        <div class="container px-3 d-lg-none mt-2">
             <form class="d-flex w-100" action="{% url 'store:product_list' %}" method="get">
-                <div class="input-group">
-                    <input class="form-control form-control-sm rounded-start-pill ps-3" type="search" name="q" placeholder="Search streetwear..." value="{{ query|default:'' }}">
-                    <button class="btn btn-primary btn-sm rounded-end-pill px-3" type="submit"><i class="bi bi-search"></i></button>
-                </div>
+                <input class="form-control search-input-pill w-100" type="search" name="q" placeholder="Search oversized tees, hoodies, cargo..." value="{{ query|default:'' }}">
             </form>
         </div>
     </nav>
 
-    <!-- Sub-Navigation Category Tabs -->
+    <!-- Sub-Navigation Category Tabs (Desktop) -->
     <div class="bg-body border-bottom py-2 d-none d-md-block">
         <div class="container d-flex justify-content-center gap-3">
             <a href="{% url 'store:product_list' %}" class="subnav-link {% if not category %}active{% endif %}">All Drops</a>
@@ -543,10 +432,10 @@
     </div>
 
     <!-- Main Content Container -->
-    <div class="container my-3 my-md-4">
+    <div class="container my-3 px-3">
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3" role="alert">
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-4 py-2 px-3 small" role="alert">
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
@@ -556,35 +445,35 @@
         {% block content %}{% endblock %}
     </div>
 
-    <!-- Colorful Trust Badges Section -->
-    <div class="container my-5">
-        <div class="row g-3">
+    <!-- Colorful Trust Badges -->
+    <div class="container my-4 px-3">
+        <div class="row g-2 g-md-3">
             <div class="col-6 col-md-3">
-                <div class="trust-badge-box trust-cod h-100">
-                    <i class="bi bi-cash-coin fs-2 text-warning d-block mb-1"></i>
-                    <h6 class="fw-bold mt-1 mb-1">Cash on Delivery</h6>
-                    <p class="small mb-0 opacity-75">Pay upon doorstep arrival</p>
+                <div class="trust-badge-card trust-cod">
+                    <i class="bi bi-cash-coin fs-3 d-block mb-1"></i>
+                    <h6 class="fw-bold mb-0 small">Cash on Delivery</h6>
+                    <span class="small opacity-75" style="font-size: 0.7rem;">Pay upon doorstep arrival</span>
                 </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="trust-badge-box trust-returns h-100">
-                    <i class="bi bi-arrow-repeat fs-2 text-primary d-block mb-1"></i>
-                    <h6 class="fw-bold mt-1 mb-1">30 Days Returns</h6>
-                    <p class="small mb-0 opacity-75">Hassle-free exchanges</p>
+                <div class="trust-badge-card trust-returns">
+                    <i class="bi bi-arrow-repeat fs-3 d-block mb-1"></i>
+                    <h6 class="fw-bold mb-0 small">30 Days Returns</h6>
+                    <span class="small opacity-75" style="font-size: 0.7rem;">Hassle-free exchanges</span>
                 </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="trust-badge-box trust-secure h-100">
-                    <i class="bi bi-shield-check fs-2 text-success d-block mb-1"></i>
-                    <h6 class="fw-bold mt-1 mb-1">100% Secure Checkout</h6>
-                    <p class="small mb-0 opacity-75">Bank-grade encryption</p>
+                <div class="trust-badge-card trust-secure">
+                    <i class="bi bi-shield-check fs-3 d-block mb-1"></i>
+                    <h6 class="fw-bold mb-0 small">100% Safe Payment</h6>
+                    <span class="small opacity-75" style="font-size: 0.7rem;">Encrypted & protected</span>
                 </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="trust-badge-box trust-express h-100">
-                    <i class="bi bi-lightning-charge-fill fs-2 text-danger d-block mb-1"></i>
-                    <h6 class="fw-bold mt-1 mb-1">Express Delivery</h6>
-                    <p class="small mb-0 opacity-75">Fast dispatch nationwide</p>
+                <div class="trust-badge-card trust-express">
+                    <i class="bi bi-lightning-charge-fill fs-3 d-block mb-1"></i>
+                    <h6 class="fw-bold mb-0 small">Express Delivery</h6>
+                    <span class="small opacity-75" style="font-size: 0.7rem;">Fast dispatch across India</span>
                 </div>
             </div>
         </div>
@@ -595,7 +484,7 @@
         <i class="bi bi-whatsapp"></i>
     </a>
 
-    <!-- Mobile App-Style Fixed Bottom Navigation Bar -->
+    <!-- Mobile App-Style Fixed Bottom Nav Bar -->
     <div class="mobile-bottom-nav d-md-none">
         <a href="{% url 'store:product_list' %}" class="mobile-nav-item {% if request.path == '/' %}active{% endif %}">
             <i class="bi bi-house-door"></i>
@@ -603,13 +492,13 @@
         </a>
         <a href="#productGrid" class="mobile-nav-item">
             <i class="bi bi-grid"></i>
-            <span>Catalog</span>
+            <span>Drops</span>
         </a>
         <a href="{% url 'store:wishlist_detail' %}" class="mobile-nav-item {% if 'wishlist' in request.path %}active{% endif %}">
             <i class="bi bi-heart"></i>
             <span>Wishlist</span>
             {% if user.is_authenticated and user.wishlist.count > 0 %}
-                <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger" style="font-size: 0.58rem;">
                     {{ user.wishlist.count }}
                 </span>
             {% endif %}
@@ -619,7 +508,7 @@
             <span>Cart</span>
             {% with total_items=cart|length %}
                 {% if total_items > 0 %}
-                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill cart-badge" style="font-size: 0.6rem;">
+                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill cart-badge" style="font-size: 0.58rem;">
                         {{ total_items }}
                     </span>
                 {% endif %}
@@ -639,34 +528,34 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-dark text-light py-5 mt-5">
-        <div class="container">
-            <div class="row g-4">
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container px-3">
+            <div class="row g-3">
                 <div class="col-6 col-md-3">
-                    <h6 class="fw-bold text-uppercase text-warning mb-3">Need Help</h6>
-                    <ul class="list-unstyled small text-muted">
-                        <li class="mb-2"><a href="{% url 'accounts:profile' %}" class="text-reset text-decoration-none">Track Order</a></li>
-                        <li class="mb-2"><a href="{% url 'store:wishlist_detail' %}" class="text-reset text-decoration-none">My Wishlist</a></li>
-                        <li class="mb-2"><a href="https://wa.me/919781855165" class="text-reset text-decoration-none">WhatsApp Support</a></li>
+                    <h6 class="fw-bold text-uppercase text-warning mb-2 small">Need Help</h6>
+                    <ul class="list-unstyled small text-muted mb-0">
+                        <li class="mb-1"><a href="{% url 'accounts:profile' %}" class="text-reset text-decoration-none">Track Order</a></li>
+                        <li class="mb-1"><a href="{% url 'store:wishlist_detail' %}" class="text-reset text-decoration-none">My Wishlist</a></li>
+                        <li class="mb-1"><a href="https://wa.me/919781855165" class="text-reset text-decoration-none">WhatsApp Support</a></li>
                     </ul>
                 </div>
                 <div class="col-6 col-md-3">
-                    <h6 class="fw-bold text-uppercase text-warning mb-3">Categories</h6>
-                    <ul class="list-unstyled small text-muted">
-                        {% for c in categories|slice:":5" %}
-                            <li class="mb-2"><a href="{{ c.get_absolute_url }}" class="text-reset text-decoration-none">{{ c.name }}</a></li>
+                    <h6 class="fw-bold text-uppercase text-warning mb-2 small">Categories</h6>
+                    <ul class="list-unstyled small text-muted mb-0">
+                        {% for c in categories|slice:":4" %}
+                            <li class="mb-1"><a href="{{ c.get_absolute_url }}" class="text-reset text-decoration-none">{{ c.name }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
                 <div class="col-12 col-md-6 text-md-end">
-                    <h6 class="fw-bold text-uppercase text-warning mb-3">Homegrown Indian Brand</h6>
-                    <p class="small text-muted">Curating streetwear, oversized fits, pop culture merchandise, and accessories.</p>
-                    <div class="text-muted small">
-                        <strong>100% Safe Payments:</strong> UPI • Credit/Debit Cards • NetBanking • COD
+                    <h6 class="fw-bold text-uppercase text-warning mb-2 small">Style Sphere Streetwear</h6>
+                    <p class="small text-muted mb-1">Curated anime merchandise, oversized streetwear, heavy-gauge hoodies, and sneakers.</p>
+                    <div class="text-muted small" style="font-size: 0.75rem;">
+                        <strong>Safe Payments:</strong> UPI • Cards • NetBanking • Cash on Delivery
                     </div>
                 </div>
             </div>
-            <hr class="my-4 border-secondary">
+            <hr class="my-3 border-secondary">
             <p class="text-center small text-muted mb-0">&copy; {% now "Y" %} Style Sphere. All rights reserved.</p>
         </div>
     </footer>
