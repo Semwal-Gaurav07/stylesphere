@@ -6,6 +6,7 @@ from django.db.models import Q
 from decimal import Decimal
 from datetime import datetime, timedelta
 from .models import Category, Product, Order, OrderItem, Coupon, Review, Wishlist
+from accounts.models import Profile
 from .cart import Cart
 from .forms import CartAddProductForm, OrderCreateForm, CouponApplyForm, ReviewForm
 
@@ -64,7 +65,6 @@ def product_detail(request, id, slug):
     if request.user.is_authenticated:
         in_wishlist = Wishlist.objects.filter(user=request.user, product=product).exists()
 
-    # Dynamic delivery estimate (3-4 days from today)
     delivery_date = (datetime.now() + timedelta(days=3)).strftime("%A, %b %d")
 
     return render(request, 'store/product/detail.html', {
@@ -174,17 +174,15 @@ def order_create(request):
         messages.info(request, 'Please create an account or sign in to complete your order.')
         return redirect('/accounts/register/?next=/orders/create/')
 
+    profile, _ = Profile.objects.get_or_create(user=request.user)
     initial_data = {
         'first_name': request.user.first_name,
         'last_name': request.user.last_name,
         'email': request.user.email,
+        'address': profile.address,
+        'city': profile.city,
+        'postal_code': profile.postal_code,
     }
-    if hasattr(request.user, 'profile'):
-        initial_data.update({
-            'address': request.user.profile.address,
-            'city': request.user.profile.city,
-            'postal_code': request.user.profile.postal_code,
-        })
 
     coupon_id = request.session.get('coupon_id')
     discount = 0
@@ -200,14 +198,26 @@ def order_create(request):
             order.user = request.user
             order.discount = discount
             order.save()
+
+            if not profile.address:
+                profile.address = order.address
+                profile.city = order.city
+                profile.postal_code = order.postal_code
+                profile.save()
+
             for item in cart:
+                product = item['product']
                 OrderItem.objects.create(
                     order=order,
-                    product=item['product'],
+                    product=product,
                     price=item['price'],
                     quantity=item['quantity'],
                     size=item['size']
                 )
+                if product.stock >= item['quantity']:
+                    product.stock -= item['quantity']
+                    product.save()
+
             cart.clear()
             request.session['coupon_id'] = None
             request.session['order_id'] = order.id

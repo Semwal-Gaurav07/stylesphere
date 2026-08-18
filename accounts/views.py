@@ -20,7 +20,6 @@ def register(request):
             new_user.set_password(form.cleaned_data['password'])
             new_user.save()
             Profile.objects.create(user=new_user)
-            # Automatically log the user in
             login(request, new_user)
             messages.success(request, f'Welcome, {new_user.username}! Your account has been created.')
             return redirect(next_url)

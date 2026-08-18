@@ -3,15 +3,12 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-ecommerce-secret-key-change-in-production'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-ecommerce-secret-key-change-in-production')
 
-DEBUG = True
-CSRF_TRUSTED_ORIGINS = [
-    'https://stylesphere-store.onrender.com',
-    'https://*.onrender.com',
-    'http://127.0.0.1:8000',
-    'http://localhost:8000',
-]
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+
+ALLOWED_HOSTS = ['stylesphere-store.onrender.com', '.onrender.com', 'localhost', '127.0.0.1', '*']
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -20,10 +17,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    # Third-party apps
+    # Third-party
     'rest_framework',
 
-    # Local apps
+    # Local Apps
     'store.apps.StoreConfig',
     'accounts.apps.AccountsConfig',
     'payment.apps.PaymentConfig',
@@ -32,13 +29,13 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'ecommerce_project.urls'
@@ -95,21 +92,20 @@ LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'store:product_list'
 LOGOUT_REDIRECT_URL = 'store:product_list'
 
-# Payment Configurations (Replace with production keys) 
-STRIPE_PUBLISHABLE_KEY = 'pk_test_sample_stripe_key'
-STRIPE_SECRET_KEY = 'sk_test_sample_stripe_key'
-RAZORPAY_KEY_ID = 'rzp_test_sample_key_id'
-RAZORPAY_KEY_SECRET = 'sample_razorpay_secret'
+CSRF_TRUSTED_ORIGINS = [
+    'https://stylesphere-store.onrender.com',
+    'https://*.onrender.com',
+    'https://*.trycloudflare.com',
+    'https://*.pinggy.net',
+    'https://*.pinggy-free.link',
+    'https://*.ngrok-free.app',
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ],
+    'PAGE_SIZE': 12,
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-ALLOWED_HOSTS = ['stylesphere-store.onrender.com', '.onrender.com', 'localhost', '127.0.0.1', '*']

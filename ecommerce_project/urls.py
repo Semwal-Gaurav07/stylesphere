@@ -11,7 +11,6 @@ urlpatterns = [
     path('api/', include('api.urls', namespace='api')),
 ]
 
-# Serve media and static files in production
 urlpatterns += [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
