@@ -29,27 +29,59 @@ class Cart:
         self.session.modified = True
 
     def remove(self, item_key):
+        item_key = str(item_key)
         if item_key in self.cart:
             del self.cart[item_key]
             self.save()
 
     def __iter__(self):
         cart = self.cart.copy()
-        product_ids = [item['product_id'] for item in cart.values()]
+        product_ids = []
+        for key, item in cart.items():
+            if isinstance(item, dict):
+                pid = item.get('product_id')
+                if not pid:
+                    try:
+                        pid = int(str(key).split('_')[0])
+                        item['product_id'] = pid
+                        item['size'] = item.get('size', 'M')
+                    except (ValueError, IndexError):
+                        continue
+                product_ids.append(pid)
+
         products = {p.id: p for p in Product.objects.filter(id__in=product_ids)}
 
-        for key, item in cart.items():
-            item['product'] = products.get(item['product_id'])
-            item['item_key'] = key
-            item['price'] = Decimal(item['price'])
-            item['total_price'] = int(item['price'] * item['quantity'])
-            yield item
+        for key, item in list(cart.items()):
+            if not isinstance(item, dict):
+                continue
+            pid = item.get('product_id')
+            if not pid:
+                try:
+                    pid = int(str(key).split('_')[0])
+                except (ValueError, IndexError):
+                    continue
+            product = products.get(pid)
+            if product:
+                item_copy = item.copy()
+                item_copy['product'] = product
+                item_copy['item_key'] = key
+                item_copy['size'] = item.get('size', 'M')
+                item_copy['price'] = Decimal(item.get('price', product.price))
+                item_copy['total_price'] = int(item_copy['price'] * item.get('quantity', 1))
+                yield item_copy
 
     def __len__(self):
-        return sum(item['quantity'] for item in self.cart.values())
+        return sum(item.get('quantity', 0) for item in self.cart.values() if isinstance(item, dict))
 
     def get_total_price(self):
-        return sum(int(Decimal(item['price']) * item['quantity']) for item in self.cart.values())
+        total = 0
+        for item in self.cart.values():
+            if isinstance(item, dict):
+                try:
+                    total += int(Decimal(item.get('price', 0)) * item.get('quantity', 0))
+                except Exception:
+                    pass
+        return total
 
     def get_free_shipping_needed(self):
         total = self.get_total_price()
@@ -64,5 +96,6 @@ class Cart:
         return min(int((total / threshold) * 100), 100)
 
     def clear(self):
-        del self.session[settings.CART_SESSION_ID]
-        self.save()
+        if settings.CART_SESSION_ID in self.session:
+            del self.session[settings.CART_SESSION_ID]
+            self.save()
