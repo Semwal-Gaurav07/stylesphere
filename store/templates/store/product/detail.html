@@ -15,9 +15,9 @@
 <div class="card p-3 p-md-4 mb-4 shadow-xl border-0 rounded-5 position-relative overflow-hidden" id="productMainCard">
     <div class="row g-4 align-items-center">
         
-        <!-- Left: Cinematic 3D Floating Stage with Giant Watermark Typography (From Video) -->
+        <!-- Left: Cinematic 3D Floating Stage with Giant Watermark Typography -->
         <div class="col-12 col-md-6">
-            <div class="cinematic-detail-stage position-relative rounded-4 overflow-hidden d-flex justify-content-center align-items-center" id="detailStage">
+            <div class="cinematic-detail-stage position-relative rounded-5 overflow-hidden d-flex justify-content-center align-items-center" id="detailStage">
                 
                 <!-- Ambient Dynamic Radial Light Glow -->
                 <div class="stage-ambient-glow"></div>
@@ -28,7 +28,7 @@
                     {{ product.category.name|upper }}
                 </div>
 
-                <!-- Floating Orbit Badges (From Video) -->
+                <!-- Floating Orbit Badges -->
                 <div class="floating-orbit-item detail-orbit-1">
                     <div class="orbit-badge">
                         <i class="bi bi-patch-check-fill text-warning"></i> 240 GSM
@@ -312,30 +312,38 @@
     </div>
 {% endif %}
 
-<!-- Sticky Mobile Purchase Bar -->
-<div id="stickyMobileBar" class="d-md-none position-fixed bottom-0 start-0 end-0 p-2 bg-body border-top shadow-lg" style="display: none; z-index: 1050; margin-bottom: 62px;">
-    <div class="d-flex align-items-center justify-content-between gap-2">
-        <div class="d-flex align-items-center gap-2">
-            {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 42px; height: 42px; object-fit: contain;" class="rounded border">
-            {% endif %}
-            <div>
-                <div class="text-truncate small fw-bold" style="max-width: 140px;">{{ product.name }}</div>
-                <div class="text-success fw-bold">₹{{ product.price }}</div>
+<!-- Universal Sticky Floating Product Bar on Scroll (Desktop & Mobile) -->
+<div id="universalStickyBar" class="universal-sticky-bar">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between gap-3">
+            <!-- Left: Product Image & Details -->
+            <div class="d-flex align-items-center gap-3">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="sticky-thumb-3d">
+                {% endif %}
+                <div>
+                    <div class="text-truncate fw-bold" style="max-width: 220px;">{{ product.name }}</div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="text-success fw-bold fs-5">₹{{ product.price }}</span>
+                        <span class="badge bg-warning text-dark px-2 py-0 small"><i class="bi bi-star-fill"></i> {{ product.get_average_rating }}</span>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="d-flex gap-1">
-            <button type="button" onclick="document.getElementById('purchaseForm').submit();" class="btn btn-sm btn-dark fw-bold px-3 rounded-pill">
-                Add to Cart
-            </button>
-            <button type="button" onclick="let f=document.getElementById('purchaseForm'); let inp=document.createElement('input'); inp.type='hidden'; inp.name='buy_now'; inp.value='true'; f.appendChild(inp); f.submit();" class="btn btn-sm btn-warning fw-bold px-3 text-dark rounded-pill">
-                ⚡ Buy
-            </button>
+
+            <!-- Right: Action Buttons -->
+            <div class="d-flex align-items-center gap-2">
+                <button type="button" onclick="document.getElementById('purchaseForm').submit();" class="btn btn-dark fw-bold px-3 py-2 rounded-pill shadow-sm">
+                    <i class="bi bi-bag-plus me-1"></i> Add to Cart
+                </button>
+                <button type="button" onclick="let f=document.getElementById('purchaseForm'); let inp=document.createElement('input'); inp.type='hidden'; inp.name='buy_now'; inp.value='true'; f.appendChild(inp); f.submit();" class="btn btn-warning fw-bold px-4 py-2 text-dark rounded-pill shadow-sm">
+                    ⚡ Buy Now
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- 3D Parallax Tilt for Product Detail Page -->
+<!-- 3D Parallax Tilt & Scroll Reveal Script -->
 <script>
     const detailStage = document.getElementById('detailStage');
     const detailImg = document.getElementById('detailFloatingImg');
@@ -354,16 +362,16 @@
         });
     }
 
-    // Reveal Sticky Mobile Bar on Scroll
+    // Reveal Universal Sticky Bar when scrolling past main card
     window.addEventListener('scroll', function() {
-        const stickyBar = document.getElementById('stickyMobileBar');
+        const stickyBar = document.getElementById('universalStickyBar');
         const mainCard = document.getElementById('productMainCard');
         if (stickyBar && mainCard) {
             const rect = mainCard.getBoundingClientRect();
-            if (rect.bottom < 150) {
-                stickyBar.style.display = 'block';
+            if (rect.bottom < 120) {
+                stickyBar.classList.add('show-sticky');
             } else {
-                stickyBar.style.display = 'none';
+                stickyBar.classList.remove('show-sticky');
             }
         }
     });
