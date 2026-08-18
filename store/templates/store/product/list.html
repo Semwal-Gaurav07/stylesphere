@@ -1,56 +1,115 @@
 {% extends "store/base.html" %}
 
 {% block title %}
-    {% if category %}{{ category.name }} - Style Sphere{% else %}Style Sphere - Official Men's Streetwear{% endif %}
+    {% if category %}{{ category.name }} - Style Sphere{% else %}Style Sphere - 3D Streetwear Studio{% endif %}
 {% endblock %}
 
 {% block content %}
 {% if not category and not query %}
-    <!-- Hero Banner Carousel -->
-    <div id="heroCarousel" class="carousel slide mb-4 shadow-sm rounded-4 overflow-hidden" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
-            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
-        </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active" style="background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%); min-height: 260px;">
-                <div class="p-4 p-md-5 text-white d-flex flex-column justify-content-center align-items-start" style="min-height: 260px;">
-                    <span class="badge bg-danger mb-2 px-3 py-2 text-uppercase">New Drop</span>
-                    <h1 class="fw-bold display-6">Oversized Streetwear & Fandom Merch</h1>
-                    <p class="lead small text-light mb-3">Explore the newest streetwear drops, heavy-gauge hoodies, and graphic tees.</p>
-                    <a href="#trendingSection" class="btn btn-warning btn-lg px-4 fw-bold">Explore Trending</a>
+    <!-- 3D Interactive Hero Studio -->
+    <div class="interactive-hero-studio mb-5 rounded-5 overflow-hidden position-relative shadow-lg" id="interactiveStudio">
+        <div class="studio-ambient-bg" id="studioBg"></div>
+
+        <div class="row align-items-center position-relative p-4 p-md-5" style="z-index: 5; min-height: 520px;">
+            <!-- Left: Floating Product Spec & Controls -->
+            <div class="col-lg-6 mb-4 mb-lg-0 text-start text-white">
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill luxury-pill mb-3">
+                    <i class="bi bi-stars text-warning"></i>
+                    <span class="small fw-bold text-uppercase tracking-wider">3D STUDIO // FLAGSHIP DROP</span>
+                </div>
+                
+                <h1 class="display-4 fw-extrabold mb-2 text-white" id="heroProductTitle">
+                    Naruto: Itachi Oversized Tee
+                </h1>
+                
+                <div class="d-flex align-items-center gap-3 my-3">
+                    <span class="fs-2 fw-bold text-success" id="heroProductPrice">₹899</span>
+                    <span class="text-white-50 text-decoration-line-through fs-5">₹1,499</span>
+                    <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold">40% OFF</span>
+                </div>
+
+                <p class="text-light-50 small mb-4 col-md-11" id="heroProductDesc">
+                    240 GSM heavy-gauge French Terry cotton with high-density DTF back print and drop-shoulder tailoring.
+                </p>
+
+                <!-- Interactive Colorway Swatches -->
+                <div class="mb-4">
+                    <label class="small text-uppercase fw-bold tracking-wider text-white-50 d-block mb-2">
+                        Select Silhouette Colorway:
+                    </label>
+                    <div class="d-flex gap-3 align-items-center">
+                        <button type="button" class="color-swatch-btn active" style="--swatch-color: #1e1b4b;" onclick="switchHeroSilhouette(0)" title="Onyx Night"></button>
+                        <button type="button" class="color-swatch-btn" style="--swatch-color: #831843;" onclick="switchHeroSilhouette(1)" title="Deadpool Crimson"></button>
+                        <button type="button" class="color-swatch-btn" style="--swatch-color: #064e3b;" onclick="switchHeroSilhouette(2)" title="Hunter Green"></button>
+                        <button type="button" class="color-swatch-btn" style="--swatch-color: #1e293b;" onclick="switchHeroSilhouette(3)" title="Korean Slate"></button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'store:product_list' %}" id="heroProductLink" class="btn btn-light btn-lg px-4 py-2 fw-bold rounded-pill shadow">
+                        Shop Now →
+                    </a>
+                    <a href="#productGrid" class="btn btn-outline-light btn-lg px-4 py-2 fw-bold rounded-pill">
+                        Explore Collection
+                    </a>
                 </div>
             </div>
-            <div class="carousel-item" style="background: linear-gradient(135deg, #0f172a 0%, #059669 100%); min-height: 260px;">
-                <div class="p-4 p-md-5 text-white d-flex flex-column justify-content-center align-items-start" style="min-height: 260px;">
-                    <span class="badge bg-warning text-dark mb-2 px-3 py-2 text-uppercase">Exclusive Offer</span>
-                    <h1 class="fw-bold display-6">Cash on Delivery Available Across India</h1>
-                    <p class="lead small text-light mb-3">Get 10% off your first order with coupon code <strong>FIRST10</strong>.</p>
-                    <a href="#productGrid" class="btn btn-light btn-lg px-4 fw-bold">Shop Catalog</a>
+
+            <!-- Right: 3D Floating Interactive Showcase with Tilt & Ambient Reflections -->
+            <div class="col-lg-6 text-center position-relative">
+                <div class="showcase-3d-stage" id="showcaseStage">
+                    <div class="stage-pedestal"></div>
+                    <!-- Floating Depth Badges -->
+                    <div class="floating-badge-chip chip-top-left">
+                        <i class="bi bi-shield-check text-success"></i> 240 GSM French Terry
+                    </div>
+                    <div class="floating-badge-chip chip-bottom-right">
+                        <i class="bi bi-lightning-charge-fill text-warning"></i> Ready to Dispatch
+                    </div>
+                    
+                    <!-- Dynamic 3D Product Image -->
+                    <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800" 
+                         alt="Flagship Drop" 
+                         id="heroStageImg" 
+                         class="showcase-stage-img img-fluid">
                 </div>
             </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-        </button>
+
+        <!-- 4-Column Colorway Bar -->
+        <div class="colorway-split-bar d-none d-md-flex">
+            <div class="colorway-col" onclick="switchHeroSilhouette(0)" style="background: rgba(30, 27, 75, 0.6);">
+                <span>01 // Itachi Graphic</span>
+            </div>
+            <div class="colorway-col" onclick="switchHeroSilhouette(1)" style="background: rgba(131, 24, 67, 0.6);">
+                <span>02 // Deadpool Heavy</span>
+            </div>
+            <div class="colorway-col" onclick="switchHeroSilhouette(2)" style="background: rgba(6, 78, 59, 0.6);">
+                <span>03 // Urban Bomber</span>
+            </div>
+            <div class="colorway-col" onclick="switchHeroSilhouette(3)" style="background: rgba(30, 41, 59, 0.6);">
+                <span>04 // Korean Joggers</span>
+            </div>
+        </div>
     </div>
 
     <!-- Category Story Bubbles -->
-    <div class="mb-4">
-        <h5 class="fw-bold mb-2">Shop By Categories</h5>
+    <div class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0 text-uppercase tracking-wider fs-6 text-muted">Shop By Category</h5>
+            <span class="small text-muted">Swipe categories</span>
+        </div>
         <div class="cat-bubble-container">
             <a href="{% url 'store:product_list' %}" class="cat-bubble">
-                <div class="cat-bubble-img d-flex align-items-center justify-content-center fs-4 bg-primary text-white">
+                <div class="cat-bubble-img d-flex align-items-center justify-content-center fs-4 bg-primary text-white shadow-sm">
                     🔥
                 </div>
-                <span class="cat-bubble-text">All</span>
+                <span class="cat-bubble-text">All Items</span>
             </a>
             {% for c in categories %}
                 <a href="{{ c.get_absolute_url }}" class="cat-bubble">
-                    <div class="cat-bubble-img d-flex align-items-center justify-content-center fs-4 bg-body-tertiary">
+                    <div class="cat-bubble-img d-flex align-items-center justify-content-center fs-4 bg-body-tertiary shadow-sm">
                         🛍️
                     </div>
                     <span class="cat-bubble-text">{{ c.name }}</span>
@@ -59,21 +118,20 @@
         </div>
     </div>
 
-    <!-- Dedicated Trending Products Showcase Section -->
+    <!-- Trending Showcase Grid with Hover Zoom -->
     <div class="mb-5" id="trendingSection">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold mb-0">🔥 Trending Drops & Best Sellers</h5>
-            <a href="#productGrid" class="small text-decoration-none fw-bold text-primary">View All →</a>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <span class="badge bg-danger px-3 py-1 text-uppercase fw-bold rounded-pill mb-1">HOT DROPS</span>
+                <h3 class="fw-bold mb-0">Trending Streetwear Silhouettes</h3>
+            </div>
+            <a href="#productGrid" class="small text-decoration-none fw-bold text-primary">View All Pieces →</a>
         </div>
         
-        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-2 g-md-3">
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3">
             {% for product in trending_products %}
                 <div class="col">
-                    <div class="card h-100 position-relative border shadow-sm">
-                        <span class="position-absolute top-0 start-0 badge bg-danger m-2" style="z-index: 4;">
-                            HOT
-                        </span>
-                        
+                    <div class="card h-100 position-relative border-0 shadow-sm rounded-4 overflow-hidden glow-hover-card">
                         <a href="{% url 'store:wishlist_toggle' product.id %}" class="wishlist-btn" title="Wishlist">
                             {% if product.id in user_wishlist_ids %}
                                 <i class="bi bi-heart-fill text-danger"></i>
@@ -83,16 +141,16 @@
                         </a>
 
                         <a href="{{ product.get_absolute_url }}" class="d-block text-decoration-none">
-                            <div class="product-img-wrap p-2" style="height: 160px;">
+                            <div class="product-img-wrap p-2" style="height: 170px;">
                                 {% if product.image %}
-                                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-zoom-img">
                                 {% else %}
                                     <div class="text-muted small py-4">No Image</div>
                                 {% endif %}
                             </div>
                         </a>
 
-                        <div class="card-body p-2 d-flex flex-column">
+                        <div class="card-body p-2 p-md-3 d-flex flex-column">
                             <div class="text-warning small mb-1" style="font-size: 0.75rem;">
                                 <i class="bi bi-star-fill"></i> {{ product.get_average_rating }}
                             </div>
@@ -103,8 +161,8 @@
                             </h6>
                             <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
                                 <span class="fw-bold text-success fs-6">₹{{ product.price }}</span>
-                                <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-primary px-2 py-0" style="font-size: 0.75rem;">
-                                    Buy
+                                <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-primary rounded-pill px-2 py-0" style="font-size: 0.75rem;">
+                                    View
                                 </a>
                             </div>
                         </div>
@@ -113,43 +171,12 @@
             {% endfor %}
         </div>
     </div>
-
-    <!-- Official Collaborations / Fandom Grid -->
-    <div class="mb-4">
-        <h5 class="fw-bold mb-3">Official Fandoms & Collaborations</h5>
-        <div class="row g-2 g-md-3">
-            <div class="col-6 col-md-3">
-                <div class="fandom-badge" style="background: linear-gradient(135deg, #7f1d1d, #dc2626);">
-                    <i class="bi bi-fire fs-2 mb-1 d-block"></i>
-                    ANIME MERCH
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="fandom-badge" style="background: linear-gradient(135deg, #1e3a8a, #2563eb);">
-                    <i class="bi bi-shield-shaded fs-2 mb-1 d-block"></i>
-                    MARVEL & DC
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="fandom-badge" style="background: linear-gradient(135deg, #14532d, #16a34a);">
-                    <i class="bi bi-controller fs-2 mb-1 d-block"></i>
-                    GAMING & GEEK
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="fandom-badge" style="background: linear-gradient(135deg, #312e81, #7c3aed);">
-                    <i class="bi bi-gem fs-2 mb-1 d-block"></i>
-                    TSS ORIGINALS
-                </div>
-            </div>
-        </div>
-    </div>
 {% endif %}
 
-<!-- Mobile Filter Toggle Button -->
+<!-- Main Product Catalog -->
 <div class="d-md-none mb-3" id="productGrid">
     <button class="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#filterSidebar">
-        <span><i class="bi bi-funnel me-1"></i> Filter Catalog</span>
+        <span><i class="bi bi-funnel me-1"></i> Filter Products</span>
         <i class="bi bi-chevron-down"></i>
     </button>
 </div>
@@ -161,7 +188,7 @@
             <h6 class="fw-bold mb-2">Categories</h6>
             <div class="list-group list-group-flush">
                 <a href="{% url 'store:product_list' %}" class="list-group-item list-group-item-action py-2 px-2 {% if not category %}active fw-bold{% endif %}">
-                    All Products
+                    All Drops
                 </a>
                 {% for c in categories %}
                     <a href="{{ c.get_absolute_url }}" class="list-group-item list-group-item-action py-2 px-2 {% if category.slug == c.slug %}active fw-bold{% endif %}">
@@ -190,38 +217,32 @@
                 <div class="mb-3">
                     <label class="form-label small text-muted">Sort By</label>
                     <select name="sort" class="form-select form-select-sm">
-                        <option value="">Top Picks</option>
+                        <option value="">Top Featured</option>
                         <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
                         <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
                         <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest Drops</option>
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-sm btn-primary w-100 mb-2">Apply</button>
+                <button type="submit" class="btn btn-sm btn-primary w-100 mb-2">Apply Filters</button>
                 <a href="{% url 'store:product_list' %}" class="btn btn-sm btn-outline-secondary w-100">Reset</a>
             </form>
         </div>
     </div>
 
-    <!-- Main Product Catalog Grid -->
+    <!-- Catalog Grid -->
     <div class="col-md-9">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="fw-bold mb-0">
-                {% if category %}
-                    {{ category.name }}
-                {% elif query %}
-                    Search: "{{ query }}"
-                {% else %}
-                    Explore Full Catalog
-                {% endif %}
+                {% if category %}{{ category.name }}{% elif query %}Search: "{{ query }}"{% else %}Full Streetwear Catalog{% endif %}
             </h5>
-            <span class="text-muted small">{{ products|length }} items</span>
+            <span class="text-muted small">{{ products|length }} pieces</span>
         </div>
 
-        <div class="row row-cols-2 row-cols-md-3 g-2 g-md-3">
+        <div class="row row-cols-2 row-cols-md-3 g-3">
             {% for product in products %}
                 <div class="col">
-                    <div class="card h-100 position-relative">
+                    <div class="card h-100 position-relative border-0 shadow-sm rounded-4 overflow-hidden glow-hover-card">
                         <a href="{% url 'store:wishlist_toggle' product.id %}" class="wishlist-btn" title="Wishlist">
                             {% if product.id in user_wishlist_ids %}
                                 <i class="bi bi-heart-fill text-danger"></i>
@@ -233,7 +254,7 @@
                         <a href="{{ product.get_absolute_url }}" class="d-block text-decoration-none">
                             <div class="product-img-wrap p-2">
                                 {% if product.image %}
-                                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-zoom-img">
                                 {% else %}
                                     <div class="text-muted small py-4">No Image</div>
                                 {% endif %}
@@ -263,7 +284,7 @@
 
                             <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
                                 <span class="price-tag fw-bold text-success fs-5">₹{{ product.price }}</span>
-                                <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-outline-primary px-2 px-md-3">
+                                <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-outline-primary px-3 rounded-pill">
                                     View
                                 </a>
                             </div>
@@ -278,4 +299,95 @@
         </div>
     </div>
 </div>
+
+<!-- 3D Hero Colorway Switcher & Parallax Tilt JS -->
+<script>
+    const silhouettes = [
+        {
+            title: "Naruto: Itachi Oversized Tee",
+            price: "₹899",
+            desc: "240 GSM heavy-gauge French Terry cotton with high-density DTF back print and drop-shoulder tailoring.",
+            img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800",
+            bg: "linear-gradient(135deg, #0b0f19 0%, #1e1b4b 60%, #312e81 100%)",
+            link: "/product/1/naruto-itachi-oversized-tee/"
+        },
+        {
+            title: "Deadpool: Merc with a Mouth Hoodie",
+            price: "₹1,499",
+            desc: "400 GSM heavyweight brushed fleece with dual-colorblock storm hood and kangaroo pocket.",
+            img: "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=800",
+            bg: "linear-gradient(135deg, #180509 0%, #831843 60%, #9f1239 100%)",
+            link: "/product/6/deadpool-merc-pullover/"
+        },
+        {
+            title: "Urban Bomber Jacket: Hunter Green",
+            price: "₹2,499",
+            desc: "Water-resistant matte nylon shell with insulated quilted orange lining and utility arm pocket.",
+            img: "https://images.unsplash.com/photo-1544441893-675973e31985?w=800",
+            bg: "linear-gradient(135deg, #022c22 0%, #064e3b 60%, #047857 100%)",
+            link: "/product/7/urban-bomber-jacket-green/"
+        },
+        {
+            title: "Korean Baggy Fit Joggers: Slate",
+            price: "₹1,199",
+            desc: "Relaxed Korean baggy cut with heavy-ribbed drawstring waistband and deep cargo pockets.",
+            img: "https://images.unsplash.com/photo-1552902865-b72c031ac5ea?w=800",
+            bg: "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #334155 100%)",
+            link: "/product/8/korean-baggy-joggers-offwhite/"
+        }
+    ];
+
+    function switchHeroSilhouette(index) {
+        const item = silhouettes[index];
+        if (!item) return;
+
+        document.querySelectorAll('.color-swatch-btn').forEach((btn, i) => {
+            btn.classList.toggle('active', i === index);
+        });
+
+        const studioBg = document.getElementById('studioBg');
+        if (studioBg) studioBg.style.background = item.bg;
+
+        const titleEl = document.getElementById('heroProductTitle');
+        const priceEl = document.getElementById('heroProductPrice');
+        const descEl = document.getElementById('heroProductDesc');
+        const imgEl = document.getElementById('heroStageImg');
+        const linkEl = document.getElementById('heroProductLink');
+
+        if (titleEl) titleEl.innerText = item.title;
+        if (priceEl) priceEl.innerText = item.price;
+        if (descEl) descEl.innerText = item.desc;
+        if (linkEl) linkEl.href = item.link;
+
+        if (imgEl) {
+            imgEl.style.opacity = '0';
+            imgEl.style.transform = 'scale(0.9) translateY(20px)';
+            setTimeout(() => {
+                imgEl.src = item.img;
+                imgEl.style.opacity = '1';
+                imgEl.style.transform = 'scale(1) translateY(0)';
+            }, 200);
+        }
+    }
+
+    // 3D Parallax Tilt
+    const stage = document.getElementById('showcaseStage');
+    if (stage) {
+        stage.addEventListener('mousemove', (e) => {
+            const rect = stage.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            const img = document.getElementById('heroStageImg');
+            if (img) {
+                img.style.transform = `perspective(800px) rotateY(${x * 0.05}deg) rotateX(${-y * 0.05}deg) scale(1.05)`;
+            }
+        });
+        stage.addEventListener('mouseleave', () => {
+            const img = document.getElementById('heroStageImg');
+            if (img) {
+                img.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg) scale(1)';
+            }
+        });
+    }
+</script>
 {% endblock %}

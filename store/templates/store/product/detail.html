@@ -1,8 +1,9 @@
 {% extends "store/base.html" %}
 
-{% block title %}{{ product.name }} - Style Sphere{% endblock %}
+{% block title %}{{ product.name }} - Style Sphere 3D{% endblock %}
 
 {% block content %}
+<!-- Breadcrumb -->
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb small">
         <li class="breadcrumb-item"><a href="{% url 'store:product_list' %}" class="text-decoration-none text-muted">Home</a></li>
@@ -11,33 +12,70 @@
     </ol>
 </nav>
 
-<div class="card p-3 p-md-4 mb-4 shadow-sm">
-    <div class="row g-4">
-        <!-- Product Image Showcase -->
-        <div class="col-12 col-md-6 text-center">
-            <div class="bg-white p-3 rounded-4 border position-relative" style="min-height: 380px; display: flex; align-items: center; justify-content: center;">
+<div class="card p-3 p-md-4 mb-4 shadow-xl border-0 rounded-5 position-relative overflow-hidden" id="productMainCard">
+    <div class="row g-4 align-items-center">
+        
+        <!-- Left: Cinematic 3D Floating Stage with Giant Watermark Typography (From Video) -->
+        <div class="col-12 col-md-6">
+            <div class="cinematic-detail-stage position-relative rounded-4 overflow-hidden d-flex justify-content-center align-items-center" id="detailStage">
+                
+                <!-- Ambient Dynamic Radial Light Glow -->
+                <div class="stage-ambient-glow"></div>
+                <div class="stage-mesh-overlay"></div>
+
+                <!-- Giant Background Watermark (Behind Product) -->
+                <div class="giant-watermark-detail">
+                    {{ product.category.name|upper }}
+                </div>
+
+                <!-- Floating Orbit Badges (From Video) -->
+                <div class="floating-orbit-item detail-orbit-1">
+                    <div class="orbit-badge">
+                        <i class="bi bi-patch-check-fill text-warning"></i> 240 GSM
+                    </div>
+                </div>
+                <div class="floating-orbit-item detail-orbit-2">
+                    <div class="orbit-badge">
+                        <i class="bi bi-shield-check text-success"></i> 100% Bio-Wash
+                    </div>
+                </div>
+                <div class="floating-orbit-item detail-orbit-3">
+                    <div class="orbit-badge">
+                        <i class="bi bi-lightning-charge-fill text-info"></i> COD Ready
+                    </div>
+                </div>
+
+                <!-- Stage Light Beam & Showroom Shadow Pedestal -->
+                <div class="stage-light-beam"></div>
+                <div class="stage-shadow-pedestal"></div>
+
+                <!-- 3D Floating Product Image -->
                 {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded-3" style="max-height: 400px; object-fit: contain;">
+                    <img src="{{ product.image.url }}" 
+                         alt="{{ product.name }}" 
+                         id="detailFloatingImg" 
+                         class="floating-detail-img img-fluid">
                 {% else %}
-                    <div class="py-5 text-muted">No Image Available</div>
+                    <div class="py-5 text-muted small position-relative" style="z-index: 5;">No Image Available</div>
                 {% endif %}
             </div>
         </div>
 
-        <!-- Product Specs & Purchase Options -->
+        <!-- Right: Specs, Size Picker, Delivery & Buy Controls -->
         <div class="col-12 col-md-6">
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="badge bg-primary-subtle text-primary px-3 py-2 text-uppercase fw-bold">{{ product.category.name }}</span>
+                <span class="badge bg-primary-subtle text-primary px-3 py-2 text-uppercase fw-bold rounded-pill">{{ product.category.name }}</span>
+                
                 <a href="{% url 'store:wishlist_toggle' product.id %}" class="btn btn-outline-danger btn-sm rounded-pill px-3">
                     {% if in_wishlist %}
-                        <i class="bi bi-heart-fill text-danger me-1"></i> Saved
+                        <i class="bi bi-heart-fill text-danger me-1"></i> Saved in Wishlist
                     {% else %}
-                        <i class="bi bi-heart me-1"></i> Wishlist
+                        <i class="bi bi-heart me-1"></i> Add to Wishlist
                     {% endif %}
                 </a>
             </div>
             
-            <h1 class="fw-bold fs-3 mb-2">{{ product.name }}</h1>
+            <h1 class="fw-extrabold fs-3 mb-2">{{ product.name }}</h1>
             
             <!-- Live Social Proof & Ratings -->
             <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
@@ -70,19 +108,19 @@
                         </span>
                     </div>
                     <div class="d-flex gap-2">
-                        <input type="radio" class="btn-check" name="size" id="sizeS" value="S" autocomplete="off">
+                        <input type="radio" class="btn-check size-radio" name="size" id="sizeS" value="S" autocomplete="off">
                         <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeS">S</label>
 
-                        <input type="radio" class="btn-check" name="size" id="sizeM" value="M" autocomplete="off" checked>
+                        <input type="radio" class="btn-check size-radio" name="size" id="sizeM" value="M" autocomplete="off" checked>
                         <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeM">M</label>
 
-                        <input type="radio" class="btn-check" name="size" id="sizeL" value="L" autocomplete="off">
+                        <input type="radio" class="btn-check size-radio" name="size" id="sizeL" value="L" autocomplete="off">
                         <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeL">L</label>
 
-                        <input type="radio" class="btn-check" name="size" id="sizeXL" value="XL" autocomplete="off">
+                        <input type="radio" class="btn-check size-radio" name="size" id="sizeXL" value="XL" autocomplete="off">
                         <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeXL">XL</label>
 
-                        <input type="radio" class="btn-check" name="size" id="sizeXXL" value="XXL" autocomplete="off">
+                        <input type="radio" class="btn-check size-radio" name="size" id="sizeXXL" value="XXL" autocomplete="off">
                         <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeXXL">XXL</label>
                     </div>
                 </div>
@@ -98,13 +136,11 @@
                     </div>
                     
                     <div class="col-9 d-flex gap-2">
-                        <!-- Add to Cart Button -->
-                        <button type="submit" name="buy_now" value="false" class="btn btn-dark btn-lg flex-grow-1 fw-bold py-2 shadow-sm">
+                        <button type="submit" name="buy_now" value="false" class="btn btn-dark btn-lg flex-grow-1 fw-bold py-2 shadow-sm rounded-pill">
                             <i class="bi bi-bag-plus me-1"></i> Add to Cart
                         </button>
                         
-                        <!-- Instant Buy Now Button -->
-                        <button type="submit" name="buy_now" value="true" class="btn btn-warning btn-lg flex-grow-1 fw-bold py-2 shadow-sm text-dark">
+                        <button type="submit" name="buy_now" value="true" class="btn btn-warning btn-lg flex-grow-1 fw-bold py-2 shadow-sm text-dark rounded-pill">
                             ⚡ Buy Now
                         </button>
                     </div>
@@ -112,7 +148,7 @@
             </form>
 
             <!-- Delivery Estimate Box -->
-            <div class="card p-3 bg-body-tertiary my-3 border rounded-3">
+            <div class="card p-3 bg-body-tertiary my-3 border rounded-4">
                 <div class="d-flex align-items-center gap-2 mb-2">
                     <i class="bi bi-truck fs-5 text-primary"></i>
                     <strong class="small">Get it by {{ delivery_date }}</strong>
@@ -127,7 +163,7 @@
             </div>
 
             <!-- Product Specs Accordion -->
-            <div class="accordion accordion-flush mt-3 border rounded-3" id="productDetailsAccordion">
+            <div class="accordion accordion-flush mt-3 border rounded-4 overflow-hidden" id="productDetailsAccordion">
                 <div class="accordion-item">
                     <h2 class="accordion-header">
                         <button class="accordion-button collapsed fw-bold py-2 small" type="button" data-bs-toggle="collapse" data-bs-target="#descTab">
@@ -164,12 +200,12 @@
 <!-- Size Chart Modal -->
 <div class="modal fade" id="sizeChartModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header border-0">
                 <h5 class="modal-title fw-bold">Size Guide (Inches)</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body pt-0">
                 <table class="table table-bordered table-sm text-center small">
                     <thead class="table-light">
                         <tr><th>Size</th><th>Chest (in)</th><th>Length (in)</th><th>Shoulder (in)</th></tr>
@@ -188,12 +224,12 @@
 </div>
 
 <!-- Customer Reviews Section -->
-<div class="card p-3 p-md-4 mb-4 shadow-sm">
+<div class="card p-3 p-md-4 mb-4 shadow-sm rounded-4 border-0">
     <h4 class="fw-bold mb-4">Customer Reviews & Ratings</h4>
     
     <div class="row g-4">
         <div class="col-md-5">
-            <div class="card p-3 bg-body-tertiary border">
+            <div class="card p-3 bg-body-tertiary border rounded-4">
                 <h6 class="fw-bold mb-2">Write a Review</h6>
                 {% if user.is_authenticated %}
                     <form action="{% url 'store:review_add' product.id %}" method="post">
@@ -202,7 +238,7 @@
                         {{ review_form.rating }}
                         <label class="form-label small fw-bold">Your Feedback:</label>
                         {{ review_form.comment }}
-                        <button type="submit" class="btn btn-primary btn-sm w-100 py-2 fw-bold">Submit Review</button>
+                        <button type="submit" class="btn btn-primary btn-sm w-100 py-2 fw-bold rounded-pill">Submit Review</button>
                     </form>
                 {% else %}
                     <p class="text-muted small mb-0">Please <a href="{% url 'accounts:login' %}?next={{ request.path }}">sign in</a> to write a review.</p>
@@ -237,4 +273,99 @@
         </div>
     </div>
 </div>
+
+<!-- You Might Also Like Section -->
+{% if related_products %}
+    <div class="my-4">
+        <h4 class="fw-bold mb-3">You Might Also Like</h4>
+        <div class="row row-cols-2 row-cols-md-4 g-3">
+            {% for item in related_products %}
+                <div class="col">
+                    <div class="card h-100 position-relative shadow-sm border-0 rounded-4 overflow-hidden glow-hover-card">
+                        <a href="{% url 'store:wishlist_toggle' item.id %}" class="wishlist-btn">
+                            <i class="bi bi-heart text-muted"></i>
+                        </a>
+                        <a href="{{ item.get_absolute_url }}" class="d-block text-decoration-none">
+                            <div class="product-img-wrap p-2" style="height: 160px;">
+                                {% if item.image %}
+                                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="product-zoom-img">
+                                {% else %}
+                                    <div class="text-muted small py-4">No Image</div>
+                                {% endif %}
+                            </div>
+                        </a>
+                        <div class="card-body p-2 p-md-3 d-flex flex-column">
+                            <h6 class="card-title fw-bold mb-1">
+                                <a href="{{ item.get_absolute_url }}" class="text-decoration-none text-body text-truncate d-block">
+                                    {{ item.name }}
+                                </a>
+                            </h6>
+                            <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
+                                <span class="fw-bold text-success fs-6">₹{{ item.price }}</span>
+                                <a href="{{ item.get_absolute_url }}" class="btn btn-sm btn-outline-primary px-3 rounded-pill">View</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+<!-- Sticky Mobile Purchase Bar -->
+<div id="stickyMobileBar" class="d-md-none position-fixed bottom-0 start-0 end-0 p-2 bg-body border-top shadow-lg" style="display: none; z-index: 1050; margin-bottom: 62px;">
+    <div class="d-flex align-items-center justify-content-between gap-2">
+        <div class="d-flex align-items-center gap-2">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 42px; height: 42px; object-fit: contain;" class="rounded border">
+            {% endif %}
+            <div>
+                <div class="text-truncate small fw-bold" style="max-width: 140px;">{{ product.name }}</div>
+                <div class="text-success fw-bold">₹{{ product.price }}</div>
+            </div>
+        </div>
+        <div class="d-flex gap-1">
+            <button type="button" onclick="document.getElementById('purchaseForm').submit();" class="btn btn-sm btn-dark fw-bold px-3 rounded-pill">
+                Add to Cart
+            </button>
+            <button type="button" onclick="let f=document.getElementById('purchaseForm'); let inp=document.createElement('input'); inp.type='hidden'; inp.name='buy_now'; inp.value='true'; f.appendChild(inp); f.submit();" class="btn btn-sm btn-warning fw-bold px-3 text-dark rounded-pill">
+                ⚡ Buy
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 3D Parallax Tilt for Product Detail Page -->
+<script>
+    const detailStage = document.getElementById('detailStage');
+    const detailImg = document.getElementById('detailFloatingImg');
+
+    if (detailStage && detailImg) {
+        detailStage.addEventListener('mousemove', (e) => {
+            const rect = detailStage.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            detailImg.style.transform = `perspective(1000px) rotateY(${x * 0.05}deg) rotateX(${-y * 0.05}deg) scale(1.06) translateY(${y * 0.02}px)`;
+        });
+
+        detailStage.addEventListener('mouseleave', () => {
+            detailImg.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1) translateY(0px)';
+        });
+    }
+
+    // Reveal Sticky Mobile Bar on Scroll
+    window.addEventListener('scroll', function() {
+        const stickyBar = document.getElementById('stickyMobileBar');
+        const mainCard = document.getElementById('productMainCard');
+        if (stickyBar && mainCard) {
+            const rect = mainCard.getBoundingClientRect();
+            if (rect.bottom < 150) {
+                stickyBar.style.display = 'block';
+            } else {
+                stickyBar.style.display = 'none';
+            }
+        }
+    });
+</script>
 {% endblock %}
