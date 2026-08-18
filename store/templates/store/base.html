@@ -1,695 +1,379 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Style Sphere - Official Merch & Streetwear{% endblock %}</title>
+{% extends "store/base.html" %}
 
-    <!-- SEO & OpenGraph Tags -->
-    <meta name="description" content="Shop official merchandise, oversized t-shirts, streetwear, hoodies, and joggers at Style Sphere. Cash on Delivery available.">
-    <meta property="og:title" content="Style Sphere - Curated Streetwear & Apparel">
-    <meta property="og:description" content="Shop the latest trends with Cash on Delivery and instant checkout.">
-    <meta property="og:image" content="https://stylesphere-store.onrender.com/static/images/stylesphere_logo_primary.png">
-    <meta property="og:url" content="https://stylesphere-store.onrender.com/">
-    <meta name="twitter:card" content="summary_large_image">
+{% block title %}{{ product.name }} - Style Sphere 3D{% endblock %}
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{% static 'images/stylesphere_icon.png' %}">
+{% block content %}
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><a href="{% url 'store:product_list' %}" class="text-decoration-none text-muted">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ product.category.get_absolute_url }}" class="text-decoration-none text-muted">{{ product.category.name }}</a></li>
+        <li class="breadcrumb-item active text-truncate fw-bold" style="max-width: 200px;">{{ product.name }}</li>
+    </ol>
+</nav>
 
-    <!-- Google Fonts: Plus Jakarta Sans -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    <!-- Immediate Theme Application Script -->
-    <script>
-        (function() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-bs-theme', savedTheme);
-        })();
-    </script>
-
-    <!-- Bootstrap 5.3 & Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    
-    <style>
-        :root {
-            --font-family-base: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-        body { font-family: var(--font-family-base); background-color: #f8f9fc; color: #1e293b; }
+<div class="card p-3 p-md-4 mb-4 shadow-xl border-0 rounded-5 position-relative overflow-hidden" id="productMainCard">
+    <div class="row g-4 align-items-center">
         
-        /* Animated Multi-Color Gradient Ticker */
-        .top-ticker {
-            background: linear-gradient(-45deg, #ff0844, #ffb199, #7928ca, #ff0080, #0070f3, #00dfd8);
-            background-size: 400% 400%;
-            animation: gradientTicker 12s ease infinite;
-            color: #ffffff;
-            font-size: 0.82rem;
-            padding: 7px 0;
-            font-weight: 700;
-            text-align: center;
-            letter-spacing: 0.3px;
-        }
-        @keyframes gradientTicker {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        <!-- Left: Cinematic 3D Floating Stage with Giant Watermark Typography -->
+        <div class="col-12 col-md-6">
+            <div class="cinematic-detail-stage position-relative rounded-5 overflow-hidden d-flex justify-content-center align-items-center" id="detailStage">
+                
+                <!-- Ambient Dynamic Radial Light Glow -->
+                <div class="stage-ambient-glow"></div>
+                <div class="stage-mesh-overlay"></div>
 
-        /* Frosted Glass Navbar -->
-        .navbar-frosted {
-            background: rgba(255, 255, 255, 0.92) !important;
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-        }
-        .navbar-brand img { height: 38px; }
-        
-        .subnav-link {
-            font-weight: 700;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            color: inherit;
-            text-decoration: none;
-            padding: 6px 16px;
-            border-radius: 20px;
-            transition: all 0.25s ease;
-        }
-        .subnav-link:hover, .subnav-link.active {
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(236, 72, 153, 0.15));
-            color: #4f46e5;
-            transform: translateY(-1px);
-        }
-
-        /* Category Story Bubbles with Vivid Colorful Rings */
-        .cat-bubble-container { display: flex; gap: 20px; overflow-x: auto; padding: 15px 5px; scrollbar-width: none; }
-        .cat-bubble-container::-webkit-scrollbar { display: none; }
-        .cat-bubble { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit; min-width: 82px; text-align: center; }
-        
-        .cat-bubble-img {
-            width: 74px;
-            height: 74px;
-            border-radius: 50%;
-            padding: 3px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.1);
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s;
-        }
-        .cat-bubble:hover .cat-bubble-img {
-            transform: scale(1.12) rotate(3deg);
-            box-shadow: 0 8px 22px rgba(0,0,0,0.2);
-        }
-        .cat-bubble-text { font-size: 0.78rem; font-weight: 800; margin-top: 7px; text-transform: uppercase; letter-spacing: 0.3px; }
-
-        /* Colorful Category Rings */
-        .ring-all { background: linear-gradient(135deg, #ff0080, #7928ca); color: #fff; }
-        .ring-tshirts { background: linear-gradient(135deg, #ff416c, #ff4b2b); color: #fff; }
-        .ring-hoodies { background: linear-gradient(135deg, #8a2387, #e94057, #f27121); color: #fff; }
-        .ring-bottoms { background: linear-gradient(135deg, #11998e, #38ef7d); color: #fff; }
-        .ring-sneakers { background: linear-gradient(135deg, #00c6ff, #0072ff); color: #fff; }
-        .ring-shirts { background: linear-gradient(135deg, #f7971e, #ffd200); color: #fff; }
-        .ring-acc { background: linear-gradient(135deg, #f857a6, #ff5858); color: #fff; }
-
-        /* Cards & Hover Animations */
-        .card { border-radius: 16px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.04); transition: transform 0.25s ease, box-shadow 0.25s ease; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 12px 28px rgba(79, 70, 229, 0.15); }
-        .product-img-wrap { width: 100%; height: 210px; display: flex; align-items: center; justify-content: center; background: #fff; border-radius: 16px 16px 0 0; overflow: hidden; position: relative; }
-        .product-img-wrap img { max-height: 100%; max-width: 100%; object-fit: contain; transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
-        .card:hover .product-img-wrap img { transform: scale(1.09); }
-        
-        .wishlist-btn { position: absolute; top: 10px; right: 10px; z-index: 5; background: rgba(255,255,255,0.92); border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.15s; }
-        .wishlist-btn:hover { transform: scale(1.2); }
-        .cart-badge { background: linear-gradient(135deg, #ff0844, #ff4e50); font-size: 0.75rem; }
-
-        /* Colorful Fandom Badges */
-        .fandom-badge-box {
-            border-radius: 16px;
-            overflow: hidden;
-            position: relative;
-            color: #ffffff;
-            text-align: center;
-            padding: 28px 16px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-        .fandom-badge-box:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-        }
-        .badge-anime { background: linear-gradient(135deg, #e11d48 0%, #fb7185 100%); }
-        .badge-marvel { background: linear-gradient(135deg, #2563eb 0%, #38bdf8 100%); }
-        .badge-gaming { background: linear-gradient(135deg, #059669 0%, #34d399 100%); }
-        .badge-originals { background: linear-gradient(135deg, #7c3aed 0%, #c084fc 100%); }
-
-        /* Colorful Trust Badges Section */
-        .trust-badge-box {
-            border-radius: 16px;
-            padding: 22px;
-            text-align: center;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            transition: transform 0.2s;
-        }
-        .trust-badge-box:hover { transform: translateY(-3px); }
-        .trust-cod { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); color: #92400e; }
-        .trust-returns { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1e40af; }
-        .trust-secure { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); color: #166534; }
-        .trust-express { background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); color: #9d174d; }
-
-        /* Floating WhatsApp Button */
-        .whatsapp-float { position: fixed; bottom: 25px; right: 25px; background: linear-gradient(135deg, #25d366, #128c7e); color: #fff; border-radius: 50px; font-size: 30px; box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4); z-index: 1000; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.2s; }
-        .whatsapp-float:hover { transform: scale(1.12); color: #fff; }
-
-        /* Mobile App-Style Bottom Nav */
-        .mobile-bottom-nav {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            height: 62px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-top: 1px solid rgba(0, 0, 0, 0.08);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 1040;
-            padding: 4px 0;
-        }
-        .mobile-nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #64748b;
-            font-size: 0.7rem;
-            font-weight: 700;
-            position: relative;
-            transition: color 0.15s;
-        }
-        .mobile-nav-item i { font-size: 1.25rem; margin-bottom: 2px; }
-        .mobile-nav-item.active, .mobile-nav-item:hover { color: #4f46e5; }
-        
-        @media (max-width: 768px) {
-            body { padding-bottom: 70px; }
-            .whatsapp-float { bottom: 75px; right: 18px; width: 50px; height: 50px; font-size: 26px; }
-            .product-img-wrap { height: 155px; }
-        }
-
-        /* Dark Mode Styling */
-        [data-bs-theme="dark"] body { background-color: #080c16; color: #f1f5f9; }
-        [data-bs-theme="dark"] .navbar-frosted { background: rgba(14, 20, 34, 0.92) !important; border-bottom: 1px solid #1e293b; }
-        [data-bs-theme="dark"] .mobile-bottom-nav { background: rgba(14, 20, 34, 0.95); border-top: 1px solid #1e293b; }
-        [data-bs-theme="dark"] .card { background-color: #111a2e; border: 1px solid #1e293b; color: #f1f5f9; }
-        [data-bs-theme="dark"] .product-img-wrap { background-color: #1a243a; }
-        [data-bs-theme="dark"] .wishlist-btn { background: rgba(30,41,59,0.95); color: #fff; }
-        [data-bs-theme="dark"] .trust-cod { background: linear-gradient(135deg, #451a03 0%, #78350f 100%); color: #fef3c7; border-color: #92400e; }
-        [data-bs-theme="dark"] .trust-returns { background: linear-gradient(135deg, #172554 0%, #1e3a8a 100%); color: #dbeafe; border-color: #1e40af; }
-        [data-bs-theme="dark"] .trust-secure { background: linear-gradient(135deg, #052e16 0%, #065f46 100%); color: #dcfce7; border-color: #047857; }
-        [data-bs-theme="dark"] .trust-express { background: linear-gradient(135deg, #500724 0%, #831843 100%); color: #fce7f3; border-color: #9d174d; }
-        [data-bs-theme="light"] .logo-light { display: inline-block !important; }
-        [data-bs-theme="light"] .logo-dark { display: none !important; }
-        [data-bs-theme="dark"] .logo-light { display: none !important; }
-        [data-bs-theme="dark"] .logo-dark { display: inline-block !important; }
-        [data-bs-theme="dark"] .text-dark, [data-bs-theme="dark"] a.text-dark { color: #f1f5f9 !important; }
-
-        /* Cinematic 3D Floating Stage & Giant Typography Styles */
-        .cinematic-stage-container {
-            position: relative;
-            background: #080c14;
-            min-height: 520px;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-        }
-        .stage-bg-morph {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at 60% 40%, #4338ca 0%, #1e1b4b 50%, #080c14 100%);
-            transition: background 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 1;
-        }
-        .stage-mesh-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-            background-size: 24px 24px;
-            opacity: 0.4;
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        .giant-watermark-text {
-            position: absolute;
-            top: 45%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: clamp(5rem, 16vw, 15rem);
-            font-weight: 900;
-            letter-spacing: 0.15em;
-            color: #ffffff;
-            opacity: 0.09;
-            white-space: nowrap;
-            user-select: none;
-            pointer-events: none;
-            z-index: 3;
-            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            text-transform: uppercase;
-        }
-
-        .floating-orbit-item {
-            position: absolute;
-            z-index: 9;
-            pointer-events: none;
-        }
-        .orbit-badge {
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            color: #fff;
-            font-size: 0.75rem;
-            font-weight: 800;
-            padding: 7px 15px;
-            border-radius: 30px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-            animation: floatBobbing 4s ease-in-out infinite alternate;
-        }
-        .orbit-item-1 { top: 12%; left: 42%; }
-        .orbit-item-1 .orbit-badge { animation-delay: 0s; }
-        .orbit-item-2 { top: 22%; right: 8%; }
-        .orbit-item-2 .orbit-badge { animation-delay: 1.2s; }
-        .orbit-item-3 { bottom: 18%; left: 45%; }
-        .orbit-item-3 .orbit-badge { animation-delay: 2.1s; }
-        .orbit-item-4 { bottom: 25%; right: 12%; }
-        .orbit-item-4 .orbit-badge { animation-delay: 3s; }
-
-        @keyframes floatBobbing {
-            0% { transform: translateY(0px) rotate(0deg); }
-            100% { transform: translateY(-12px) rotate(1.5deg); }
-        }
-
-        .hero-3d-stage-wrapper {
-            position: relative;
-            width: 100%; height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .stage-shadow-pedestal {
-            position: absolute;
-            bottom: 20px;
-            width: 320px;
-            height: 45px;
-            background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 75%);
-            border-radius: 50%;
-            z-index: 4;
-        }
-        .stage-light-beam {
-            position: absolute;
-            top: -20px;
-            width: 380px;
-            height: 380px;
-            background: radial-gradient(circle at center, rgba(99, 102, 241, 0.35) 0%, transparent 70%);
-            border-radius: 50%;
-            filter: blur(40px);
-            z-index: 3;
-            pointer-events: none;
-        }
-        .floating-centerpiece-img {
-            max-height: 360px;
-            object-fit: contain;
-            position: relative;
-            z-index: 7;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
-            filter: drop-shadow(0 25px 35px rgba(0, 0, 0, 0.75));
-            animation: centerpieceFloat 4.5s ease-in-out infinite alternate;
-        }
-        @keyframes centerpieceFloat {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(-10px); }
-        }
-
-        .swatch-circle {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            background-color: var(--swatch-hex);
-            cursor: pointer;
-            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s;
-        }
-        .swatch-circle.active, .swatch-circle:hover {
-            transform: scale(1.3);
-            border-color: #ffffff;
-            box-shadow: 0 0 18px var(--swatch-hex);
-        }
-        .btn-glow-white {
-            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
-            color: #0b0f19 !important;
-            border: none;
-            box-shadow: 0 6px 22px rgba(255, 255, 255, 0.35);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-glow-white:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.6);
-        }
-        .btn-glass {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            color: #fff !important;
-            backdrop-filter: blur(10px);
-            transition: all 0.2s;
-        }
-        .btn-glass:hover {
-            background: rgba(255, 255, 255, 0.22);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-        .live-pulse {
-            width: 8px;
-            height: 8px;
-            background: #22c55e;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #22c55e;
-        }
-
-        .cinematic-colorway-ribbon {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 48px;
-            border-top: 1px solid rgba(255, 255, 255, 0.12);
-            z-index: 10;
-        }
-        .colorway-segment {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--segment-bg);
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 0.75rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .colorway-segment:hover {
-            background: rgba(255, 255, 255, 0.25) !important;
-            color: #ffffff;
-        }
-
-        /* Product Detail Page 3D Stage */
-        .cinematic-detail-stage {
-            min-height: 420px;
-            background: radial-gradient(circle at center, #312e81 0%, #0b0f19 80%);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            position: relative;
-        }
-        [data-bs-theme="light"] .cinematic-detail-stage {
-            background: radial-gradient(circle at center, #e0e7ff 0%, #f1f5f9 80%);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-        }
-        .stage-ambient-glow {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 1;
-        }
-        .giant-watermark-detail {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: clamp(3.5rem, 10vw, 7rem);
-            font-weight: 900;
-            letter-spacing: 0.2em;
-            color: rgba(255, 255, 255, 0.09);
-            user-select: none;
-            pointer-events: none;
-            z-index: 2;
-            white-space: nowrap;
-        }
-        [data-bs-theme="light"] .giant-watermark-detail {
-            color: rgba(79, 70, 229, 0.1);
-        }
-        .floating-detail-img {
-            max-height: 340px;
-            object-fit: contain;
-            position: relative;
-            z-index: 6;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.55));
-            animation: centerpieceFloat 4.5s ease-in-out infinite alternate;
-        }
-        .detail-orbit-1 { top: 15px; left: 15px; }
-        .detail-orbit-2 { bottom: 25px; left: 15px; }
-        .detail-orbit-3 { bottom: 25px; right: 15px; }
-    </style>
-</head>
-<body>
-    <!-- Top Animated Gradient Ticker -->
-    <div class="top-ticker">
-        🔥 FESTIVAL DROP: Use code <span class="badge bg-warning text-dark fw-bold">FIRST10</span> for 10% OFF | Free Express Delivery on orders over ₹999
-    </div>
-
-    <!-- Main Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light navbar-frosted sticky-top py-2">
-        <div class="container">
-            <a class="navbar-brand py-0 d-flex align-items-center" href="{% url 'store:product_list' %}">
-                <img src="{% static 'images/stylesphere_logo_primary.png' %}" alt="Style Sphere" class="logo-light">
-                <img src="{% static 'images/stylesphere_logo_white.png' %}" alt="Style Sphere" class="logo-dark">
-            </a>
-
-            <!-- Search Bar (Desktop) -->
-            <form class="d-none d-lg-flex mx-auto col-lg-5" action="{% url 'store:product_list' %}" method="get">
-                <div class="input-group">
-                    <input class="form-control rounded-start-pill ps-3" type="search" name="q" placeholder="Search T-Shirts, Hoodies, Joggers, Sneakers..." value="{{ query|default:'' }}">
-                    <button class="btn btn-primary rounded-end-pill px-3" type="submit"><i class="bi bi-search"></i></button>
+                <!-- Giant Background Watermark (Behind Product) -->
+                <div class="giant-watermark-detail">
+                    {{ product.category.name|upper }}
                 </div>
-            </form>
 
-            <!-- Actions (Theme + Wishlist + Cart + Profile) -->
-            <div class="d-flex align-items-center gap-2 ms-auto">
-                <button id="themeToggleBtn" class="btn btn-outline-secondary btn-sm px-2" type="button" title="Toggle Theme">
-                    <i id="themeIcon" class="bi bi-moon-stars"></i>
-                </button>
+                <!-- Floating Orbit Badges -->
+                <div class="floating-orbit-item detail-orbit-1">
+                    <div class="orbit-badge">
+                        <i class="bi bi-patch-check-fill text-warning"></i> 240 GSM
+                    </div>
+                </div>
+                <div class="floating-orbit-item detail-orbit-2">
+                    <div class="orbit-badge">
+                        <i class="bi bi-shield-check text-success"></i> 100% Bio-Wash
+                    </div>
+                </div>
+                <div class="floating-orbit-item detail-orbit-3">
+                    <div class="orbit-badge">
+                        <i class="bi bi-lightning-charge-fill text-info"></i> COD Ready
+                    </div>
+                </div>
 
-                <a href="{% url 'store:wishlist_detail' %}" class="btn btn-outline-danger btn-sm px-2 position-relative" title="Wishlist">
-                    <i class="bi bi-heart"></i>
-                    {% if user.is_authenticated and user.wishlist.count > 0 %}
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
-                            {{ user.wishlist.count }}
-                        </span>
+                <!-- Stage Light Beam & Showroom Shadow Pedestal -->
+                <div class="stage-light-beam"></div>
+                <div class="stage-shadow-pedestal"></div>
+
+                <!-- 3D Floating Product Image -->
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" 
+                         alt="{{ product.name }}" 
+                         id="detailFloatingImg" 
+                         class="floating-detail-img img-fluid">
+                {% else %}
+                    <div class="py-5 text-muted small position-relative" style="z-index: 5;">No Image Available</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Right: Specs, Size Picker, Delivery & Buy Controls -->
+        <div class="col-12 col-md-6">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-primary-subtle text-primary px-3 py-2 text-uppercase fw-bold rounded-pill">{{ product.category.name }}</span>
+                
+                <a href="{% url 'store:wishlist_toggle' product.id %}" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                    {% if in_wishlist %}
+                        <i class="bi bi-heart-fill text-danger me-1"></i> Saved in Wishlist
+                    {% else %}
+                        <i class="bi bi-heart me-1"></i> Add to Wishlist
                     {% endif %}
                 </a>
-
-                <a href="{% url 'store:cart_detail' %}" class="btn btn-outline-dark btn-sm position-relative px-2 px-md-3">
-                    <i class="bi bi-bag me-1"></i> <span class="d-none d-sm-inline">Cart</span>
-                    {% with total_items=cart|length %}
-                        {% if total_items > 0 %}
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge">
-                                {{ total_items }}
-                            </span>
-                        {% endif %}
-                    {% endwith %}
-                </a>
-
-                {% if user.is_authenticated %}
-                    <div class="dropdown d-none d-sm-block">
-                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle me-1"></i> {{ user.username }}
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                            <li><a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="bi bi-truck me-2"></i>My Orders & Tracking</a></li>
-                            <li><a class="dropdown-item" href="{% url 'store:wishlist_detail' %}"><i class="bi bi-heart me-2 text-danger"></i>My Wishlist</a></li>
-                            <li><a class="dropdown-item" href="{% url 'api:product-list' %}"><i class="bi bi-code-slash me-2"></i>REST API</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
-                        </ul>
-                    </div>
-                {% else %}
-                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary btn-sm px-2 px-md-3 d-none d-sm-inline-block">Sign In</a>
-                    <a href="{% url 'accounts:register' %}" class="btn btn-success btn-sm px-2 px-md-3 d-none d-sm-inline-block">Sign Up</a>
-                {% endif %}
             </div>
-        </div>
+            
+            <h1 class="fw-extrabold fs-3 mb-2">{{ product.name }}</h1>
+            
+            <!-- Live Social Proof & Ratings -->
+            <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <span class="badge bg-warning text-dark px-2 py-1">
+                    <i class="bi bi-star-fill"></i> {{ product.get_average_rating }}
+                </span>
+                <span class="text-muted small">({{ reviews.count }} Verified Reviews)</span>
+                <span class="badge bg-danger-subtle text-danger small">
+                    <i class="bi bi-fire"></i> 18 bought in last 24h
+                </span>
+            </div>
 
-        <!-- Mobile Search Row -->
-        <div class="container d-lg-none mt-2">
-            <form class="d-flex w-100" action="{% url 'store:product_list' %}" method="get">
-                <div class="input-group">
-                    <input class="form-control form-control-sm rounded-start-pill ps-3" type="search" name="q" placeholder="Search streetwear..." value="{{ query|default:'' }}">
-                    <button class="btn btn-primary btn-sm rounded-end-pill px-3" type="submit"><i class="bi bi-search"></i></button>
+            <!-- Price in INR -->
+            <div class="d-flex align-items-baseline gap-3 my-3">
+                <span class="text-success fw-bold display-6">₹{{ product.price }}</span>
+                <span class="text-muted text-decoration-line-through fs-5">₹{{ product.price|add:600 }}</span>
+                <span class="badge bg-success-subtle text-success fw-bold">35% OFF</span>
+            </div>
+            <div class="small text-muted mb-3">Inclusive of all taxes • Free Shipping on orders over ₹999</div>
+
+            <!-- Size Selector & Purchase Form -->
+            <form action="{% url 'store:cart_add' product.id %}" method="post" id="purchaseForm">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label class="form-label small fw-bold mb-0">Select Size:</label>
+                        <span class="text-primary small text-decoration-underline" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#sizeChartModal">
+                            <i class="bi bi-rulers me-1"></i>Size Guide
+                        </span>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <input type="radio" class="btn-check size-radio" name="size" id="sizeS" value="S" autocomplete="off">
+                        <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeS">S</label>
+
+                        <input type="radio" class="btn-check size-radio" name="size" id="sizeM" value="M" autocomplete="off" checked>
+                        <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeM">M</label>
+
+                        <input type="radio" class="btn-check size-radio" name="size" id="sizeL" value="L" autocomplete="off">
+                        <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeL">L</label>
+
+                        <input type="radio" class="btn-check size-radio" name="size" id="sizeXL" value="XL" autocomplete="off">
+                        <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeXL">XL</label>
+
+                        <input type="radio" class="btn-check size-radio" name="size" id="sizeXXL" value="XXL" autocomplete="off">
+                        <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeXXL">XXL</label>
+                    </div>
+                </div>
+
+                <div class="row g-2 align-items-center mb-3">
+                    <div class="col-3">
+                        <label class="form-label small fw-bold mb-1">Qty:</label>
+                        <select name="quantity" class="form-select form-select-sm">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-9 d-flex gap-2">
+                        <button type="submit" name="buy_now" value="false" class="btn btn-dark btn-lg flex-grow-1 fw-bold py-2 shadow-sm rounded-pill">
+                            <i class="bi bi-bag-plus me-1"></i> Add to Cart
+                        </button>
+                        
+                        <button type="submit" name="buy_now" value="true" class="btn btn-warning btn-lg flex-grow-1 fw-bold py-2 shadow-sm text-dark rounded-pill">
+                            ⚡ Buy Now
+                        </button>
+                    </div>
                 </div>
             </form>
-        </div>
-    </nav>
 
-    <!-- Sub-Navigation Category Tabs -->
-    <div class="bg-body border-bottom py-2 d-none d-md-block">
-        <div class="container d-flex justify-content-center gap-3">
-            <a href="{% url 'store:product_list' %}" class="subnav-link {% if not category %}active{% endif %}">All Drops</a>
-            {% for c in categories %}
-                <a href="{{ c.get_absolute_url }}" class="subnav-link {% if category.slug == c.slug %}active{% endif %}">{{ c.name }}</a>
-            {% endfor %}
-        </div>
-    </div>
-
-    <!-- Main Content Container -->
-    <div class="container my-3 my-md-4">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <!-- Delivery Estimate Box -->
+            <div class="card p-3 bg-body-tertiary my-3 border rounded-4">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-truck fs-5 text-primary"></i>
+                    <strong class="small">Get it by {{ delivery_date }}</strong>
                 </div>
-            {% endfor %}
-        {% endif %}
-
-        {% block content %}{% endblock %}
-    </div>
-
-    <!-- Colorful Trust Badges Section -->
-    <div class="container my-5">
-        <div class="row g-3">
-            <div class="col-6 col-md-3">
-                <div class="trust-badge-box trust-cod h-100">
-                    <i class="bi bi-cash-coin fs-2 text-warning d-block mb-1"></i>
-                    <h6 class="fw-bold mt-1 mb-1">Cash on Delivery</h6>
-                    <p class="small mb-0 opacity-75">Pay upon doorstep arrival</p>
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" placeholder="Enter Pincode (e.g. 131001)" maxlength="6">
+                    <button class="btn btn-dark btn-sm" type="button" onclick="alert('Delivery available in 3-4 days! Cash on Delivery active.')">Check</button>
+                </div>
+                <div class="small text-muted mt-2">
+                    💵 Cash on Delivery Available • 🔄 30-Day Easy Returns & Exchanges
                 </div>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="trust-badge-box trust-returns h-100">
-                    <i class="bi bi-arrow-repeat fs-2 text-primary d-block mb-1"></i>
-                    <h6 class="fw-bold mt-1 mb-1">30 Days Returns</h6>
-                    <p class="small mb-0 opacity-75">Hassle-free exchanges</p>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="trust-badge-box trust-secure h-100">
-                    <i class="bi bi-shield-check fs-2 text-success d-block mb-1"></i>
-                    <h6 class="fw-bold mt-1 mb-1">100% Secure Checkout</h6>
-                    <p class="small mb-0 opacity-75">Bank-grade encryption</p>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="trust-badge-box trust-express h-100">
-                    <i class="bi bi-lightning-charge-fill fs-2 text-danger d-block mb-1"></i>
-                    <h6 class="fw-bold mt-1 mb-1">Express Delivery</h6>
-                    <p class="small mb-0 opacity-75">Fast dispatch nationwide</p>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Floating WhatsApp Support -->
-    <a href="https://wa.me/919781855165?text=Hello%20Style%20Sphere,%20I%20have%20an%20inquiry%20about%20my%20order" class="whatsapp-float" target="_blank" title="Chat on WhatsApp">
-        <i class="bi bi-whatsapp"></i>
-    </a>
-
-    <!-- Mobile App-Style Fixed Bottom Navigation Bar -->
-    <div class="mobile-bottom-nav d-md-none">
-        <a href="{% url 'store:product_list' %}" class="mobile-nav-item {% if request.path == '/' %}active{% endif %}">
-            <i class="bi bi-house-door"></i>
-            <span>Home</span>
-        </a>
-        <a href="#productGrid" class="mobile-nav-item">
-            <i class="bi bi-grid"></i>
-            <span>Catalog</span>
-        </a>
-        <a href="{% url 'store:wishlist_detail' %}" class="mobile-nav-item {% if 'wishlist' in request.path %}active{% endif %}">
-            <i class="bi bi-heart"></i>
-            <span>Wishlist</span>
-            {% if user.is_authenticated and user.wishlist.count > 0 %}
-                <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
-                    {{ user.wishlist.count }}
-                </span>
-            {% endif %}
-        </a>
-        <a href="{% url 'store:cart_detail' %}" class="mobile-nav-item {% if 'cart' in request.path %}active{% endif %}">
-            <i class="bi bi-bag"></i>
-            <span>Cart</span>
-            {% with total_items=cart|length %}
-                {% if total_items > 0 %}
-                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill cart-badge" style="font-size: 0.6rem;">
-                        {{ total_items }}
-                    </span>
-                {% endif %}
-            {% endwith %}
-        </a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'accounts:profile' %}" class="mobile-nav-item {% if 'profile' in request.path %}active{% endif %}">
-                <i class="bi bi-person"></i>
-                <span>Profile</span>
-            </a>
-        {% else %}
-            <a href="{% url 'accounts:login' %}" class="mobile-nav-item">
-                <i class="bi bi-person"></i>
-                <span>Sign In</span>
-            </a>
-        {% endif %}
-    </div>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-light py-5 mt-5">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-6 col-md-3">
-                    <h6 class="fw-bold text-uppercase text-warning mb-3">Need Help</h6>
-                    <ul class="list-unstyled small text-muted">
-                        <li class="mb-2"><a href="{% url 'accounts:profile' %}" class="text-reset text-decoration-none">Track Order</a></li>
-                        <li class="mb-2"><a href="{% url 'store:wishlist_detail' %}" class="text-reset text-decoration-none">My Wishlist</a></li>
-                        <li class="mb-2"><a href="https://wa.me/919781855165" class="text-reset text-decoration-none">WhatsApp Support</a></li>
-                    </ul>
+            <!-- Product Specs Accordion -->
+            <div class="accordion accordion-flush mt-3 border rounded-4 overflow-hidden" id="productDetailsAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold py-2 small" type="button" data-bs-toggle="collapse" data-bs-target="#descTab">
+                            <i class="bi bi-card-text me-2"></i>Product Details
+                        </button>
+                    </h2>
+                    <div id="descTab" class="accordion-collapse collapse show">
+                        <div class="accordion-body small text-muted">
+                            {{ product.description }}
+                        </div>
+                    </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <h6 class="fw-bold text-uppercase text-warning mb-3">Categories</h6>
-                    <ul class="list-unstyled small text-muted">
-                        {% for c in categories|slice:":5" %}
-                            <li class="mb-2"><a href="{{ c.get_absolute_url }}" class="text-reset text-decoration-none">{{ c.name }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="col-12 col-md-6 text-md-end">
-                    <h6 class="fw-bold text-uppercase text-warning mb-3">Homegrown Indian Brand</h6>
-                    <p class="small text-muted">Curating streetwear, oversized fits, pop culture merchandise, and accessories.</p>
-                    <div class="text-muted small">
-                        <strong>100% Safe Payments:</strong> UPI • Credit/Debit Cards • NetBanking • COD
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold py-2 small" type="button" data-bs-toggle="collapse" data-bs-target="#specsTab">
+                            <i class="bi bi-info-circle me-2"></i>Material & Fit
+                        </button>
+                    </h2>
+                    <div id="specsTab" class="accordion-collapse collapse">
+                        <div class="accordion-body small text-muted">
+                            <ul class="mb-0 ps-3">
+                                <li><strong>Fabric:</strong> 100% French Terry Cotton (240 GSM Bio-Washed)</li>
+                                <li><strong>Fit:</strong> Drop-Shoulder Relaxed Streetwear Oversized Fit</li>
+                                <li><strong>Country of Origin:</strong> India 🇮🇳</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-            <hr class="my-4 border-secondary">
-            <p class="text-center small text-muted mb-0">&copy; {% now "Y" %} Style Sphere. All rights reserved.</p>
         </div>
-    </footer>
+    </div>
+</div>
 
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Size Chart Modal -->
+<div class="modal fade" id="sizeChartModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">Size Guide (Inches)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pt-0">
+                <table class="table table-bordered table-sm text-center small">
+                    <thead class="table-light">
+                        <tr><th>Size</th><th>Chest (in)</th><th>Length (in)</th><th>Shoulder (in)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>S</td><td>40"</td><td>27"</td><td>19"</td></tr>
+                        <tr><td>M</td><td>42"</td><td>28"</td><td>20"</td></tr>
+                        <tr><td>L</td><td>44"</td><td>29"</td><td>21"</td></tr>
+                        <tr><td>XL</td><td>46"</td><td>30"</td><td>22"</td></tr>
+                        <tr><td>XXL</td><td>48"</td><td>31"</td><td>23"</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <!-- Theme Switcher JS -->
-    <script>
-        const themeToggleBtn = document.getElementById('themeToggleBtn');
-        const themeIcon = document.getElementById('themeIcon');
-        function updateThemeIcon(theme) {
-            themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill text-warning' : 'bi bi-moon-stars';
-        }
-        const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
-        updateThemeIcon(currentTheme);
-        themeToggleBtn.addEventListener('click', () => {
-            const activeTheme = document.documentElement.getAttribute('data-bs-theme');
-            const newTheme = activeTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-bs-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeIcon(newTheme);
+<!-- Customer Reviews Section -->
+<div class="card p-3 p-md-4 mb-4 shadow-sm rounded-4 border-0">
+    <h4 class="fw-bold mb-4">Customer Reviews & Ratings</h4>
+    
+    <div class="row g-4">
+        <div class="col-md-5">
+            <div class="card p-3 bg-body-tertiary border rounded-4">
+                <h6 class="fw-bold mb-2">Write a Review</h6>
+                {% if user.is_authenticated %}
+                    <form action="{% url 'store:review_add' product.id %}" method="post">
+                        {% csrf_token %}
+                        <label class="form-label small fw-bold">Rating:</label>
+                        {{ review_form.rating }}
+                        <label class="form-label small fw-bold">Your Feedback:</label>
+                        {{ review_form.comment }}
+                        <button type="submit" class="btn btn-primary btn-sm w-100 py-2 fw-bold rounded-pill">Submit Review</button>
+                    </form>
+                {% else %}
+                    <p class="text-muted small mb-0">Please <a href="{% url 'accounts:login' %}?next={{ request.path }}">sign in</a> to write a review.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            {% if reviews %}
+                <div class="list-group list-group-flush">
+                    {% for review in reviews %}
+                        <div class="list-group-item px-0 py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold"><i class="bi bi-person-check text-success me-1"></i>{{ review.user.username }}</span>
+                                <span class="text-muted small">{{ review.created|date:"M d, Y" }}</span>
+                            </div>
+                            <div class="text-warning small my-1">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= review.rating %}<i class="bi bi-star-fill"></i>{% else %}<i class="bi bi-star"></i>{% endif %}
+                                {% endfor %}
+                            </div>
+                            <p class="mb-0 text-muted small">{{ review.comment }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-chat-left-heart fs-1 d-block mb-2 text-primary"></i>
+                    <p class="mb-0">No reviews yet for this product. Be the first to share your thoughts!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- You Might Also Like Section -->
+{% if related_products %}
+    <div class="my-4">
+        <h4 class="fw-bold mb-3">You Might Also Like</h4>
+        <div class="row row-cols-2 row-cols-md-4 g-3">
+            {% for item in related_products %}
+                <div class="col">
+                    <div class="card h-100 position-relative shadow-sm border-0 rounded-4 overflow-hidden glow-hover-card">
+                        <a href="{% url 'store:wishlist_toggle' item.id %}" class="wishlist-btn">
+                            <i class="bi bi-heart text-muted"></i>
+                        </a>
+                        <a href="{{ item.get_absolute_url }}" class="d-block text-decoration-none">
+                            <div class="product-img-wrap p-2" style="height: 160px;">
+                                {% if item.image %}
+                                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="product-zoom-img">
+                                {% else %}
+                                    <div class="text-muted small py-4">No Image</div>
+                                {% endif %}
+                            </div>
+                        </a>
+                        <div class="card-body p-2 p-md-3 d-flex flex-column">
+                            <h6 class="card-title fw-bold mb-1">
+                                <a href="{{ item.get_absolute_url }}" class="text-decoration-none text-body text-truncate d-block">
+                                    {{ item.name }}
+                                </a>
+                            </h6>
+                            <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
+                                <span class="fw-bold text-success fs-6">₹{{ item.price }}</span>
+                                <a href="{{ item.get_absolute_url }}" class="btn btn-sm btn-outline-primary px-3 rounded-pill">View</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+<!-- Universal Sticky Floating Product Bar on Scroll (Desktop & Mobile) -->
+<div id="universalStickyBar" class="universal-sticky-bar">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between gap-3">
+            <!-- Left: Product Image & Details -->
+            <div class="d-flex align-items-center gap-3">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="sticky-thumb-3d">
+                {% endif %}
+                <div>
+                    <div class="text-truncate fw-bold" style="max-width: 220px;">{{ product.name }}</div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="text-success fw-bold fs-5">₹{{ product.price }}</span>
+                        <span class="badge bg-warning text-dark px-2 py-0 small"><i class="bi bi-star-fill"></i> {{ product.get_average_rating }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Action Buttons -->
+            <div class="d-flex align-items-center gap-2">
+                <button type="button" onclick="document.getElementById('purchaseForm').submit();" class="btn btn-dark fw-bold px-3 py-2 rounded-pill shadow-sm">
+                    <i class="bi bi-bag-plus me-1"></i> Add to Cart
+                </button>
+                <button type="button" onclick="let f=document.getElementById('purchaseForm'); let inp=document.createElement('input'); inp.type='hidden'; inp.name='buy_now'; inp.value='true'; f.appendChild(inp); f.submit();" class="btn btn-warning fw-bold px-4 py-2 text-dark rounded-pill shadow-sm">
+                    ⚡ Buy Now
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 3D Parallax Tilt & Scroll Reveal Script -->
+<script>
+    const detailStage = document.getElementById('detailStage');
+    const detailImg = document.getElementById('detailFloatingImg');
+
+    if (detailStage && detailImg) {
+        detailStage.addEventListener('mousemove', (e) => {
+            const rect = detailStage.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            detailImg.style.transform = `perspective(1000px) rotateY(${x * 0.05}deg) rotateX(${-y * 0.05}deg) scale(1.06) translateY(${y * 0.02}px)`;
         });
-    </script>
-</body>
-</html>
+
+        detailStage.addEventListener('mouseleave', () => {
+            detailImg.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1) translateY(0px)';
+        });
+    }
+
+    // Reveal Universal Sticky Bar when scrolling past main card
+    window.addEventListener('scroll', function() {
+        const stickyBar = document.getElementById('universalStickyBar');
+        const mainCard = document.getElementById('productMainCard');
+        if (stickyBar && mainCard) {
+            const rect = mainCard.getBoundingClientRect();
+            if (rect.bottom < 120) {
+                stickyBar.classList.add('show-sticky');
+            } else {
+                stickyBar.classList.remove('show-sticky');
+            }
+        }
+    });
+</script>
+{% endblock %}
