@@ -1,102 +1,157 @@
 {% extends "store/base.html" %}
 
-{% block title %}My Orders & Profile{% endblock %}
+{% block title %}My Profile & Order History - Style Sphere{% endblock %}
 
 {% block content %}
-<div class="row g-4">
-    <!-- Profile Info -->
-    <div class="col-md-4">
-        <div class="card p-4 shadow-sm">
-            <h5 class="fw-bold mb-3">My Details</h5>
-            <form method="post">
-                {% csrf_token %}
-                <div class="mb-2">
-                    <label class="form-label small fw-bold">First Name</label>
-                    {{ u_form.first_name }}
-                </div>
-                <div class="mb-2">
-                    <label class="form-label small fw-bold">Last Name</label>
-                    {{ u_form.last_name }}
-                </div>
-                <div class="mb-2">
-                    <label class="form-label small fw-bold">Email</label>
-                    {{ u_form.email }}
-                </div>
-                <div class="mb-2">
-                    <label class="form-label small fw-bold">Phone</label>
-                    {{ p_form.phone_number }}
-                </div>
-                <div class="mb-2">
-                    <label class="form-label small fw-bold">Address</label>
-                    {{ p_form.address }}
-                </div>
-                <div class="row g-2 mb-3">
-                    <div class="col-6">
-                        <label class="form-label small fw-bold">City</label>
-                        {{ p_form.city }}
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label small fw-bold">Postal Code</label>
-                        {{ p_form.postal_code }}
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary btn-sm w-100">Update Profile</button>
-            </form>
+<div class="max-w-6xl mx-auto py-4">
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <span class="text-xs font-cta font-bold text-brand-neon uppercase tracking-wider">VIP DASHBOARD</span>
+            <h1 class="text-2xl sm:text-3xl font-black text-white font-heading">Account & Orders</h1>
         </div>
+        <a href="{% url 'accounts:logout' %}" class="btn btn-sm btn-outline border-rose-800 text-rose-400 hover:bg-rose-950/60 rounded-full">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
     </div>
 
-    <!-- Order History & Progress Tracker -->
-    <div class="col-md-8">
-        <div class="card p-4 shadow-sm">
-            <h5 class="fw-bold mb-3">Order History & Tracking</h5>
-            {% if orders %}
-                {% for order in orders %}
-                    <div class="card p-3 mb-3 bg-body-tertiary">
-                        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
-                            <div>
-                                <span class="fw-bold">Order #{{ order.id }}</span>
-                                <span class="text-muted small ms-2">({{ order.created|date:"M d, Y" }})</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-3">
-                                <span class="fw-bold text-success fs-5">₹{{ order.get_total_cost }}</span>
-                                <a href="{% url 'store:order_invoice' order.id %}" target="_blank" class="btn btn-outline-dark btn-sm">
-                                    📄 Invoice
-                                </a>
-                            </div>
-                        </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left: Profile Details & Shipping Address Form -->
+        <div class="lg:col-span-4">
+            <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-sm space-y-4">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+                    <div class="w-12 h-12 rounded-2xl bg-brand-neon/10 text-brand-neon flex items-center justify-center text-2xl">
+                        <i class="bi bi-person-circle"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-heading font-bold text-white text-base">{{ user.username }}</h3>
+                        <span class="text-xs text-slate-400">{{ user.email }}</span>
+                    </div>
+                </div>
 
-                        <div class="small mb-3">
-                            <strong>Payment:</strong> {{ order.payment_method }} 
-                            {% if order.paid %}<span class="badge bg-success ms-1">Paid</span>{% else %}<span class="badge bg-warning text-dark ms-1">Unpaid (COD)</span>{% endif %}
-                            {% if order.discount %}<span class="badge bg-info text-dark ms-1">{{ order.discount }}% Off Applied</span>{% endif %}
-                        </div>
+                <h4 class="text-xs font-bold text-slate-400 font-cta uppercase tracking-wider">Saved Shipping Details</h4>
 
-                        <!-- Step-by-Step Order Progress Tracker -->
-                        <h6 class="small fw-bold text-muted mb-2">Tracking Status:</h6>
-                        <div class="d-flex justify-content-between text-center position-relative my-2">
-                            <div class="col">
-                                <i class="bi bi-bag-check-fill fs-5 {% if order.status in 'Placed,Processing,Shipped,Delivered' %}text-primary{% else %}text-muted{% endif %}"></i>
-                                <div class="small fw-bold">Placed</div>
-                            </div>
-                            <div class="col">
-                                <i class="bi bi-gear-fill fs-5 {% if order.status in 'Processing,Shipped,Delivered' %}text-primary{% else %}text-muted{% endif %}"></i>
-                                <div class="small fw-bold">Processing</div>
-                            </div>
-                            <div class="col">
-                                <i class="bi bi-truck fs-5 {% if order.status in 'Shipped,Delivered' %}text-primary{% else %}text-muted{% endif %}"></i>
-                                <div class="small fw-bold">Shipped</div>
-                            </div>
-                            <div class="col">
-                                <i class="bi bi-house-door-fill fs-5 {% if order.status == 'Delivered' %}text-success{% else %}text-muted{% endif %}"></i>
-                                <div class="small fw-bold">Delivered</div>
-                            </div>
+                <form method="post" class="space-y-3">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[11px] font-bold text-slate-400 block mb-1">First Name</label>
+                            {{ u_form.first_name }}
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-bold text-slate-400 block mb-1">Last Name</label>
+                            {{ u_form.last_name }}
                         </div>
                     </div>
-                {% endfor %}
-            {% else %}
-                <p class="text-muted py-3">You haven't placed any orders yet.</p>
-            {% endif %}
+
+                    <div>
+                        <label class="text-[11px] font-bold text-slate-400 block mb-1">Email</label>
+                        {{ u_form.email }}
+                    </div>
+
+                    <div>
+                        <label class="text-[11px] font-bold text-slate-400 block mb-1">Phone Number</label>
+                        {{ p_form.phone_number }}
+                    </div>
+
+                    <div>
+                        <label class="text-[11px] font-bold text-slate-400 block mb-1">Shipping Street Address</label>
+                        {{ p_form.address }}
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[11px] font-bold text-slate-400 block mb-1">City</label>
+                            {{ p_form.city }}
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-bold text-slate-400 block mb-1">Pincode</label>
+                            {{ p_form.postal_code }}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-2.5 bg-brand-neon hover:bg-cyan-300 text-black font-cta font-bold text-xs rounded-xl shadow transition-all mt-2">
+                        SAVE PROFILE DETAILS
+                    </button>
+                </form>
+            </div>
         </div>
+
+        <!-- Right: Order History & Tracking -->
+        <div class="lg:col-span-8 space-y-4">
+            <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-sm">
+                <h3 class="text-lg font-black text-white font-heading mb-4">Order History & Live Tracking</h3>
+
+                {% if orders %}
+                    <div class="space-y-4">
+                        {% for order in orders %}
+                            <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+                                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                                    <div>
+                                        <span class="text-xs font-black text-brand-neon">ORDER #{{ order.id }}</span>
+                                        <span class="text-xs text-slate-400 ml-2">({{ order.created|date:"M d, Y • h:i A" }})</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span class="font-heading font-black text-lg text-emerald-400">₹{{ order.get_total_cost }}</span>
+                                        <a href="{% url 'store:order_invoice' order.id %}" target="_blank" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 rounded-lg">
+                                            📄 Invoice
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="text-xs text-slate-300 flex flex-wrap items-center gap-3">
+                                    <span><strong>Payment:</strong> {{ order.payment_method }}</span>
+                                    {% if order.paid %}
+                                        <span class="badge bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-bold">PAID</span>
+                                    {% else %}
+                                        <span class="badge bg-amber-950 text-amber-400 border border-amber-800 text-[10px] font-bold">CASH ON DELIVERY</span>
+                                    {% endif %}
+                                    {% if order.discount %}
+                                        <span class="badge bg-indigo-950 text-indigo-400 border border-indigo-800 text-[10px] font-bold">{{ order.discount }}% OFF APPLIED</span>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Step-by-Step Order Timeline Tracker -->
+                                <div class="pt-2">
+                                    <span class="text-[11px] font-bold text-slate-400 font-cta uppercase block mb-2">Delivery Status:</span>
+                                    <div class="grid grid-cols-4 text-center relative py-2">
+                                        <div>
+                                            <i class="bi bi-bag-check-fill text-lg {% if order.status in 'Placed,Processing,Shipped,Delivered' %}text-brand-neon{% else %}text-slate-600{% endif %}"></i>
+                                            <div class="text-[11px] font-bold mt-1 text-white">Placed</div>
+                                        </div>
+                                        <div>
+                                            <i class="bi bi-gear-fill text-lg {% if order.status in 'Processing,Shipped,Delivered' %}text-brand-neon{% else %}text-slate-600{% endif %}"></i>
+                                            <div class="text-[11px] font-bold mt-1 text-white">Processing</div>
+                                        </div>
+                                        <div>
+                                            <i class="bi bi-truck text-lg {% if order.status in 'Shipped,Delivered' %}text-brand-neon{% else %}text-slate-600{% endif %}"></i>
+                                            <div class="text-[11px] font-bold mt-1 text-white">Shipped</div>
+                                        </div>
+                                        <div>
+                                            <i class="bi bi-house-door-fill text-lg {% if order.status == 'Delivered' %}text-emerald-400{% else %}text-slate-600{% endif %}"></i>
+                                            <div class="text-[11px] font-bold mt-1 text-white">Delivered</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-12 text-slate-500">
+                        <i class="bi bi-box-seam text-4xl block mb-2 text-slate-600"></i>
+                        <p class="text-sm font-bold text-white">You haven't placed any orders yet.</p>
+                        <a href="{% url 'store:product_list' %}" class="btn btn-sm bg-brand-neon text-black font-cta rounded-full mt-3">START SHOPPING</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
     </div>
 </div>
+
+<script>
+    document.querySelectorAll('input:not([type="submit"]):not([type="hidden"])').forEach(input => {
+        input.className = "w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-brand-neon transition-all";
+    });
+</script>
 {% endblock %}

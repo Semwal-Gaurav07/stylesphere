@@ -1,66 +1,94 @@
 {% extends "store/base.html" %}
 
-{% block title %}Checkout - Style Sphere{% endblock %}
+{% block title %}Checkout & Shipping - Style Sphere{% endblock %}
 
 {% block content %}
-<div class="row g-4">
-    <div class="col-md-7">
-        <div class="card p-4 shadow-sm">
-            <h4 class="mb-4 fw-bold">Shipping & Contact Details</h4>
-            <form method="post" class="needs-validation">
-                {% csrf_token %}
-                <div class="row g-3">
-                    <div class="col-sm-6">
-                        <label class="form-label small fw-bold">First Name</label>
-                        <input type="text" name="first_name" class="form-control" value="{{ form.first_name.value|default:'' }}" required>
+<div class="max-w-5xl mx-auto py-4">
+    <h1 class="text-2xl sm:text-3xl font-black text-white font-heading mb-6">Checkout & Delivery Details</h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left: Shipping Form -->
+        <div class="lg:col-span-7">
+            <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-sm space-y-4">
+                <h3 class="text-sm font-bold text-white font-cta uppercase tracking-wider mb-2">Shipping Address</h3>
+
+                <form method="post" class="space-y-3">
+                    {% csrf_token %}
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-xs font-bold text-slate-400 block mb-1">First Name</label>
+                            <input type="text" name="first_name" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-brand-neon" value="{{ form.first_name.value|default:'' }}" required>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-400 block mb-1">Last Name</label>
+                            <input type="text" name="last_name" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-brand-neon" value="{{ form.last_name.value|default:'' }}" required>
+                        </div>
                     </div>
-                    <div class="col-sm-6">
-                        <label class="form-label small fw-bold">Last Name</label>
-                        <input type="text" name="last_name" class="form-control" value="{{ form.last_name.value|default:'' }}" required>
+
+                    <div>
+                        <label class="text-xs font-bold text-slate-400 block mb-1">Email Address</label>
+                        <input type="email" name="email" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-brand-neon" value="{{ form.email.value|default:'' }}" required>
                     </div>
-                    <div class="col-12">
-                        <label class="form-label small fw-bold">Email Address</label>
-                        <input type="email" name="email" class="form-control" value="{{ form.email.value|default:'' }}" required>
+
+                    <div>
+                        <label class="text-xs font-bold text-slate-400 block mb-1">Delivery Street Address</label>
+                        <input type="text" name="address" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-brand-neon" placeholder="House / Flat No., Street, Area" value="{{ form.address.value|default:'' }}" required>
                     </div>
-                    <div class="col-12">
-                        <label class="form-label small fw-bold">Street Address</label>
-                        <input type="text" name="address" class="form-control" value="{{ form.address.value|default:'' }}" placeholder="Flat, House no., Area" required>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-xs font-bold text-slate-400 block mb-1">City</label>
+                            <input type="text" name="city" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-brand-neon" value="{{ form.city.value|default:'' }}" required>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-400 block mb-1">Postal Pincode</label>
+                            <input type="text" name="postal_code" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-brand-neon" maxlength="6" value="{{ form.postal_code.value|default:'' }}" required>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label small fw-bold">City / Town</label>
-                        <input type="text" name="city" class="form-control" value="{{ form.city.value|default:'' }}" required>
+
+                    <button type="submit" class="w-full py-3.5 bg-brand-neon hover:bg-cyan-300 text-black font-cta font-black text-base rounded-full shadow-xl shadow-brand-neon/20 transition-all mt-4">
+                        PROCEED TO PAYMENT OPTIONS →
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right: Order Summary -->
+        <div class="lg:col-span-5 space-y-4">
+            <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-sm space-y-4">
+                <h3 class="text-sm font-bold text-white font-cta uppercase tracking-wider">Order Summary ({{ cart|length }} items)</h3>
+
+                <div class="divide-y divide-slate-800 max-h-72 overflow-y-auto">
+                    {% for item in cart %}
+                        <div class="py-3 flex items-center justify-between text-xs">
+                            <div>
+                                <span class="font-bold text-white block">{{ item.product.name }}</span>
+                                <span class="text-slate-400">Size: {{ item.size }} • Qty: {{ item.quantity }}</span>
+                            </div>
+                            <span class="font-bold text-emerald-400">₹{{ item.total_price }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="border-t border-slate-800 pt-3 space-y-2 text-xs">
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Subtotal:</span>
+                        <span class="font-bold text-white">₹{{ cart.get_total_price }}</span>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label small fw-bold">Postal Pincode</label>
-                        <input type="text" name="postal_code" class="form-control" value="{{ form.postal_code.value|default:'' }}" maxlength="6" required>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Delivery:</span>
+                        <span class="font-bold text-brand-lime">{% if cart.get_free_shipping_needed == 0 %}FREE{% else %}₹99{% endif %}</span>
+                    </div>
+                    <div class="flex justify-between text-base font-black border-t border-slate-800 pt-2">
+                        <span class="text-white">Total Amount:</span>
+                        <span class="text-brand-neon text-xl">₹{{ cart.get_total_price }}</span>
                     </div>
                 </div>
-                <hr class="my-4">
-                <button class="w-100 btn btn-success btn-lg fw-bold py-2 shadow-sm" type="submit">
-                    Proceed to Payment Options →
-                </button>
-            </form>
+            </div>
         </div>
-    </div>
-    <div class="col-md-5">
-        <div class="card p-4 shadow-sm">
-            <h5 class="mb-3 fw-bold">Order Summary</h5>
-            <ul class="list-group mb-3">
-                {% for item in cart %}
-                    <li class="list-group-item d-flex justify-content-between lh-sm">
-                        <div>
-                            <h6 class="my-0 small fw-bold">{{ item.product.name }}</h6>
-                            <small class="text-muted">Size: {{ item.size }} • Qty: {{ item.quantity }}</small>
-                        </div>
-                        <span class="text-muted fw-bold">₹{{ item.total_price }}</span>
-                    </li>
-                {% endfor %}
-                <li class="list-group-item d-flex justify-content-between bg-body-tertiary">
-                    <span class="fw-bold">Total (INR)</span>
-                    <strong class="text-success fs-5">₹{{ cart.get_total_price }}</strong>
-                </li>
-            </ul>
-        </div>
+
     </div>
 </div>
 {% endblock %}

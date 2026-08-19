@@ -1,49 +1,61 @@
 {% extends "store/base.html" %}
 
-{% block title %}My Wishlist{% endblock %}
+{% block title %}My Saved Wishlist - Style Sphere{% endblock %}
 
 {% block content %}
-<h3 class="fw-bold mb-3"><i class="bi bi-heart-fill text-danger me-2"></i>My Saved Items</h3>
+<div class="max-w-6xl mx-auto py-4">
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <span class="text-xs font-cta font-bold text-brand-pink uppercase tracking-wider">SAVED COLLECTION</span>
+            <h1 class="text-2xl sm:text-3xl font-black text-white font-heading">My Wishlist</h1>
+        </div>
+        <span class="text-xs font-bold text-slate-400">{{ wishlist_items|length }} saved items</span>
+    </div>
 
-{% if wishlist_items %}
-    <div class="row row-cols-2 row-cols-md-4 g-3">
-        {% for item in wishlist_items %}
-            {% with product=item.product %}
-                <div class="col">
-                    <div class="card h-100">
-                        <div class="product-img-wrap p-2">
+    {% if wishlist_items %}
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            {% for item in wishlist_items %}
+                {% with product=item.product %}
+                    <div class="glass-card rounded-2xl p-4 flex flex-col justify-between group hover:-translate-y-1.5 transition-all">
+                        
+                        <div class="relative w-full aspect-square flex items-center justify-center p-2 rounded-xl bg-slate-900/60 overflow-hidden">
                             {% if product.image %}
-                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-contain filter drop-shadow-md group-hover:scale-105 transition-all">
                             {% else %}
-                                <div class="text-muted small">No Image</div>
+                                <div class="text-slate-500 text-xs">No Image</div>
                             {% endif %}
                         </div>
-                        <div class="card-body p-3 d-flex flex-column">
-                            <h6 class="card-title fw-bold mb-1">
-                                <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-body text-truncate d-block">
-                                    {{ product.name }}
-                                </a>
-                            </h6>
-                            <span class="text-success fw-bold fs-5 mb-2">₨{{ product.price }}</span>
-                            <div class="mt-auto d-flex gap-2">
-                                <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-primary flex-grow-1">View Item</a>
-                                <a href="{% url 'store:wishlist_toggle' product.id %}" class="btn btn-sm btn-outline-danger" title="Remove">
-                                    <i class="bi bi-trash"></i>
-                                </a>
-                            </div>
+
+                        <div class="pt-3 space-y-1">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-cta">{{ product.category.name }}</span>
+                            <a href="{{ product.get_absolute_url }}" class="font-heading font-bold text-xs sm:text-sm text-white line-clamp-1 hover:text-brand-neon block">
+                                {{ product.name }}
+                            </a>
+                            <div class="font-heading font-black text-base text-brand-neon">₹{{ product.price }}</div>
                         </div>
+
+                        <div class="pt-3 mt-2 border-t border-slate-800 flex items-center gap-2">
+                            <a href="{{ product.get_absolute_url }}" class="flex-1 btn btn-xs bg-brand-neon hover:bg-cyan-300 text-black font-cta rounded-full border-none">
+                                MOVE TO BAG
+                            </a>
+                            <a href="{% url 'store:wishlist_toggle' product.id %}" class="btn btn-xs btn-circle btn-ghost text-slate-400 hover:text-rose-500" title="Remove from Wishlist">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+
                     </div>
-                </div>
-            {% endwith %}
-        {% endfor %}
-    </div>
-{% else %}
-    <div class="card p-5 text-center">
-        <div class="fs-1 text-muted mb-2"><i class="bi bi-heart"></i></div>
-        <h5>Your Wishlist is empty.</h5>
-        <div class="mt-3">
-            <a href="{% url 'store:product_list' %}" class="btn btn-primary">Discover Products</a>
+                {% endwith %}
+            {% endfor %}
         </div>
-    </div>
-{% endif %}
+    {% else %}
+        <div class="text-center py-16 glass-card rounded-3xl p-8 border border-slate-800">
+            <i class="bi bi-heart text-5xl text-slate-600 block mb-3"></i>
+            <h2 class="text-lg font-bold text-white mb-2">Your Wishlist is currently empty</h2>
+            <p class="text-xs text-slate-400 mb-6">Explore our limited edition sneakers, sunglasses, and streetwear drops.</p>
+            <a href="{% url 'store:product_list' %}" class="btn bg-brand-neon text-black font-cta px-6 rounded-full border-none">
+                DISCOVER DROPS →
+            </a>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

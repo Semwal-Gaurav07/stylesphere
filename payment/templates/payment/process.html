@@ -3,161 +3,129 @@
 {% block title %}Complete Payment - Style Sphere{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-7 col-lg-6">
-        <div class="card p-4 shadow-sm border-0">
-            <!-- Header -->
-            <div class="text-center mb-3">
-                <span class="badge bg-secondary mb-1">Order #{{ order.id }}</span>
-                <h3 class="fw-bold mb-1">Choose Payment Method</h3>
-                <div class="alert alert-info py-2 my-3 d-flex justify-content-between align-items-center">
-                    <span>Total Amount Payable:</span>
-                    <strong class="fs-4 text-success">₹{{ order.get_total_cost }}</strong>
-                </div>
-            </div>
-
-            <!-- Payment Options Accordion -->
-            <div class="accordion shadow-sm" id="paymentOptionsAccordion">
-                
-                <!-- Option 1: Direct UPI / Google Pay / PhonePe / Paytm -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#upiPay">
-                            <i class="bi bi-phone text-success fs-5 me-2"></i> UPI / Google Pay / PhonePe / QR
-                        </button>
-                    </h2>
-                    <div id="upiPay" class="accordion-collapse collapse show" data-bs-parent="#paymentOptionsAccordion">
-                        <div class="accordion-body bg-body-tertiary">
-                            <p class="small text-muted mb-2">Tap an app below to pay directly on your mobile phone:</p>
-
-                            <!-- Mobile UPI Deep-Link Intent Buttons -->
-                            <div class="row g-2 mb-3">
-                                <div class="col-6">
-                                    <a href="upi://pay?pa=9781855165@upi&pn=Style%20Sphere&am={{ order.get_total_cost }}&cu=INR&tn=Order%20{{ order.id }}" class="btn btn-outline-dark w-100 py-2 d-flex align-items-center justify-content-center gap-2 bg-white shadow-sm">
-                                        <i class="bi bi-google text-primary"></i> <span class="fw-bold">Google Pay</span>
-                                    </a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="upi://pay?pa=9781855165@upi&pn=Style%20Sphere&am={{ order.get_total_cost }}&cu=INR&tn=Order%20{{ order.id }}" class="btn btn-outline-dark w-100 py-2 d-flex align-items-center justify-content-center gap-2 bg-white shadow-sm">
-                                        <span class="fw-bold" style="color: #5f259f;"><i class="bi bi-wallet2"></i> PhonePe</span>
-                                    </a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="upi://pay?pa=9781855165@upi&pn=Style%20Sphere&am={{ order.get_total_cost }}&cu=INR&tn=Order%20{{ order.id }}" class="btn btn-outline-dark w-100 py-2 d-flex align-items-center justify-content-center gap-2 bg-white shadow-sm">
-                                        <span class="fw-bold" style="color: #00baf2;"><i class="bi bi-lightning-charge-fill"></i> Paytm</span>
-                                    </a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="upi://pay?pa=9781855165@upi&pn=Style%20Sphere&am={{ order.get_total_cost }}&cu=INR&tn=Order%20{{ order.id }}" class="btn btn-outline-dark w-100 py-2 d-flex align-items-center justify-content-center gap-2 bg-white shadow-sm">
-                                        <span class="fw-bold text-success"><i class="bi bi-qr-code"></i> Any UPI App</span>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="text-center my-3 text-muted small">— OR SCAN QR CODE —</div>
-
-                            <!-- Dynamic Scan QR Code -->
-                            <div class="text-center p-3 bg-white rounded-3 border mb-3">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR" alt="UPI QR Code" class="img-fluid mb-2">
-                                <div class="small text-muted">UPI ID: <strong>9781855165@upi</strong></div>
-                            </div>
-
-                            <!-- Confirmation Form -->
-                            <form method="post" action="{% url 'payment:process' %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="payment_type" value="upi">
-                                <input type="hidden" name="upi_id" value="Google Pay / UPI App">
-                                <button type="submit" class="btn btn-success btn-lg w-100 fw-bold py-2 shadow-sm">
-                                    ✅ I Have Completed the UPI Payment
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Option 2: Credit / Debit Card -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#cardPay">
-                            <i class="bi bi-credit-card-2-front text-primary fs-5 me-2"></i> Credit / Debit Card
-                        </button>
-                    </h2>
-                    <div id="cardPay" class="accordion-collapse collapse" data-bs-parent="#paymentOptionsAccordion">
-                        <div class="accordion-body bg-body-tertiary">
-                            <form method="post" action="{% url 'payment:process' %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="payment_type" value="card">
-
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Cardholder Name</label>
-                                    <input type="text" name="card_name" class="form-control" placeholder="Name on card" required>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Card Number</label>
-                                    <div class="input-group">
-                                        <input type="text" name="card_number" id="cardNumInput" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19" required>
-                                        <span class="input-group-text bg-white"><i class="bi bi-credit-card"></i></span>
-                                    </div>
-                                </div>
-
-                                <div class="row g-2 mb-3">
-                                    <div class="col-6">
-                                        <label class="form-label small fw-bold">Expiry Date</label>
-                                        <input type="text" name="card_expiry" id="expiryInput" class="form-control" placeholder="MM/YY" maxlength="5" required>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="form-label small fw-bold">CVV</label>
-                                        <input type="password" name="card_cvv" class="form-control" placeholder="123" maxlength="4" required>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex align-items-center gap-1 small text-muted mb-3">
-                                    <i class="bi bi-shield-lock-fill text-success"></i> 256-Bit Bank Grade SSL Encrypted
-                                </div>
-
-                                <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-2 shadow-sm">
-                                    🔒 Pay ₹{{ order.get_total_cost }} Securely
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Option 3: Cash on Delivery (COD) -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#codPay">
-                            <i class="bi bi-cash-coin text-warning fs-5 me-2"></i> Cash on Delivery (COD)
-                        </button>
-                    </h2>
-                    <div id="codPay" class="accordion-collapse collapse" data-bs-parent="#paymentOptionsAccordion">
-                        <div class="accordion-body bg-body-tertiary text-center">
-                            <p class="small text-muted mb-3">
-                                Pay ₹{{ order.get_total_cost }} in cash when the delivery courier arrives at your doorstep.
-                            </p>
-                            <form method="post" action="{% url 'payment:process' %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="payment_type" value="cod">
-                                <button type="submit" class="btn btn-warning btn-lg w-100 fw-bold text-dark shadow-sm py-2">
-                                    💵 Confirm Order with Cash on Delivery
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Cancel link -->
-            <div class="text-center mt-4">
-                <a href="{% url 'payment:canceled' %}" class="text-danger small text-decoration-none">Cancel & Return to Cart</a>
+<div class="max-w-xl mx-auto py-6">
+    <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-2xl space-y-6">
+        
+        <!-- Header -->
+        <div class="text-center space-y-2">
+            <span class="badge bg-slate-900 text-brand-neon font-extrabold text-xs px-3 py-1">ORDER #{{ order.id }}</span>
+            <h1 class="text-2xl font-black text-white font-heading">CHOOSE PAYMENT METHOD</h1>
+            
+            <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex justify-between items-center my-3">
+                <span class="text-xs text-slate-400 font-bold uppercase">Total Payable:</span>
+                <span class="text-2xl font-black text-brand-neon font-heading">₹{{ order.get_total_cost }}</span>
             </div>
         </div>
+
+        <!-- 3 Payment Option Tabs via DaisyUI -->
+        <div class="space-y-4">
+            
+            <!-- Option 1: UPI & Deep Links -->
+            <div class="collapse collapse-arrow bg-slate-900/90 border border-slate-800 rounded-2xl">
+                <input type="radio" name="payment_accordion" checked="checked" /> 
+                <div class="collapse-title text-sm font-bold text-white flex items-center gap-2">
+                    <i class="bi bi-phone text-brand-neon text-lg"></i> UPI / Google Pay / PhonePe / QR Code
+                </div>
+                <div class="collapse-content space-y-4 pt-2">
+                    <p class="text-xs text-slate-400">Pay directly from your phone with 1-tap:</p>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
+                            <i class="bi bi-google text-brand-neon"></i> Google Pay
+                        </a>
+                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
+                            <span class="text-purple-400 font-bold">PhonePe</span>
+                        </a>
+                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
+                            <span class="text-cyan-400 font-bold">Paytm</span>
+                        </a>
+                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
+                            <i class="bi bi-qr-code text-brand-lime"></i> Any UPI
+                        </a>
+                    </div>
+
+                    <!-- Dynamic QR Code -->
+                    <div class="text-center p-4 bg-white rounded-2xl max-w-xs mx-auto">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR" alt="UPI QR" class="mx-auto rounded-lg mb-2">
+                        <span class="text-[11px] text-slate-800 font-bold block">UPI ID: 9781855165@upi</span>
+                    </div>
+
+                    <form method="post" action="{% url 'payment:process' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="payment_type" value="upi">
+                        <button type="submit" class="w-full btn bg-emerald-500 hover:bg-emerald-400 text-black font-cta text-sm py-2.5 rounded-full border-none">
+                            ✅ I HAVE COMPLETED UPI PAYMENT
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Option 2: Credit / Debit Card -->
+            <div class="collapse collapse-arrow bg-slate-900/90 border border-slate-800 rounded-2xl">
+                <input type="radio" name="payment_accordion" /> 
+                <div class="collapse-title text-sm font-bold text-white flex items-center gap-2">
+                    <i class="bi bi-credit-card-2-front text-brand-pink text-lg"></i> Credit / Debit Card (256-bit SSL)
+                </div>
+                <div class="collapse-content pt-2">
+                    <form method="post" action="{% url 'payment:process' %}" class="space-y-3">
+                        {% csrf_token %}
+                        <input type="hidden" name="payment_type" value="card">
+
+                        <div>
+                            <label class="text-[11px] font-bold text-slate-400 block mb-1">Name on Card</label>
+                            <input type="text" name="card_name" required placeholder="Cardholder Name" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white">
+                        </div>
+
+                        <div>
+                            <label class="text-[11px] font-bold text-slate-400 block mb-1">Card Number</label>
+                            <input type="text" name="card_number" id="cardNumInput" required placeholder="1234 5678 9012 3456" maxlength="19" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="text-[11px] font-bold text-slate-400 block mb-1">Expiry</label>
+                                <input type="text" name="card_expiry" id="expiryInput" required placeholder="MM/YY" maxlength="5" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white">
+                            </div>
+                            <div>
+                                <label class="text-[11px] font-bold text-slate-400 block mb-1">CVV</label>
+                                <input type="password" name="card_cvv" required placeholder="123" maxlength="4" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full btn bg-brand-neon hover:bg-cyan-300 text-black font-cta text-sm py-2.5 rounded-full border-none mt-2">
+                            🔒 PAY ₹{{ order.get_total_cost }} SECURELY
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Option 3: Cash on Delivery -->
+            <div class="collapse collapse-arrow bg-slate-900/90 border border-slate-800 rounded-2xl">
+                <input type="radio" name="payment_accordion" /> 
+                <div class="collapse-title text-sm font-bold text-white flex items-center gap-2">
+                    <i class="bi bi-cash-coin text-amber-400 text-lg"></i> Cash on Delivery (COD)
+                </div>
+                <div class="collapse-content pt-2 text-center space-y-3">
+                    <p class="text-xs text-slate-400">Pay in cash to the courier when your order arrives at your doorstep.</p>
+                    <form method="post" action="{% url 'payment:process' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="payment_type" value="cod">
+                        <button type="submit" class="w-full btn bg-amber-400 hover:bg-amber-300 text-black font-cta text-sm py-2.5 rounded-full border-none">
+                            💵 CONFIRM CASH ON DELIVERY
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="text-center pt-2">
+            <a href="{% url 'payment:canceled' %}" class="text-xs text-rose-400 hover:underline">Cancel & Return to Bag</a>
+        </div>
+
     </div>
 </div>
 
-<!-- Card formatting JavaScript -->
 <script>
     const cardInput = document.getElementById('cardNumInput');
     if (cardInput) {
