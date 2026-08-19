@@ -1,111 +1,117 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="en" data-theme="dark" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>{% block title %}Style Sphere - Official Streetwear & Merch{% endblock %}</title>
+    <title>{% block title %}Style Sphere - Official Streetwear, Sneakers & Merch{% endblock %}</title>
 
-    <!-- SEO & OpenGraph Tags -->
-    <meta name="description" content="Shop official merchandise, oversized t-shirts, streetwear, hoodies, and joggers at Style Sphere. Fast dispatch and Cash on Delivery available across India.">
-    <meta property="og:title" content="Style Sphere - Curated Streetwear & Apparel">
-    <meta property="og:description" content="Shop the latest trends with Cash on Delivery and instant checkout.">
+    <!-- SEO & Metadata -->
+    <meta name="description" content="Shop limited edition sneakers, sunglasses, oversized graphic tees, and streetwear hoodies at Style Sphere. Fast dispatch and Cash on Delivery available across India.">
+    <meta property="og:title" content="Style Sphere - Streetwear, Sneakers & Sunglasses">
     <meta property="og:image" content="https://stylesphere-store.onrender.com/static/images/stylesphere_logo_primary.png">
-    <meta property="og:url" content="https://stylesphere-store.onrender.com/">
-    <meta name="twitter:card" content="summary_large_image">
-
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="{% static 'images/stylesphere_icon.png' %}">
 
-    <!-- Google Fonts: Plus Jakarta Sans -->
+    <!-- Google Fonts: Poppins (Headings), Inter (Body), Oswald (CTAs) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@500;600;700&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Immediate Theme Application Script -->
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- TailwindCSS & DaisyUI CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: ["class", '[data-theme="dark"]'],
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                        cta: ['Oswald', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            neon: '#00F0FF',
+                            pink: '#FF0055',
+                            lime: '#CCFF00',
+                            purple: '#7928CA',
+                            dark: '#0A0C10',
+                            card: '#121620'
+                        }
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(24px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        floatSlow: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-10px) rotate(1.5deg)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.35', transform: 'scale(1)' },
+                            '50%': { opacity: '0.75', transform: 'scale(1.08)' },
+                        }
+                    },
+                    animation: {
+                        fadeInUp: 'fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        float: 'floatSlow 4.5s ease-in-out infinite',
+                        pulseGlow: 'pulseGlow 6s ease-in-out infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Theme State Handler -->
     <script>
         (function() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
         })();
     </script>
 
-    <!-- Bootstrap 5.3 & Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    
     <style>
-        :root {
-            --font-family-base: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-        }
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Poppins', sans-serif; }
+        .font-cta { font-family: 'Oswald', sans-serif; letter-spacing: 0.05em; text-transform: uppercase; }
         
-        /* Prevent Horizontal Scroll on Mobile */
-        html, body {
-            overflow-x: hidden;
-            width: 100%;
-            font-family: var(--font-family-base);
-            background-color: #f8f9fc;
-            color: #0f172a;
-            -webkit-tap-highlight-color: transparent;
+        .glass-nav {
+            background: rgba(10, 12, 16, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
-
-        /* Top Announcement Ticker */
-        .top-ticker {
-            background: linear-gradient(90deg, #1e1b4b 0%, #4338ca 50%, #e11d48 100%);
-            color: #ffffff;
-            font-size: 0.75rem;
-            padding: 6px 10px;
-            font-weight: 700;
-            text-align: center;
-            letter-spacing: 0.2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        [data-theme="light"] .glass-nav {
+            background: rgba(255, 255, 255, 0.92);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
         }
-
-        /* App-Like Header Navbar */
-        .navbar-app {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-            padding: 8px 0;
-            z-index: 1030;
+        .glass-card {
+            background: rgba(18, 22, 32, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .navbar-brand img { height: 34px; }
-        
-        .subnav-link {
-            font-weight: 700;
-            font-size: 0.82rem;
-            text-transform: uppercase;
-            color: inherit;
-            text-decoration: none;
-            padding: 5px 14px;
-            border-radius: 20px;
-            transition: all 0.2s ease;
-        }
-        .subnav-link:hover, .subnav-link.active {
-            background: rgba(79, 70, 229, 0.1);
-            color: #4f46e5;
-        }
-
-        /* Mobile Search Bar */
-        .search-input-pill {
-            border-radius: 25px;
-            background: #f1f5f9;
-            border: 1px solid transparent;
-            font-size: 0.85rem;
-            padding: 8px 16px;
-            transition: all 0.2s;
-        }
-        .search-input-pill:focus {
+        [data-theme="light"] .glass-card {
             background: #ffffff;
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        .glass-card:hover {
+            border-color: rgba(0, 240, 255, 0.5);
+            box-shadow: 0 10px 30px -10px rgba(0, 240, 255, 0.25);
         }
 
-        /* Category Story Bubbles */
         .cat-bubble-container {
             display: flex;
             gap: 16px;
@@ -121,464 +127,320 @@
             align-items: center;
             text-decoration: none;
             color: inherit;
-            min-width: 72px;
+            min-width: 76px;
             text-align: center;
         }
         .cat-bubble-img {
-            width: 66px;
-            height: 66px;
+            width: 68px;
+            height: 68px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             padding: 2px;
         }
-        .cat-bubble:hover .cat-bubble-img { transform: scale(1.08); }
+        .cat-bubble:hover .cat-bubble-img { transform: scale(1.1) rotate(2deg); }
         .cat-bubble-text {
             font-size: 0.72rem;
             font-weight: 800;
             margin-top: 6px;
             text-transform: uppercase;
             letter-spacing: 0.2px;
-            line-height: 1.1;
         }
 
-        /* Vivid Category Rings */
-        .ring-all { background: linear-gradient(135deg, #ec4899, #8b5cf6); color: #fff; }
-        .ring-tshirts { background: linear-gradient(135deg, #f43f5e, #fb923c); color: #fff; }
-        .ring-hoodies { background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff; }
-        .ring-bottoms { background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff; }
-        .ring-sneakers { background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: #fff; }
-        .ring-shirts { background: linear-gradient(135deg, #f59e0b, #eab308); color: #fff; }
-        .ring-acc { background: linear-gradient(135deg, #d946ef, #ec4899); color: #fff; }
+        .ring-all { background: linear-gradient(135deg, #00F0FF, #7928CA); color: #000; }
+        .ring-sneakers { background: linear-gradient(135deg, #00F0FF, #0070F3); color: #000; }
+        .ring-sunglasses { background: linear-gradient(135deg, #CCFF00, #00F0FF); color: #000; }
+        .ring-tshirts { background: linear-gradient(135deg, #FF0055, #FFB199); color: #fff; }
+        .ring-hoodies { background: linear-gradient(135deg, #7928CA, #FF0055); color: #fff; }
+        .ring-bottoms { background: linear-gradient(135deg, #10B981, #CCFF00); color: #000; }
+        .ring-acc { background: linear-gradient(135deg, #F59E0B, #FF0055); color: #fff; }
 
-        /* Mobile-First 2-Column Product Cards */
-        .product-card {
-            border-radius: 14px;
-            border: none;
-            background: #ffffff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.12);
-        }
-        .product-card-img-wrap {
-            width: 100%;
-            height: 180px;
-            background: #f8fafc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-        }
-        .product-card-img-wrap img {
-            max-height: 90%;
-            max-width: 90%;
-            object-fit: contain;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .product-card:hover .product-card-img-wrap img {
-            transform: scale(1.08);
-        }
-        .product-card-body {
-            padding: 10px 12px 14px 12px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-        .product-title-link {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: inherit;
-            text-decoration: none;
-            line-height: 1.25;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            height: 2.1em;
-            margin-bottom: 6px;
-        }
-        .product-price-tag {
-            font-size: 1rem;
-            font-weight: 800;
-            color: #16a34a;
-        }
-        .wishlist-pill-btn {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            z-index: 5;
-            background: rgba(255,255,255,0.92);
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            transition: transform 0.15s;
-        }
-        .wishlist-pill-btn:hover { transform: scale(1.15); }
-        .cart-badge { background: linear-gradient(135deg, #f43f5e, #e11d48); font-size: 0.7rem; }
-
-        /* Fandom Boxes */
         .fandom-badge-box {
-            border-radius: 14px;
+            border-radius: 16px;
             color: #ffffff;
             text-align: center;
-            padding: 22px 12px;
+            padding: 24px 14px;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-size: 0.85rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transition: transform 0.25s ease;
         }
-        .fandom-badge-box:hover { transform: translateY(-3px); }
+        .fandom-badge-box:hover { transform: translateY(-4px); }
         .badge-anime { background: linear-gradient(135deg, #e11d48, #fb7185); }
         .badge-marvel { background: linear-gradient(135deg, #2563eb, #60a5fa); }
         .badge-gaming { background: linear-gradient(135deg, #059669, #34d399); }
         .badge-originals { background: linear-gradient(135deg, #7c3aed, #c084fc); }
 
-        /* Trust Badges */
-        .trust-badge-card {
-            border-radius: 14px;
-            padding: 16px 12px;
-            text-align: center;
-            border: 1px solid rgba(0,0,0,0.04);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            height: 100%;
-        }
-        .trust-cod { background: #fffbeb; color: #92400e; }
-        .trust-returns { background: #eff6ff; color: #1e40af; }
-        .trust-secure { background: #f0fdf4; color: #166534; }
-        .trust-express { background: #fdf2f8; color: #9d174d; }
-
-        /* Floating WhatsApp Button */
-        .whatsapp-float {
-            position: fixed;
-            bottom: 74px;
-            right: 16px;
-            background: linear-gradient(135deg, #25d366, #128c7e);
-            color: #fff;
-            border-radius: 50px;
-            font-size: 26px;
-            box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
-            z-index: 1020;
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition: transform 0.2s;
-        }
-        .whatsapp-float:hover { transform: scale(1.1); color: #fff; }
-
-        /* Mobile App Bottom Nav Bar */
-        .mobile-bottom-nav {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            height: 58px;
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border-top: 1px solid rgba(0, 0, 0, 0.08);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 1030;
-            padding: 2px 0;
-        }
-        .mobile-nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #64748b;
-            font-size: 0.68rem;
-            font-weight: 700;
-            position: relative;
-            transition: color 0.15s;
-        }
-        .mobile-nav-item i { font-size: 1.2rem; margin-bottom: 2px; }
-        .mobile-nav-item.active, .mobile-nav-item:hover { color: #4f46e5; }
-
-        @media (max-width: 768px) {
-            body { padding-bottom: 64px; }
-            .product-card-img-wrap { height: 145px; }
-            .product-title-link { font-size: 0.8rem; }
-            .product-price-tag { font-size: 0.92rem; }
-        }
-
-        @media (min-width: 769px) {
-            .whatsapp-float { bottom: 25px; right: 25px; width: 55px; height: 55px; font-size: 30px; }
-        }
-
-        /* Dark Mode Overrides */
-        [data-bs-theme="dark"] body { background-color: #090d16; color: #f1f5f9; }
-        [data-bs-theme="dark"] .navbar-app { background: rgba(14, 20, 34, 0.95) !important; border-bottom: 1px solid #1e293b; }
-        [data-bs-theme="dark"] .mobile-bottom-nav { background: rgba(14, 20, 34, 0.96); border-top: 1px solid #1e293b; }
-        [data-bs-theme="dark"] .product-card { background-color: #111a2e; border: 1px solid #1e293b; color: #f1f5f9; }
-        [data-bs-theme="dark"] .product-card-img-wrap { background-color: #1a243a; }
-        [data-bs-theme="dark"] .search-input-pill { background: #1a243a; color: #fff; }
-        [data-bs-theme="dark"] .wishlist-pill-btn { background: rgba(30,41,59,0.95); color: #fff; }
-        [data-bs-theme="dark"] .trust-cod { background: #451a03; color: #fef3c7; }
-        [data-bs-theme="dark"] .trust-returns { background: #172554; color: #dbeafe; }
-        [data-bs-theme="dark"] .trust-secure { background: #052e16; color: #dcfce7; }
-        [data-bs-theme="dark"] .trust-express { background: #500724; color: #fce7f3; }
-        [data-bs-theme="light"] .logo-light { display: inline-block !important; }
-        [data-bs-theme="light"] .logo-dark { display: none !important; }
-        [data-bs-theme="dark"] .logo-light { display: none !important; }
-        [data-bs-theme="dark"] .logo-dark { display: inline-block !important; }
-        [data-bs-theme="dark"] .text-dark, [data-bs-theme="dark"] a.text-dark { color: #f1f5f9 !important; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
     </style>
 </head>
-<body>
+<body class="bg-[#0A0C10] dark:bg-[#0A0C10] text-slate-100 antialiased min-h-screen flex flex-col justify-between selection:bg-brand-neon selection:text-black pb-16 md:pb-0">
+
     <!-- Top Announcement Ticker -->
-    <div class="top-ticker">
-        🔥 USE CODE <span class="badge bg-warning text-dark fw-bold">FIRST10</span> FOR 10% OFF • FREE DELIVERY ON ₹999+
+    <div class="bg-gradient-to-r from-brand-purple via-brand-pink to-brand-neon text-white text-xs py-1.5 px-4 text-center font-bold tracking-wide">
+        ⚡ FLASH DROP: USE CODE <span class="bg-black text-brand-neon px-2 py-0.5 rounded-full font-extrabold mx-1">FIRST10</span> FOR 10% OFF + FREE SHIPPING ON ORDERS OVER ₹999 🕶️👟
     </div>
 
-    <!-- Main Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light navbar-app sticky-top">
-        <div class="container px-3">
-            <a class="navbar-brand py-0 d-flex align-items-center" href="{% url 'store:product_list' %}">
-                <img src="{% static 'images/stylesphere_logo_primary.png' %}" alt="Style Sphere" class="logo-light">
-                <img src="{% static 'images/stylesphere_logo_white.png' %}" alt="Style Sphere" class="logo-dark">
-            </a>
-
-            <!-- Search Bar (Desktop) -->
-            <form class="d-none d-lg-flex mx-auto col-lg-5" action="{% url 'store:product_list' %}" method="get">
-                <div class="input-group">
-                    <input class="form-control search-input-pill" type="search" name="q" placeholder="Search T-Shirts, Hoodies, Joggers, Sneakers..." value="{{ query|default:'' }}">
+    <!-- Glassmorphic Navbar -->
+    <header class="sticky top-0 z-40 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <a href="{% url 'store:product_list' %}" class="flex items-center gap-2 group">
+                        <img src="{% static 'images/stylesphere_logo_white.png' %}" alt="Style Sphere" class="h-9 block">
+                    </a>
                 </div>
-            </form>
 
-            <!-- Actions (Theme + Wishlist + Cart + Profile) -->
-            <div class="d-flex align-items-center gap-2 ms-auto">
-                <button id="themeToggleBtn" class="btn btn-outline-secondary btn-sm rounded-circle p-2" type="button" title="Toggle Theme" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
-                    <i id="themeIcon" class="bi bi-moon-stars"></i>
-                </button>
-
-                <a href="{% url 'store:wishlist_detail' %}" class="btn btn-outline-danger btn-sm rounded-circle p-2 position-relative d-none d-sm-flex" title="Wishlist" style="width: 36px; height: 36px; align-items: center; justify-content: center;">
-                    <i class="bi bi-heart"></i>
-                    {% if user.is_authenticated and user.wishlist.count > 0 %}
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.62rem;">
-                            {{ user.wishlist.count }}
-                        </span>
-                    {% endif %}
-                </a>
-
-                <a href="{% url 'store:cart_detail' %}" class="btn btn-outline-dark btn-sm position-relative rounded-pill px-3 py-1 d-flex align-items-center">
-                    <i class="bi bi-bag me-1"></i> <span class="d-none d-sm-inline">Cart</span>
-                    {% with total_items=cart|length %}
-                        {% if total_items > 0 %}
-                            <span class="badge rounded-pill cart-badge ms-1">
-                                {{ total_items }}
-                            </span>
-                        {% endif %}
-                    {% endwith %}
-                </a>
-
-                {% if user.is_authenticated %}
-                    <div class="dropdown d-none d-sm-block">
-                        <button class="btn btn-primary btn-sm rounded-pill dropdown-toggle px-3" type="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle me-1"></i> {{ user.username }}
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-4">
-                            <li><a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="bi bi-truck me-2"></i>My Orders & Tracking</a></li>
-                            <li><a class="dropdown-item" href="{% url 'store:wishlist_detail' %}"><i class="bi bi-heart me-2 text-danger"></i>My Wishlist</a></li>
-                            <li><a class="dropdown-item" href="{% url 'api:product-list' %}"><i class="bi bi-code-slash me-2"></i>REST API</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold">
+                    <a href="{% url 'store:product_list' %}" class="text-white hover:text-brand-neon transition-colors {% if not category %}text-brand-neon font-bold{% endif %}">Home</a>
+                    
+                    <div class="dropdown dropdown-hover">
+                        <label tabindex="0" class="cursor-pointer text-slate-300 hover:text-brand-neon flex items-center gap-1">
+                            Products <i class="bi bi-chevron-down text-xs"></i>
+                        </label>
+                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-2xl bg-brand-card border border-slate-800 rounded-2xl w-56">
+                            <li><a href="{% url 'store:product_list' %}"><i class="bi bi-grid-fill text-brand-neon"></i> All Collections</a></li>
+                            {% for c in categories %}
+                                <li><a href="{{ c.get_absolute_url }}"><i class="bi bi-tag-fill text-brand-pink"></i> {{ c.name }}</a></li>
+                            {% endfor %}
                         </ul>
                     </div>
-                {% else %}
-                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3 d-none d-sm-inline-block">Sign In</a>
-                    <a href="{% url 'accounts:register' %}" class="btn btn-success btn-sm rounded-pill px-3 d-none d-sm-inline-block">Sign Up</a>
-                {% endif %}
+
+                    <a href="#productGrid" class="text-slate-300 hover:text-brand-neon transition-colors">Catalog</a>
+                    <a href="#about" class="text-slate-300 hover:text-brand-neon transition-colors">About Us</a>
+                    <a href="https://wa.me/919781855165" target="_blank" class="text-slate-300 hover:text-brand-neon transition-colors">Contact</a>
+                </nav>
+
+                <!-- Search Bar (Desktop) -->
+                <div class="hidden md:flex items-center flex-1 max-w-xs mx-6">
+                    <form action="{% url 'store:product_list' %}" method="get" class="w-full relative">
+                        <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search sneakers, shades, tees..." 
+                               class="w-full bg-slate-900/90 border border-slate-700/60 rounded-full py-2 pl-10 pr-4 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-brand-neon focus:ring-1 focus:ring-brand-neon transition-all">
+                        <button type="submit" class="absolute left-3.5 top-2 text-slate-400 hover:text-brand-neon">
+                            <i class="bi bi-search text-xs"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right Action Icons: Cart, Wishlist, Account, Theme Toggle -->
+                <div class="flex items-center gap-3">
+                    
+                    <!-- Wishlist Icon with Counter Badge -->
+                    <a href="{% url 'store:wishlist_detail' %}" class="btn btn-ghost btn-circle btn-sm text-slate-300 hover:text-brand-pink relative" title="My Wishlist">
+                        <i class="bi bi-heart text-lg"></i>
+                        {% if user.is_authenticated and user.wishlist.count > 0 %}
+                            <span class="badge badge-xs bg-brand-pink border-none text-white absolute -top-1 -right-1 font-bold">
+                                {{ user.wishlist.count }}
+                            </span>
+                        {% endif %}
+                    </a>
+
+                    <!-- Cart Drawer Trigger with Counter Badge -->
+                    <a href="{% url 'store:cart_detail' %}" class="btn btn-ghost btn-circle btn-sm text-slate-300 hover:text-brand-neon relative" title="Shopping Cart">
+                        <i class="bi bi-bag text-lg"></i>
+                        {% with total_items=cart|length %}
+                            {% if total_items > 0 %}
+                                <span class="badge badge-xs bg-brand-neon border-none text-black font-extrabold absolute -top-1 -right-1">
+                                    {{ total_items }}
+                                </span>
+                            {% endif %}
+                        {% endwith %}
+                    </a>
+
+                    <!-- User Account Dropdown -->
+                    <div class="dropdown dropdown-end">
+                        <label tabindex="0" class="btn btn-ghost btn-circle btn-sm avatar border border-slate-700 hover:border-brand-neon">
+                            <div class="w-8 rounded-full bg-slate-800 flex items-center justify-center">
+                                <i class="bi bi-person text-lg text-brand-neon"></i>
+                            </div>
+                        </label>
+                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-2xl bg-brand-card border border-slate-800 rounded-2xl w-56 mt-3">
+                            {% if user.is_authenticated %}
+                                <li class="menu-title px-4 py-2 text-slate-400 border-b border-slate-800">
+                                    <span class="text-xs font-bold text-brand-neon">VIP: {{ user.username }}</span>
+                                </li>
+                                <li><a href="{% url 'accounts:profile' %}"><i class="bi bi-truck text-brand-neon"></i> My Orders & Tracking</a></li>
+                                <li><a href="{% url 'store:wishlist_detail' %}"><i class="bi bi-heart text-brand-pink"></i> My Wishlist</a></li>
+                                <li><a href="{% url 'api:product-list' %}"><i class="bi bi-code-slash text-brand-lime"></i> REST API</a></li>
+                                <li><hr class="border-slate-800 my-1"></li>
+                                <li><a href="{% url 'accounts:logout' %}" class="text-rose-400"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                            {% else %}
+                                <li><a href="{% url 'accounts:login' %}"><i class="bi bi-box-arrow-in-right text-brand-neon"></i> Login</a></li>
+                                <li><a href="{% url 'accounts:register' %}"><i class="bi bi-person-plus text-brand-pink"></i> Sign Up</a></li>
+                                <li><a href="{% url 'accounts:login' %}"><i class="bi bi-gear text-brand-lime"></i> My Account</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    <!-- Theme Toggle (Dark & Light) -->
+                    <button onclick="toggleTheme()" class="btn btn-ghost btn-circle btn-sm text-slate-300 hover:text-amber-400" title="Toggle Theme">
+                        <i id="themeToggleIcon" class="bi bi-moon-stars text-lg"></i>
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- Mobile Search Bar -->
+            <div class="md:hidden pb-3">
+                <form action="{% url 'store:product_list' %}" method="get" class="w-full relative">
+                    <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search sneakers, shades, drops..." 
+                           class="w-full bg-slate-900 border border-slate-700 rounded-full py-2 pl-10 pr-4 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-brand-neon">
+                    <button type="submit" class="absolute left-3.5 top-2 text-slate-400">
+                        <i class="bi bi-search text-xs"></i>
+                    </button>
+                </form>
             </div>
         </div>
+    </header>
 
-        <!-- Mobile Search Bar -->
-        <div class="container px-3 d-lg-none mt-2">
-            <form class="d-flex w-100" action="{% url 'store:product_list' %}" method="get">
-                <input class="form-control search-input-pill w-100" type="search" name="q" placeholder="Search oversized tees, hoodies, cargo..." value="{{ query|default:'' }}">
-            </form>
+    <!-- Sub-Navbar Category Tabs (Desktop) -->
+    <nav class="hidden md:block bg-brand-card/60 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-center gap-2 py-2">
+                <a href="{% url 'store:product_list' %}" 
+                   class="px-4 py-1.5 rounded-full text-xs font-cta font-bold transition-all {% if not category %}bg-brand-neon text-black{% else %}text-slate-400 hover:text-white{% endif %}">
+                    ALL ITEMS
+                </a>
+                {% for c in categories %}
+                    <a href="{{ c.get_absolute_url }}" 
+                       class="px-4 py-1.5 rounded-full text-xs font-cta font-bold transition-all {% if category.slug == c.slug %}bg-brand-neon text-black{% else %}text-slate-400 hover:text-white{% endif %}">
+                        {{ c.name|upper }}
+                    </a>
+                {% endfor %}
+            </div>
         </div>
     </nav>
 
-    <!-- Sub-Navigation Category Tabs (Desktop) -->
-    <div class="bg-body border-bottom py-2 d-none d-md-block">
-        <div class="container d-flex justify-content-center gap-3">
-            <a href="{% url 'store:product_list' %}" class="subnav-link {% if not category %}active{% endif %}">All Drops</a>
-            {% for c in categories %}
-                <a href="{{ c.get_absolute_url }}" class="subnav-link {% if category.slug == c.slug %}active{% endif %}">{{ c.name }}</a>
-            {% endfor %}
-        </div>
-    </div>
-
     <!-- Main Content Container -->
-    <div class="container my-3 px-3">
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-4 py-2 px-3 small" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
+            <div class="mb-6 space-y-2">
+                {% for message in messages %}
+                    <div class="p-3.5 rounded-2xl text-xs font-bold flex items-center justify-between {% if message.tags == 'success' %}bg-emerald-950/60 text-emerald-300 border border-emerald-800{% elif message.tags == 'error' %}bg-rose-950/60 text-rose-300 border border-rose-800{% else %}bg-indigo-950/60 text-indigo-300 border border-indigo-800{% endif %}">
+                        <span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
 
         {% block content %}{% endblock %}
-    </div>
+    </main>
 
-    <!-- Colorful Trust Badges -->
-    <div class="container my-4 px-3">
-        <div class="row g-2 g-md-3">
-            <div class="col-6 col-md-3">
-                <div class="trust-badge-card trust-cod">
-                    <i class="bi bi-cash-coin fs-3 d-block mb-1"></i>
-                    <h6 class="fw-bold mb-0 small">Cash on Delivery</h6>
-                    <span class="small opacity-75" style="font-size: 0.7rem;">Pay upon doorstep arrival</span>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="trust-badge-card trust-returns">
-                    <i class="bi bi-arrow-repeat fs-3 d-block mb-1"></i>
-                    <h6 class="fw-bold mb-0 small">30 Days Returns</h6>
-                    <span class="small opacity-75" style="font-size: 0.7rem;">Hassle-free exchanges</span>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="trust-badge-card trust-secure">
-                    <i class="bi bi-shield-check fs-3 d-block mb-1"></i>
-                    <h6 class="fw-bold mb-0 small">100% Safe Payment</h6>
-                    <span class="small opacity-75" style="font-size: 0.7rem;">Encrypted & protected</span>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="trust-badge-card trust-express">
-                    <i class="bi bi-lightning-charge-fill fs-3 d-block mb-1"></i>
-                    <h6 class="fw-bold mb-0 small">Express Delivery</h6>
-                    <span class="small opacity-75" style="font-size: 0.7rem;">Fast dispatch across India</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Floating WhatsApp Support -->
-    <a href="https://wa.me/919781855165?text=Hello%20Style%20Sphere,%20I%20have%20an%20inquiry%20about%20my%20order" class="whatsapp-float" target="_blank" title="Chat on WhatsApp">
+    <!-- Floating WhatsApp Support Button -->
+    <a href="https://wa.me/919781855165?text=Hello%20Style%20Sphere,%20I%20have%20an%20inquiry%20about%20my%20order" 
+       target="_blank" 
+       class="fixed bottom-20 md:bottom-6 right-5 z-40 w-12 h-12 p-3 bg-emerald-500 hover:bg-emerald-400 text-white rounded-full shadow-lg hover:shadow-emerald-500/30 flex items-center justify-center text-2xl transition-all transform hover:scale-110" 
+       title="Chat on WhatsApp (+91 9781855165)">
         <i class="bi bi-whatsapp"></i>
     </a>
 
     <!-- Mobile App-Style Fixed Bottom Nav Bar -->
-    <div class="mobile-bottom-nav d-md-none">
-        <a href="{% url 'store:product_list' %}" class="mobile-nav-item {% if request.path == '/' %}active{% endif %}">
-            <i class="bi bi-house-door"></i>
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0A0C10]/95 backdrop-blur-lg border-t border-slate-800 flex justify-around items-center h-15 py-1">
+        <a href="{% url 'store:product_list' %}" class="flex flex-col items-center text-xs font-bold {% if request.path == '/' %}text-brand-neon{% else %}text-slate-400{% endif %}">
+            <i class="bi bi-house-door text-lg mb-0.5"></i>
             <span>Home</span>
         </a>
-        <a href="#productGrid" class="mobile-nav-item">
-            <i class="bi bi-grid"></i>
+        <a href="#productGrid" class="flex flex-col items-center text-xs font-bold text-slate-400 hover:text-brand-neon">
+            <i class="bi bi-grid text-lg mb-0.5"></i>
             <span>Drops</span>
         </a>
-        <a href="{% url 'store:wishlist_detail' %}" class="mobile-nav-item {% if 'wishlist' in request.path %}active{% endif %}">
-            <i class="bi bi-heart"></i>
+        <a href="{% url 'store:wishlist_detail' %}" class="relative flex flex-col items-center text-xs font-bold {% if 'wishlist' in request.path %}text-brand-pink{% else %}text-slate-400{% endif %}">
+            <i class="bi bi-heart text-lg mb-0.5"></i>
             <span>Wishlist</span>
             {% if user.is_authenticated and user.wishlist.count > 0 %}
-                <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger" style="font-size: 0.58rem;">
+                <span class="absolute -top-1 right-2 bg-brand-pink text-white text-[9px] font-black w-3.5 h-3.5 rounded-full flex items-center justify-center">
                     {{ user.wishlist.count }}
                 </span>
             {% endif %}
         </a>
-        <a href="{% url 'store:cart_detail' %}" class="mobile-nav-item {% if 'cart' in request.path %}active{% endif %}">
-            <i class="bi bi-bag"></i>
+        <a href="{% url 'store:cart_detail' %}" class="relative flex flex-col items-center text-xs font-bold {% if 'cart' in request.path %}text-brand-neon{% else %}text-slate-400{% endif %}">
+            <i class="bi bi-bag text-lg mb-0.5"></i>
             <span>Cart</span>
             {% with total_items=cart|length %}
                 {% if total_items > 0 %}
-                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill cart-badge" style="font-size: 0.58rem;">
+                    <span class="absolute -top-1 right-1 bg-brand-neon text-black text-[9px] font-black w-3.5 h-3.5 rounded-full flex items-center justify-center">
                         {{ total_items }}
                     </span>
                 {% endif %}
             {% endwith %}
         </a>
         {% if user.is_authenticated %}
-            <a href="{% url 'accounts:profile' %}" class="mobile-nav-item {% if 'profile' in request.path %}active{% endif %}">
-                <i class="bi bi-person"></i>
+            <a href="{% url 'accounts:profile' %}" class="flex flex-col items-center text-xs font-bold {% if 'profile' in request.path %}text-brand-neon{% else %}text-slate-400{% endif %}">
+                <i class="bi bi-person text-lg mb-0.5"></i>
                 <span>Profile</span>
             </a>
         {% else %}
-            <a href="{% url 'accounts:login' %}" class="mobile-nav-item">
-                <i class="bi bi-person"></i>
+            <a href="{% url 'accounts:login' %}" class="flex flex-col items-center text-xs font-bold text-slate-400 hover:text-brand-neon">
+                <i class="bi bi-person text-lg mb-0.5"></i>
                 <span>Sign In</span>
             </a>
         {% endif %}
-    </div>
+    </nav>
 
     <!-- Footer -->
-    <footer class="bg-dark text-light py-4 mt-5">
-        <div class="container px-3">
-            <div class="row g-3">
-                <div class="col-6 col-md-3">
-                    <h6 class="fw-bold text-uppercase text-warning mb-2 small">Need Help</h6>
-                    <ul class="list-unstyled small text-muted mb-0">
-                        <li class="mb-1"><a href="{% url 'accounts:profile' %}" class="text-reset text-decoration-none">Track Order</a></li>
-                        <li class="mb-1"><a href="{% url 'store:wishlist_detail' %}" class="text-reset text-decoration-none">My Wishlist</a></li>
-                        <li class="mb-1"><a href="https://wa.me/919781855165" class="text-reset text-decoration-none">WhatsApp Support</a></li>
+    <footer class="bg-black text-slate-400 border-t border-slate-900 py-12 mt-12" id="about">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h4 class="text-white font-heading font-bold text-sm mb-4">Shop Collections</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="{% url 'store:product_list' %}" class="hover:text-brand-neon">Sneakers & Kicks</a></li>
+                        <li><a href="{% url 'store:product_list' %}" class="hover:text-brand-neon">Polarized Sunglasses</a></li>
+                        <li><a href="{% url 'store:product_list' %}" class="hover:text-brand-neon">Oversized Graphic Tees</a></li>
+                        <li><a href="{% url 'store:product_list' %}" class="hover:text-brand-neon">Heavyweight Hoodies</a></li>
                     </ul>
                 </div>
-                <div class="col-6 col-md-3">
-                    <h6 class="fw-bold text-uppercase text-warning mb-2 small">Categories</h6>
-                    <ul class="list-unstyled small text-muted mb-0">
-                        {% for c in categories|slice:":4" %}
-                            <li class="mb-1"><a href="{{ c.get_absolute_url }}" class="text-reset text-decoration-none">{{ c.name }}</a></li>
-                        {% endfor %}
+                <div>
+                    <h4 class="text-white font-heading font-bold text-sm mb-4">Customer Support</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="{% url 'accounts:profile' %}" class="hover:text-brand-neon">Track Order Status</a></li>
+                        <li><a href="{% url 'store:wishlist_detail' %}" class="hover:text-brand-neon">My Wishlist</a></li>
+                        <li><a href="https://wa.me/919781855165" target="_blank" class="hover:text-brand-neon">WhatsApp Support (+91 9781855165)</a></li>
                     </ul>
                 </div>
-                <div class="col-12 col-md-6 text-md-end">
-                    <h6 class="fw-bold text-uppercase text-warning mb-2 small">Style Sphere Streetwear</h6>
-                    <p class="small text-muted mb-1">Curated anime merchandise, oversized streetwear, heavy-gauge hoodies, and sneakers.</p>
-                    <div class="text-muted small" style="font-size: 0.75rem;">
-                        <strong>Safe Payments:</strong> UPI • Cards • NetBanking • Cash on Delivery
+                <div class="col-span-2 md:text-right">
+                    <h4 class="text-white font-heading font-bold text-sm mb-2">Style Sphere Streetwear</h4>
+                    <p class="text-xs text-slate-400 max-w-md md:ml-auto mb-3">
+                        Curating sneakers, aerodynamic optics, anime drops, and 240 GSM heavy French Terry cotton.
+                    </p>
+                    <div class="text-xs font-semibold text-slate-500">
+                        ⚡ 100% Encrypted Payments • UPI • Credit/Debit Cards • NetBanking • Cash on Delivery (COD)
                     </div>
                 </div>
             </div>
-            <hr class="my-3 border-secondary">
-            <p class="text-center small text-muted mb-0">&copy; {% now "Y" %} Style Sphere. All rights reserved.</p>
+            <div class="border-t border-slate-900 pt-6 text-center text-xs text-slate-500">
+                &copy; {% now "Y" %} Style Sphere Inc. All rights reserved.
+            </div>
         </div>
     </footer>
 
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <!-- Theme Switcher JS -->
     <script>
-        const themeToggleBtn = document.getElementById('themeToggleBtn');
-        const themeIcon = document.getElementById('themeIcon');
-        function updateThemeIcon(theme) {
-            themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill text-warning' : 'bi bi-moon-stars';
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            if (next === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            localStorage.setItem('theme', next);
+            const icon = document.getElementById('themeToggleIcon');
+            if (icon) {
+                icon.className = next === 'dark' ? 'bi bi-moon-stars text-lg text-slate-300' : 'bi bi-sun text-lg text-amber-500';
+            }
         }
-        const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
-        updateThemeIcon(currentTheme);
-        themeToggleBtn.addEventListener('click', () => {
-            const activeTheme = document.documentElement.getAttribute('data-bs-theme');
-            const newTheme = activeTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-bs-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeIcon(newTheme);
-        });
     </script>
 </body>
 </html>

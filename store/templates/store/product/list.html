@@ -1,228 +1,276 @@
 {% extends "store/base.html" %}
 
 {% block title %}
-    {% if category %}{{ category.name }} - Style Sphere{% else %}Style Sphere - Official Streetwear & Anime Drops{% endif %}
+    {% if category %}{{ category.name }} - Style Sphere{% else %}Style Sphere // Sneakers, Sunglasses & Streetwear{% endif %}
 {% endblock %}
 
 {% block content %}
 {% if not category and not query %}
-    <!-- Compact Mobile & Desktop Hero Carousel -->
-    <div id="heroDropCarousel" class="carousel slide mb-4 rounded-4 overflow-hidden shadow-sm" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#heroDropCarousel" data-bs-slide-to="0" class="active"></button>
-            <button type="button" data-bs-target="#heroDropCarousel" data-bs-slide-to="1"></button>
-            <button type="button" data-bs-target="#heroDropCarousel" data-bs-slide-to="2"></button>
+    <!-- HERO SECTION WITH PARALLAX & ANIMATED TEXT REVEAL -->
+    <div class="relative min-h-[75vh] flex items-center justify-center overflow-hidden rounded-3xl mb-12 bg-gradient-to-br from-[#0A0C10] via-[#121620] to-[#1e1b4b] border border-slate-800">
+        
+        <!-- Ambient Glowing Neon Orbs (Parallax Depth Layer) -->
+        <div class="absolute -top-24 -left-24 w-80 h-80 bg-brand-neon/20 rounded-full blur-3xl pointer-events-none animate-pulseGlow"></div>
+        <div class="absolute -bottom-24 -right-24 w-80 h-80 bg-brand-pink/20 rounded-full blur-3xl pointer-events-none animate-pulseGlow" style="animation-delay: 2s;"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-8 py-12 relative z-10 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                
+                <!-- Left: Animated Text Reveal & Oswald CTAs -->
+                <div class="lg:col-span-7 space-y-5 text-center lg:text-left">
+                    
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-900/80 border border-brand-neon/40 text-brand-neon text-xs font-cta uppercase tracking-widest backdrop-blur-md animate-fadeInUp">
+                        <span class="w-2 h-2 rounded-full bg-brand-neon animate-ping"></span>
+                        SEASON 2026 // ULTRA-MODERN CAPSULE
+                    </div>
+
+                    <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-[1.05] animate-fadeInUp" style="animation-delay: 0.15s;">
+                        ICONIC <span class="bg-gradient-to-r from-brand-neon via-brand-purple to-brand-pink bg-clip-text text-transparent">KICKS.</span><br>
+                        FUTURISTIC <span class="bg-gradient-to-r from-brand-pink via-amber-300 to-brand-lime bg-clip-text text-transparent">SHADES.</span>
+                    </h1>
+
+                    <p class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto lg:mx-0 leading-relaxed animate-fadeInUp" style="animation-delay: 0.3s;">
+                        Elevate your streetwear aesthetic. High-performance aerodynamic eyewear paired with limited-edition hype sneakers and 240 GSM oversized tees.
+                    </p>
+
+                    <!-- CTAs with Oswald Font -->
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2 animate-fadeInUp" style="animation-delay: 0.45s;">
+                        <a href="#productGrid" class="btn bg-brand-neon hover:bg-cyan-300 text-black font-cta text-base px-8 rounded-full border-none shadow-lg shadow-brand-neon/30 hover:scale-105 transition-all">
+                            EXPLORE DROPS <i class="bi bi-arrow-right ml-1"></i>
+                        </a>
+                        <a href="#categories" class="btn bg-brand-pink hover:bg-rose-500 text-white font-cta text-base px-8 rounded-full border-none shadow-lg shadow-brand-pink/30 hover:scale-105 transition-all">
+                            SHOP CATEGORIES 🕶️
+                        </a>
+                    </div>
+
+                    <!-- Trust Stats Counter -->
+                    <div class="grid grid-cols-3 gap-4 pt-6 border-t border-slate-800/80 max-w-md mx-auto lg:mx-0 animate-fadeInUp" style="animation-delay: 0.6s;">
+                        <div>
+                            <span class="font-heading font-extrabold text-2xl text-white">450+</span>
+                            <span class="block text-xs font-medium text-slate-400">Exclusive Drops</span>
+                        </div>
+                        <div>
+                            <span class="font-heading font-extrabold text-2xl text-brand-neon">100%</span>
+                            <span class="block text-xs font-medium text-slate-400">Verified Authentic</span>
+                        </div>
+                        <div>
+                            <span class="font-heading font-extrabold text-2xl text-brand-pink">24/7</span>
+                            <span class="block text-xs font-medium text-slate-400">Express Delivery</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right: Floating 3D Showcase -->
+                <div class="lg:col-span-5 relative flex items-center justify-center">
+                    <div class="relative w-full max-w-md aspect-square flex items-center justify-center">
+                        <div class="absolute inset-4 rounded-full border border-dashed border-brand-neon/30 animate-spin" style="animation-duration: 25s;"></div>
+
+                        <!-- Sneaker Floating Image -->
+                        <div class="relative z-20 animate-float">
+                            <img src="https://images.unsplash.com/photo-1552346154-21d32810aba3?w=800&auto=format&fit=crop&q=80" 
+                                 alt="Cyberpunk Sneaker" 
+                                 class="w-72 sm:w-88 object-contain filter drop-shadow-[0_20px_30px_rgba(0,240,255,0.35)] -rotate-12 hover:rotate-0 transition-transform duration-500 cursor-pointer">
+                        </div>
+
+                        <!-- Sunglasses Floating Badge -->
+                        <div class="absolute -bottom-2 -left-2 z-30 p-3 rounded-2xl glass-card border border-white/20 shadow-2xl flex items-center gap-3 animate-float" style="animation-delay: 1.5s;">
+                            <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=300&auto=format&fit=crop&q=80" alt="Cyber Shades" class="w-12 h-12 object-cover rounded-xl border border-slate-700">
+                            <div>
+                                <span class="badge badge-xs bg-brand-lime text-black font-extrabold px-2 py-0.5">NEW VIBE</span>
+                                <h4 class="font-heading font-bold text-xs text-white">Matrix Polarized</h4>
+                                <span class="text-[10px] font-bold text-brand-neon">UV400 Protected</span>
+                            </div>
+                        </div>
+
+                        <!-- Price Tag -->
+                        <div class="absolute top-2 -right-2 z-30 px-3.5 py-1.5 rounded-full bg-brand-pink text-white font-heading font-extrabold text-xs shadow-xl animate-float" style="animation-delay: 0.8s;">
+                            🔥 DROP #01 — ₹899
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active" style="background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 60%, #e11d48 100%); min-height: 220px;">
-                <div class="p-4 p-md-5 text-white d-flex flex-column justify-content-center align-items-start" style="min-height: 220px;">
-                    <span class="badge bg-danger mb-2 px-3 py-1 rounded-pill text-uppercase fw-bold">DROP 2026 // VOL. 01</span>
-                    <h2 class="fw-extrabold display-6 mb-1">Oversized Streetwear & Anime Tees</h2>
-                    <p class="small text-light mb-3 col-md-8">240 GSM heavy-gauge bio-washed French Terry cotton. Drop-shoulder drape.</p>
-                    <a href="#productGrid" class="btn btn-warning btn-sm px-4 py-2 rounded-pill fw-bold text-dark shadow">Shop Now →</a>
-                </div>
-            </div>
-            <div class="carousel-item" style="background: linear-gradient(135deg, #0f172a 0%, #064e3b 60%, #059669 100%); min-height: 220px;">
-                <div class="p-4 p-md-5 text-white d-flex flex-column justify-content-center align-items-start" style="min-height: 220px;">
-                    <span class="badge bg-warning text-dark mb-2 px-3 py-1 rounded-pill text-uppercase fw-bold">FREE DELIVERY</span>
-                    <h2 class="fw-extrabold display-6 mb-1">Cash on Delivery Across India</h2>
-                    <p class="small text-light mb-3 col-md-8">Use coupon code <strong>FIRST10</strong> for flat 10% discount on your order.</p>
-                    <a href="#productGrid" class="btn btn-light btn-sm px-4 py-2 rounded-pill fw-bold shadow">Explore Drops →</a>
-                </div>
-            </div>
-            <div class="carousel-item" style="background: linear-gradient(135deg, #831843 0%, #be123c 60%, #fb7185 100%); min-height: 220px;">
-                <div class="p-4 p-md-5 text-white d-flex flex-column justify-content-center align-items-start" style="min-height: 220px;">
-                    <span class="badge bg-dark mb-2 px-3 py-1 rounded-pill text-uppercase fw-bold">WINTERWEAR</span>
-                    <h2 class="fw-extrabold display-6 mb-1">400 GSM Heavyweight Hoodies</h2>
-                    <p class="small text-light mb-3 col-md-8">Brushed inner fleece for premium warmth and structured hood shape.</p>
-                    <a href="{% url 'store:product_list_by_category' 'hoodies-jackets' %}" class="btn btn-dark btn-sm px-4 py-2 rounded-pill fw-bold shadow">Shop Hoodies →</a>
-                </div>
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#heroDropCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#heroDropCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-        </button>
     </div>
 
     <!-- Category Story Bubbles -->
-    <div class="mb-4">
-        <div class="d-flex justify-content-between align-items-center mb-2 px-1">
-            <h6 class="fw-bold mb-0 text-uppercase tracking-wider text-muted" style="font-size: 0.75rem;">Categories</h6>
-            <span class="text-muted" style="font-size: 0.72rem;">Swipe to explore</span>
+    <div class="mb-10" id="categories">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xs font-black uppercase tracking-widest text-slate-400 font-cta">Shop by Category</h2>
+            <span class="text-xs font-semibold text-slate-400">Swipe to view</span>
         </div>
         <div class="cat-bubble-container">
-            <a href="{% url 'store:product_list' %}" class="cat-bubble">
-                <div class="cat-bubble-img ring-all fs-4">
+            <a href="{% url 'store:product_list' %}" class="cat-bubble group">
+                <div class="cat-bubble-img ring-all text-xl">
                     🔥
                 </div>
-                <span class="cat-bubble-text">All</span>
+                <span class="cat-bubble-text group-hover:text-brand-neon">All</span>
             </a>
             {% for c in categories %}
-                <a href="{{ c.get_absolute_url }}" class="cat-bubble">
-                    <div class="cat-bubble-img {% cycle 'ring-tshirts' 'ring-hoodies' 'ring-bottoms' 'ring-sneakers' 'ring-shirts' 'ring-acc' %} fs-4">
-                        {% if 't-shirt' in c.slug %}👕{% elif 'hoodie' in c.slug %}🧥{% elif 'jogger' in c.slug or 'cargo' in c.slug %}👖{% elif 'sneaker' in c.slug %}👟{% elif 'shirt' in c.slug %}👔{% else %}🎒{% endif %}
+                <a href="{{ c.get_absolute_url }}" class="cat-bubble group">
+                    <div class="cat-bubble-img {% cycle 'ring-sneakers' 'ring-sunglasses' 'ring-tshirts' 'ring-hoodies' 'ring-bottoms' 'ring-acc' %} text-xl">
+                        {% if 'sneaker' in c.slug %}👟{% elif 'sunglass' in c.slug or 'shade' in c.slug %}🕶️{% elif 't-shirt' in c.slug %}👕{% elif 'hoodie' in c.slug %}🧥{% elif 'jogger' in c.slug or 'cargo' in c.slug %}👖{% elif 'shirt' in c.slug %}👔{% else %}🎒{% endif %}
                     </div>
-                    <span class="cat-bubble-text">{{ c.name }}</span>
+                    <span class="cat-bubble-text group-hover:text-brand-neon">{{ c.name }}</span>
                 </a>
             {% endfor %}
         </div>
     </div>
 
-    <!-- Fandom & Theme Collaborations -->
-    <div class="mb-4">
-        <div class="row g-2">
-            <div class="col-6 col-md-3">
-                <div class="fandom-badge-box badge-anime">
-                    <i class="bi bi-fire fs-3 mb-1 d-block"></i>
-                    ANIME MERCH
-                </div>
+    <!-- Fandom Collaboration Cards -->
+    <div class="mb-10">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="fandom-badge-box badge-anime cursor-pointer">
+                <i class="bi bi-fire text-2xl block mb-1"></i>
+                <span>Anime Drops</span>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="fandom-badge-box badge-marvel">
-                    <i class="bi bi-shield-shaded fs-3 mb-1 d-block"></i>
-                    MARVEL STUDIOS
-                </div>
+            <div class="fandom-badge-box badge-marvel cursor-pointer">
+                <i class="bi bi-shield-shaded text-2xl block mb-1"></i>
+                <span>Marvel & DC</span>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="fandom-badge-box badge-gaming">
-                    <i class="bi bi-controller fs-3 mb-1 d-block"></i>
-                    GAMING & GEEK
-                </div>
+            <div class="fandom-badge-box badge-gaming cursor-pointer">
+                <i class="bi bi-controller text-2xl block mb-1"></i>
+                <span>Gaming & Geek</span>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="fandom-badge-box badge-originals">
-                    <i class="bi bi-gem fs-3 mb-1 d-block"></i>
-                    TSS ORIGINALS
-                </div>
+            <div class="fandom-badge-box badge-originals cursor-pointer">
+                <i class="bi bi-gem text-2xl block mb-1"></i>
+                <span>TSS Originals</span>
             </div>
         </div>
     </div>
 {% endif %}
 
-<!-- Mobile Filter Collapsible Trigger -->
-<div class="d-md-none mb-3" id="productGrid">
-    <button class="btn btn-outline-secondary btn-sm w-100 rounded-pill d-flex justify-content-between align-items-center py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#filterSidebar">
-        <span><i class="bi bi-funnel me-1"></i> Filter & Sort Products</span>
-        <i class="bi bi-chevron-down"></i>
-    </button>
-</div>
-
-<div class="row g-3">
+<!-- Product Catalog Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6" id="productGrid">
+    
     <!-- Sidebar Filters -->
-    <div class="col-md-3 collapse d-md-block" id="filterSidebar">
-        <div class="card p-3 mb-3 rounded-4">
-            <h6 class="fw-bold mb-2 small text-uppercase">Categories</h6>
-            <div class="list-group list-group-flush">
-                <a href="{% url 'store:product_list' %}" class="list-group-item list-group-item-action py-2 px-2 border-0 rounded-3 small {% if not category %}active fw-bold{% endif %}">
-                    All Products
-                </a>
-                {% for c in categories %}
-                    <a href="{{ c.get_absolute_url }}" class="list-group-item list-group-item-action py-2 px-2 border-0 rounded-3 small {% if category.slug == c.slug %}active fw-bold{% endif %}">
-                        {{ c.name }}
+    <aside class="md:col-span-1">
+        <div class="glass-card rounded-2xl p-5 shadow-sm space-y-6">
+            
+            <!-- Category Filter -->
+            <div>
+                <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 font-cta mb-3">Categories</h3>
+                <div class="space-y-1">
+                    <a href="{% url 'store:product_list' %}" 
+                       class="block px-3 py-2 rounded-xl text-xs font-bold transition-all {% if not category %}bg-brand-neon text-black{% else %}text-slate-300 hover:bg-slate-800{% endif %}">
+                        All Products
                     </a>
-                {% endfor %}
+                    {% for c in categories %}
+                        <a href="{{ c.get_absolute_url }}" 
+                           class="block px-3 py-2 rounded-xl text-xs font-bold transition-all {% if category.slug == c.slug %}bg-brand-neon text-black{% else %}text-slate-300 hover:bg-slate-800{% endif %}">
+                            {{ c.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Price & Sort Filter Form -->
+            <div class="pt-4 border-t border-slate-800">
+                <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 font-cta mb-3">Price & Sorting</h3>
+                <form method="get" action="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'store:product_list' %}{% endif %}" class="space-y-4">
+                    {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-400 uppercase">Min (₹)</label>
+                            <input type="number" name="min_price" value="{{ min_price|default:'' }}" placeholder="0" 
+                                   class="w-full px-3 py-1.5 text-xs bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-brand-neon">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-400 uppercase">Max (₹)</label>
+                            <input type="number" name="max_price" value="{{ max_price|default:'' }}" placeholder="2999" 
+                                   class="w-full px-3 py-1.5 text-xs bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-brand-neon">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Sort By</label>
+                        <select name="sort" class="w-full px-3 py-2 text-xs bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-brand-neon">
+                            <option value="">Featured Drops</option>
+                            <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                            <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                            <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest First</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="w-full py-2 bg-brand-neon hover:bg-cyan-300 text-black text-xs font-cta font-bold rounded-xl shadow transition-all">
+                        APPLY FILTERS
+                    </button>
+                    <a href="{% url 'store:product_list' %}" class="block text-center text-xs font-bold text-slate-400 hover:text-white">
+                        Reset Filters
+                    </a>
+                </form>
             </div>
         </div>
+    </aside>
 
-        <div class="card p-3 rounded-4">
-            <h6 class="fw-bold mb-3 small text-uppercase">Filter & Sort</h6>
-            <form method="get" action="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'store:product_list' %}{% endif %}">
-                {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
-
-                <div class="row g-2 mb-3">
-                    <div class="col-6">
-                        <label class="form-label small text-muted">Min (₹)</label>
-                        <input type="number" name="min_price" class="form-control form-control-sm rounded-3" value="{{ min_price|default:'' }}" placeholder="0">
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label small text-muted">Max (₹)</label>
-                        <input type="number" name="max_price" class="form-control form-control-sm rounded-3" value="{{ max_price|default:'' }}" placeholder="2999">
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label small text-muted">Sort By</label>
-                    <select name="sort" class="form-select form-select-sm rounded-3">
-                        <option value="">Top Featured</option>
-                        <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
-                        <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
-                        <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest Drops</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn btn-sm btn-primary w-100 mb-2 rounded-pill fw-bold">Apply</button>
-                <a href="{% url 'store:product_list' %}" class="btn btn-sm btn-outline-secondary w-100 rounded-pill">Reset</a>
-            </form>
-        </div>
-    </div>
-
-    <!-- Product Catalog Grid (2 Columns on Mobile, 3 Columns on Tablet/Desktop) -->
-    <div class="col-md-9">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold mb-0">
-                {% if category %}{{ category.name }}{% elif query %}Search: "{{ query }}"{% else %}Streetwear Drops{% endif %}
-            </h5>
-            <span class="text-muted small">{{ products|length }} items</span>
+    <!-- Main Products Grid -->
+    <section class="md:col-span-3">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-base font-extrabold text-white">
+                {% if category %}{{ category.name }}{% elif query %}Search: "{{ query }}"{% else %}Streetwear, Sneakers & Sunglasses{% endif %}
+            </h2>
+            <span class="text-xs font-semibold text-slate-400">{{ products|length }} items</span>
         </div>
 
-        <div class="row row-cols-2 row-cols-md-3 g-2 g-md-3">
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
             {% for product in products %}
-                <div class="col">
-                    <div class="product-card">
-                        <!-- Wishlist Button -->
-                        <a href="{% url 'store:wishlist_toggle' product.id %}" class="wishlist-pill-btn" title="Wishlist">
+                <div class="glass-card rounded-2xl p-3 sm:p-4 flex flex-col justify-between group hover:-translate-y-1.5 transition-all duration-300">
+                    
+                    <!-- Wishlist Button -->
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="badge bg-slate-900 text-brand-neon border border-slate-700 font-extrabold text-[10px] px-2 py-0.5">
+                            {{ product.category.name|upper }}
+                        </span>
+                        <a href="{% url 'store:wishlist_toggle' product.id %}" class="w-7 h-7 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-brand-pink transition-colors">
                             {% if product.id in user_wishlist_ids %}
-                                <i class="bi bi-heart-fill text-danger"></i>
+                                <i class="bi bi-heart-fill text-brand-pink text-xs"></i>
                             {% else %}
-                                <i class="bi bi-heart text-muted"></i>
+                                <i class="bi bi-heart text-xs"></i>
                             {% endif %}
                         </a>
+                    </div>
 
-                        <!-- Product Image Link -->
-                        <a href="{{ product.get_absolute_url }}" class="d-block text-decoration-none">
-                            <div class="product-card-img-wrap">
-                                {% if product.image %}
-                                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                                {% else %}
-                                    <div class="text-muted small py-4">No Image</div>
-                                {% endif %}
-                            </div>
+                    <!-- Product Image Container -->
+                    <a href="{{ product.get_absolute_url }}" class="relative w-full aspect-square flex items-center justify-center p-2 rounded-xl bg-slate-900/60 overflow-hidden">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-contain filter drop-shadow-md group-hover:scale-108 transition-all duration-300">
+                        {% else %}
+                            <div class="text-slate-500 text-xs font-semibold">No Image</div>
+                        {% endif %}
+                    </a>
+
+                    <!-- Product Details -->
+                    <div class="pt-3 space-y-1 flex-1 flex flex-col justify-end">
+                        <div class="flex items-center gap-1 text-amber-400 text-xs font-bold">
+                            <i class="bi bi-star-fill text-[11px]"></i>
+                            <span>{{ product.get_average_rating }}</span>
+                        </div>
+
+                        <a href="{{ product.get_absolute_url }}" class="font-heading font-bold text-xs sm:text-sm text-white line-clamp-1 hover:text-brand-neon block">
+                            {{ product.name }}
                         </a>
 
-                        <!-- Card Body -->
-                        <div class="product-card-body">
-                            <div class="text-warning small mb-1" style="font-size: 0.72rem;">
-                                <i class="bi bi-star-fill"></i> {{ product.get_average_rating }}
-                            </div>
+                        {% if product.stock <= 3 and product.stock > 0 %}
+                            <span class="text-[10px] font-extrabold text-brand-pink block">⚡ Only {{ product.stock }} left!</span>
+                        {% endif %}
 
-                            <a href="{{ product.get_absolute_url }}" class="product-title-link">
-                                {{ product.name }}
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-800 mt-2">
+                            <span class="font-heading font-black text-sm sm:text-base text-white">₹{{ product.price }}</span>
+                            <a href="{{ product.get_absolute_url }}" class="btn btn-xs bg-brand-neon hover:bg-cyan-300 text-black font-cta rounded-full border-none px-3">
+                                VIEW
                             </a>
-
-                            {% if product.stock <= 3 and product.stock > 0 %}
-                                <div class="badge bg-danger-subtle text-danger small mb-2 text-start p-1" style="font-size: 0.68rem;">
-                                    ⚡ Only {{ product.stock }} left!
-                                </div>
-                            {% endif %}
-
-                            <div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top border-secondary-subtle">
-                                <span class="product-price-tag">₹{{ product.price }}</span>
-                                <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-outline-primary px-3 py-1 rounded-pill" style="font-size: 0.75rem;">
-                                    View
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div>
             {% empty %}
-                <div class="col-12 text-center py-5">
-                    <p class="lead text-muted">No products found in this category.</p>
+                <div class="col-span-full text-center py-16 glass-card rounded-2xl">
+                    <i class="bi bi-search text-3xl text-slate-500 mb-2 block"></i>
+                    <p class="text-sm font-bold text-white">No products found in this category.</p>
                 </div>
             {% endfor %}
         </div>
-    </div>
+    </section>
 </div>
 {% endblock %}

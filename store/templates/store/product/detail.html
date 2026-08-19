@@ -4,236 +4,207 @@
 
 {% block content %}
 <!-- Breadcrumb -->
-<nav aria-label="breadcrumb" class="mb-2">
-    <ol class="breadcrumb small">
-        <li class="breadcrumb-item"><a href="{% url 'store:product_list' %}" class="text-decoration-none text-muted">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ product.category.get_absolute_url }}" class="text-decoration-none text-muted">{{ product.category.name }}</a></li>
-        <li class="breadcrumb-item active text-truncate fw-bold" style="max-width: 160px;">{{ product.name }}</li>
-    </ol>
+<nav class="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-4">
+    <a href="{% url 'store:product_list' %}" class="hover:text-brand-neon">Home</a>
+    <span>/</span>
+    <a href="{{ product.category.get_absolute_url }}" class="hover:text-brand-neon">{{ product.category.name }}</a>
+    <span>/</span>
+    <span class="text-white truncate max-w-xs">{{ product.name }}</span>
 </nav>
 
-<div class="card p-3 p-md-4 mb-4 shadow-sm border-0 rounded-4" id="productMainCard">
-    <div class="row g-4 align-items-center">
+<!-- Main Product Showcase Card -->
+<div class="glass-card rounded-3xl p-4 sm:p-8 shadow-sm mb-10" id="productMainCard">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         
-        <!-- Product Image Showcase Container -->
-        <div class="col-12 col-md-6 text-center">
-            <div class="bg-white p-3 rounded-4 border d-flex justify-content-center align-items-center position-relative shadow-sm" style="min-height: 320px;">
-                {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded-3" style="max-height: 360px; object-fit: contain;">
-                {% else %}
-                    <div class="py-5 text-muted small">No Image Available</div>
-                {% endif %}
-            </div>
+        <!-- Left: Product Image Showcase -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 flex items-center justify-center min-h-[320px] sm:min-h-[400px] relative overflow-hidden">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="max-h-[360px] object-contain filter drop-shadow-2xl animate-float">
+            {% else %}
+                <div class="text-slate-500 text-sm font-semibold">No Image Available</div>
+            {% endif %}
         </div>
 
-        <!-- Product Specs & Purchase Options -->
-        <div class="col-12 col-md-6">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="badge bg-primary-subtle text-primary px-3 py-1 text-uppercase fw-bold rounded-pill" style="font-size: 0.72rem;">{{ product.category.name }}</span>
+        <!-- Right: Specs & Buy Controls -->
+        <div class="space-y-5">
+            <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-slate-900 text-brand-neon border border-slate-700">
+                    {{ product.category.name }}
+                </span>
                 
-                <a href="{% url 'store:wishlist_toggle' product.id %}" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1 small">
+                <a href="{% url 'store:wishlist_toggle' product.id %}" class="inline-flex items-center gap-1 px-3.5 py-1 rounded-full text-xs font-bold border border-slate-700 text-slate-300 hover:text-brand-pink hover:border-brand-pink transition-all">
                     {% if in_wishlist %}
-                        <i class="bi bi-heart-fill text-danger me-1"></i> Saved
+                        <i class="bi bi-heart-fill text-brand-pink"></i> Saved in Wishlist
                     {% else %}
-                        <i class="bi bi-heart me-1"></i> Wishlist
+                        <i class="bi bi-heart"></i> Add to Wishlist
                     {% endif %}
                 </a>
             </div>
-            
-            <h1 class="fw-bold fs-4 mb-2">{{ product.name }}</h1>
-            
-            <!-- Live Social Proof & Ratings -->
-            <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
-                <span class="badge bg-warning text-dark px-2 py-1 small">
-                    <i class="bi bi-star-fill"></i> {{ product.get_average_rating }}
-                </span>
-                <span class="text-muted small">({{ reviews.count }} Reviews)</span>
-                <span class="badge bg-danger-subtle text-danger small">
-                    <i class="bi bi-fire"></i> 18 bought in last 24h
+
+            <h1 class="text-2xl sm:text-3xl font-black text-white leading-tight font-heading">
+                {{ product.name }}
+            </h1>
+
+            <!-- Ratings & Social Proof -->
+            <div class="flex items-center gap-3 flex-wrap">
+                <div class="flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-amber-400 text-black text-xs font-black">
+                    <i class="bi bi-star-fill"></i>
+                    <span>{{ product.get_average_rating }}</span>
+                </div>
+                <span class="text-xs font-semibold text-slate-400">({{ reviews.count }} Verified Reviews)</span>
+                <span class="px-2 py-0.5 rounded-md bg-brand-pink/20 text-brand-pink text-xs font-bold">
+                    🔥 18 bought in last 24h
                 </span>
             </div>
 
             <!-- Price in INR -->
-            <div class="d-flex align-items-baseline gap-3 my-2">
-                <span class="text-success fw-bold fs-2">₹{{ product.price }}</span>
-                <span class="text-muted text-decoration-line-through fs-5">₹{{ product.price|add:600 }}</span>
-                <span class="badge bg-success-subtle text-success fw-bold">35% OFF</span>
+            <div class="flex items-baseline gap-3">
+                <span class="text-3xl font-black text-brand-neon font-heading">₹{{ product.price }}</span>
+                <span class="text-base font-semibold text-slate-500 line-through">₹{{ product.price|add:600 }}</span>
+                <span class="px-2 py-0.5 rounded-md bg-emerald-950 text-emerald-400 text-xs font-extrabold">35% OFF</span>
             </div>
-            <div class="small text-muted mb-3">Inclusive of all taxes • Free Shipping on ₹999+</div>
+            <p class="text-xs text-slate-400">Inclusive of all taxes • Free Shipping on orders over ₹999</p>
 
             <!-- Size Selector & Purchase Form -->
-            <form action="{% url 'store:cart_add' product.id %}" method="post" id="purchaseForm">
+            <form action="{% url 'store:cart_add' product.id %}" method="post" id="purchaseForm" class="space-y-5 pt-2">
                 {% csrf_token %}
-                
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <label class="form-label small fw-bold mb-0">Select Size:</label>
-                        <span class="text-primary small text-decoration-underline" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#sizeChartModal">
-                            <i class="bi bi-rulers me-1"></i>Size Guide
-                        </span>
+
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-xs font-extrabold uppercase tracking-wider text-slate-400 font-cta">
+                            Select Size / Fit:
+                        </label>
+                        <span class="text-brand-neon text-xs cursor-pointer underline" onclick="document.getElementById('sizeChartModal').showModal()">Size Guide</span>
                     </div>
-                    <div class="d-flex gap-2">
-                        <input type="radio" class="btn-check" name="size" id="sizeS" value="S" autocomplete="off">
-                        <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeS">S</label>
-
-                        <input type="radio" class="btn-check" name="size" id="sizeM" value="M" autocomplete="off" checked>
-                        <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeM">M</label>
-
-                        <input type="radio" class="btn-check" name="size" id="sizeL" value="L" autocomplete="off">
-                        <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeL">L</label>
-
-                        <input type="radio" class="btn-check" name="size" id="sizeXL" value="XL" autocomplete="off">
-                        <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeXL">XL</label>
-
-                        <input type="radio" class="btn-check" name="size" id="sizeXXL" value="XXL" autocomplete="off">
-                        <label class="btn btn-outline-secondary btn-sm px-3 fw-bold rounded-3" for="sizeXXL">XXL</label>
+                    <div class="flex gap-2">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="size" value="S" class="peer sr-only">
+                            <span class="px-3.5 py-1.5 rounded-xl border border-slate-700 text-xs font-bold text-slate-300 peer-checked:bg-brand-neon peer-checked:text-black peer-checked:border-brand-neon block transition-all">S</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="size" value="M" checked class="peer sr-only">
+                            <span class="px-3.5 py-1.5 rounded-xl border border-slate-700 text-xs font-bold text-slate-300 peer-checked:bg-brand-neon peer-checked:text-black peer-checked:border-brand-neon block transition-all">M</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="size" value="L" class="peer sr-only">
+                            <span class="px-3.5 py-1.5 rounded-xl border border-slate-700 text-xs font-bold text-slate-300 peer-checked:bg-brand-neon peer-checked:text-black peer-checked:border-brand-neon block transition-all">L</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="size" value="XL" class="peer sr-only">
+                            <span class="px-3.5 py-1.5 rounded-xl border border-slate-700 text-xs font-bold text-slate-300 peer-checked:bg-brand-neon peer-checked:text-black peer-checked:border-brand-neon block transition-all">XL</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="size" value="XXL" class="peer sr-only">
+                            <span class="px-3.5 py-1.5 rounded-xl border border-slate-700 text-xs font-bold text-slate-300 peer-checked:bg-brand-neon peer-checked:text-black peer-checked:border-brand-neon block transition-all">XXL</span>
+                        </label>
                     </div>
                 </div>
 
-                <div class="row g-2 align-items-center mb-3">
-                    <div class="col-3">
-                        <label class="form-label small fw-bold mb-1">Qty:</label>
-                        <select name="quantity" class="form-select form-select-sm rounded-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-20">
+                        <select name="quantity" class="w-full px-3 py-2.5 text-xs font-bold bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
                         </select>
                     </div>
-                    
-                    <div class="col-9 d-flex gap-2">
-                        <button type="submit" name="buy_now" value="false" class="btn btn-dark btn-lg flex-grow-1 fw-bold py-2 shadow-sm rounded-pill">
-                            <i class="bi bi-bag-plus me-1"></i> Add to Cart
-                        </button>
-                        
-                        <button type="submit" name="buy_now" value="true" class="btn btn-warning btn-lg flex-grow-1 fw-bold py-2 shadow-sm text-dark rounded-pill">
-                            ⚡ Buy Now
-                        </button>
-                    </div>
+                    <button type="submit" name="buy_now" value="false" class="flex-1 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-cta font-bold text-sm shadow transition-all">
+                        <i class="bi bi-bag-plus mr-1"></i> ADD TO BAG
+                    </button>
+                    <button type="submit" name="buy_now" value="true" class="flex-1 py-3 px-4 rounded-xl bg-brand-neon hover:bg-cyan-300 text-black font-cta font-bold text-sm shadow transition-all">
+                        ⚡ BUY NOW
+                    </button>
                 </div>
             </form>
 
             <!-- Delivery Estimate Box -->
-            <div class="card p-3 bg-body-tertiary my-3 border rounded-4">
-                <div class="d-flex align-items-center gap-2 mb-2">
-                    <i class="bi bi-truck fs-5 text-primary"></i>
-                    <strong class="small">Get it by {{ delivery_date }}</strong>
+            <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2">
+                <div class="flex items-center gap-2 text-xs font-bold text-white">
+                    <i class="bi bi-truck text-brand-neon text-base"></i>
+                    <span>Estimated Delivery by {{ delivery_date }}</span>
                 </div>
-                <div class="input-group">
-                    <input type="text" class="form-control form-control-sm rounded-start-3" placeholder="Enter Pincode (e.g. 131001)" maxlength="6">
-                    <button class="btn btn-dark btn-sm rounded-end-3" type="button" onclick="alert('Delivery available in 3-4 days! Cash on Delivery active.')">Check</button>
-                </div>
-                <div class="small text-muted mt-2" style="font-size: 0.75rem;">
+                <p class="text-[11px] text-slate-400">
                     💵 Cash on Delivery Available • 🔄 30-Day Easy Returns & Exchanges
-                </div>
+                </p>
             </div>
 
-            <!-- Product Specs Accordion -->
-            <div class="accordion accordion-flush mt-3 border rounded-4 overflow-hidden" id="productDetailsAccordion">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-bold py-2 small" type="button" data-bs-toggle="collapse" data-bs-target="#descTab">
-                            <i class="bi bi-card-text me-2"></i>Product Details
-                        </button>
-                    </h2>
-                    <div id="descTab" class="accordion-collapse collapse show">
-                        <div class="accordion-body small text-muted">
-                            {{ product.description }}
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-bold py-2 small" type="button" data-bs-toggle="collapse" data-bs-target="#specsTab">
-                            <i class="bi bi-info-circle me-2"></i>Material & Fit
-                        </button>
-                    </h2>
-                    <div id="specsTab" class="accordion-collapse collapse">
-                        <div class="accordion-body small text-muted">
-                            <ul class="mb-0 ps-3">
-                                <li><strong>Fabric:</strong> 100% French Terry Cotton (240 GSM Bio-Washed)</li>
-                                <li><strong>Fit:</strong> Drop-Shoulder Relaxed Streetwear Oversized Fit</li>
-                                <li><strong>Country of Origin:</strong> India 🇮🇳</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+            <!-- Description & Specs -->
+            <div class="border-t border-slate-800 pt-4 space-y-2 text-xs text-slate-300">
+                <p>{{ product.description }}</p>
+                <p><strong>Fabric / Material:</strong> 240 GSM French Terry Cotton / Polarized UV400 Optics</p>
+                <p><strong>Country of Origin:</strong> Crafted in India 🇮🇳</p>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Size Chart Modal -->
-<div class="modal fade" id="sizeChartModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-4 border-0 shadow">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold">Size Guide (Inches)</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered table-sm text-center small mb-0">
-                    <thead class="table-light">
-                        <tr><th>Size</th><th>Chest (in)</th><th>Length (in)</th><th>Shoulder (in)</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>S</td><td>40"</td><td>27"</td><td>19"</td></tr>
-                        <tr><td>M</td><td>42"</td><td>28"</td><td>20"</td></tr>
-                        <tr><td>L</td><td>44"</td><td>29"</td><td>21"</td></tr>
-                        <tr><td>XL</td><td>46"</td><td>30"</td><td>22"</td></tr>
-                        <tr><td>XXL</td><td>48"</td><td>31"</td><td>23"</td></tr>
-                    </tbody>
-                </table>
-            </div>
+<dialog id="sizeChartModal" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box bg-brand-card border border-slate-800 rounded-3xl p-6">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-3">
+            <h3 class="font-heading font-bold text-white text-base">Size & Fit Guide</h3>
+            <form method="dialog"><button class="btn btn-sm btn-circle btn-ghost text-slate-400">✕</button></form>
         </div>
+        <table class="w-full text-xs text-center border-collapse">
+            <thead>
+                <tr class="border-b border-slate-700 text-slate-400">
+                    <th class="py-2">Size</th><th>Chest/Fit</th><th>Length</th><th>Shoulder</th>
+                </tr>
+            </thead>
+            <tbody class="text-slate-300">
+                <tr class="border-b border-slate-800/60"><td class="py-2 font-bold">S</td><td>40"</td><td>27"</td><td>19"</td></tr>
+                <tr class="border-b border-slate-800/60"><td class="py-2 font-bold">M</td><td>42"</td><td>28"</td><td>20"</td></tr>
+                <tr class="border-b border-slate-800/60"><td class="py-2 font-bold">L</td><td>44"</td><td>29"</td><td>21"</td></tr>
+                <tr class="border-b border-slate-800/60"><td class="py-2 font-bold">XL</td><td>46"</td><td>30"</td><td>22"</td></tr>
+                <tr><td class="py-2 font-bold">XXL</td><td>48"</td><td>31"</td><td>23"</td></tr>
+            </tbody>
+        </table>
     </div>
-</div>
+</dialog>
 
 <!-- Customer Reviews Section -->
-<div class="card p-3 p-md-4 mb-4 shadow-sm rounded-4 border-0">
-    <h4 class="fw-bold mb-3 fs-5">Customer Reviews & Ratings</h4>
+<div class="glass-card rounded-3xl p-6 sm:p-8 shadow-sm mb-10">
+    <h3 class="text-lg font-black text-white font-heading mb-6">Customer Reviews & Ratings</h3>
     
-    <div class="row g-3">
-        <div class="col-md-5">
-            <div class="card p-3 bg-body-tertiary border rounded-4">
-                <h6 class="fw-bold mb-2 small">Write a Review</h6>
-                {% if user.is_authenticated %}
-                    <form action="{% url 'store:review_add' product.id %}" method="post">
-                        {% csrf_token %}
-                        <label class="form-label small fw-bold mb-1">Rating:</label>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="md:col-span-1 bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
+            <h4 class="text-xs font-bold text-white font-cta uppercase mb-3">Write a Review</h4>
+            {% if user.is_authenticated %}
+                <form action="{% url 'store:review_add' product.id %}" method="post" class="space-y-3">
+                    {% csrf_token %}
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 block mb-1">Rating</label>
                         {{ review_form.rating }}
-                        <label class="form-label small fw-bold mb-1">Your Feedback:</label>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 block mb-1">Your Feedback</label>
                         {{ review_form.comment }}
-                        <button type="submit" class="btn btn-primary btn-sm w-100 py-2 fw-bold rounded-pill mt-2">Submit Review</button>
-                    </form>
-                {% else %}
-                    <p class="text-muted small mb-0">Please <a href="{% url 'accounts:login' %}?next={{ request.path }}">sign in</a> to write a review.</p>
-                {% endif %}
-            </div>
+                    </div>
+                    <button type="submit" class="w-full py-2 bg-brand-neon hover:bg-cyan-300 text-black font-cta font-bold text-xs rounded-xl transition-all">
+                        SUBMIT REVIEW
+                    </button>
+                </form>
+            {% else %}
+                <p class="text-xs text-slate-400">Please <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="text-brand-neon font-bold underline">sign in</a> to submit a review.</p>
+            {% endif %}
         </div>
 
-        <div class="col-md-7">
+        <div class="md:col-span-2 space-y-4">
             {% if reviews %}
-                <div class="list-group list-group-flush">
-                    {% for review in reviews %}
-                        <div class="list-group-item px-0 py-2 border-0 border-bottom">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="fw-bold small"><i class="bi bi-person-check text-success me-1"></i>{{ review.user.username }}</span>
-                                <span class="text-muted" style="font-size: 0.72rem;">{{ review.created|date:"M d, Y" }}</span>
-                            </div>
-                            <div class="text-warning small my-1">
-                                {% for i in "12345" %}
-                                    {% if forloop.counter <= review.rating %}<i class="bi bi-star-fill"></i>{% else %}<i class="bi bi-star"></i>{% endif %}
-                                {% endfor %}
-                            </div>
-                            <p class="mb-0 text-muted small">{{ review.comment }}</p>
+                {% for r in reviews %}
+                    <div class="border-b border-slate-800 pb-3">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-xs font-bold text-white">{{ r.user.username }}</span>
+                            <span class="text-[10px] text-slate-400">{{ r.created|date:"M d, Y" }}</span>
                         </div>
-                    {% endfor %}
-                </div>
+                        <div class="flex text-amber-400 text-xs mb-1">
+                            <i class="bi bi-star-fill mr-1"></i> {{ r.rating }} / 5
+                        </div>
+                        <p class="text-xs text-slate-300">{{ r.comment }}</p>
+                    </div>
+                {% endfor %}
             {% else %}
-                <div class="text-center py-4 text-muted">
-                    <i class="bi bi-chat-left-heart fs-2 d-block mb-1 text-primary"></i>
-                    <p class="mb-0 small">No reviews yet. Be the first to share your thoughts!</p>
-                </div>
+                <p class="text-xs text-slate-400 py-6 text-center">No reviews yet for this product. Be the first to share your thoughts!</p>
             {% endif %}
         </div>
     </div>
@@ -241,32 +212,27 @@
 
 <!-- You Might Also Like Section -->
 {% if related_products %}
-    <div class="my-4">
-        <h5 class="fw-bold mb-3">You Might Also Like</h5>
-        <div class="row row-cols-2 row-cols-md-4 g-2 g-md-3">
+    <div class="mb-10">
+        <h3 class="text-lg font-black text-white font-heading mb-4">You Might Also Like</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             {% for item in related_products %}
-                <div class="col">
-                    <div class="product-card">
-                        <a href="{% url 'store:wishlist_toggle' item.id %}" class="wishlist-pill-btn">
-                            <i class="bi bi-heart text-muted"></i>
+                <div class="glass-card rounded-2xl p-3 flex flex-col justify-between group hover:-translate-y-1 transition-all">
+                    <a href="{{ item.get_absolute_url }}" class="relative w-full aspect-square flex items-center justify-center p-2 rounded-xl bg-slate-900/60 overflow-hidden">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-full object-contain group-hover:scale-105 transition-all">
+                        {% else %}
+                            <div class="text-slate-500 text-xs">No Image</div>
+                        {% endif %}
+                    </a>
+                    <div class="pt-2">
+                        <a href="{{ item.get_absolute_url }}" class="font-heading font-bold text-xs text-white line-clamp-1 hover:text-brand-neon block">
+                            {{ item.name }}
                         </a>
-                        <a href="{{ item.get_absolute_url }}" class="d-block text-decoration-none">
-                            <div class="product-card-img-wrap">
-                                {% if item.image %}
-                                    <img src="{{ item.image.url }}" alt="{{ item.name }}">
-                                {% else %}
-                                    <div class="text-muted small py-4">No Image</div>
-                                {% endif %}
-                            </div>
-                        </a>
-                        <div class="product-card-body">
-                            <a href="{{ item.get_absolute_url }}" class="product-title-link">
-                                {{ item.name }}
+                        <div class="flex items-center justify-between pt-2 mt-1 border-t border-slate-800">
+                            <span class="font-heading font-black text-xs text-white">₹{{ item.price }}</span>
+                            <a href="{{ item.get_absolute_url }}" class="btn btn-xs bg-slate-800 hover:bg-brand-neon hover:text-black text-white font-cta rounded-full px-2.5">
+                                VIEW
                             </a>
-                            <div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top border-secondary-subtle">
-                                <span class="product-price-tag">₹{{ item.price }}</span>
-                                <a href="{{ item.get_absolute_url }}" class="btn btn-sm btn-outline-primary px-3 py-1 rounded-pill" style="font-size: 0.72rem;">View</a>
-                            </div>
                         </div>
                     </div>
                 </div>
