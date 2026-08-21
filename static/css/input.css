@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Glassmorphism Surface Utility */
+.glassmorphism {
+  background: rgba(22, 22, 31, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Smooth transition for HTMX swaps */
+.htmx-swapping {
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}

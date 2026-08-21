@@ -1,0 +1,84 @@
+<!-- Off-canvas Slide-Over Cart Drawer -->
+<div 
+  x-show="cartOpen" 
+  x-cloak
+  class="relative z-50"
+  aria-labelledby="slide-over-title" 
+  role="dialog" 
+  aria-modal="true"
+>
+  <!-- Backdrop -->
+  <div 
+    x-show="cartOpen"
+    x-transition:enter="ease-in-out duration-300"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="ease-in-out duration-300"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+    @click="cartOpen = false"
+    class="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
+  ></div>
+
+  <div class="fixed inset-0 overflow-hidden">
+    <div class="absolute inset-0 overflow-hidden">
+      <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+        <div 
+          x-show="cartOpen"
+          x-transition:enter="transform transition ease-in-out duration-300"
+          x-transition:enter-start="translate-x-full"
+          x-transition:enter-end="translate-x-0"
+          x-transition:leave="transform transition ease-in-out duration-300"
+          x-transition:leave-start="translate-x-0"
+          x-transition:leave-end="translate-x-full"
+          class="pointer-events-auto w-screen max-w-md bg-[#16161F] border-l border-white/10 text-white flex flex-col shadow-2xl"
+        >
+          <!-- Drawer Header -->
+          <div class="p-6 border-b border-white/10 flex items-center justify-between">
+            <h2 class="text-base font-bold tracking-wider uppercase" id="slide-over-title">Your Bag</h2>
+            <button @click="cartOpen = false" class="p-1 text-neutral-400 hover:text-white transition">
+              <i class="bi bi-x-lg text-lg"></i>
+            </button>
+          </div>
+
+          <!-- Drawer Body: Dynamic Cart Items -->
+          <div id="cart-drawer-content" class="flex-1 overflow-y-auto p-6 space-y-4">
+            {% if cart %}
+              <div class="space-y-4">
+                {% for item in cart %}
+                  <div class="flex gap-4 items-center border-b border-white/10 pb-4">
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="h-16 w-12 object-cover rounded-lg bg-neutral-900" />
+                    <div class="flex-1 min-w-0">
+                      <h4 class="text-sm font-semibold truncate">{{ item.product.name }}</h4>
+                      <p class="text-xs text-neutral-400">${{ item.price }} × {{ item.quantity }}</p>
+                    </div>
+                    <span class="text-sm font-bold">${{ item.total_price }}</span>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="py-12 text-center text-neutral-400">
+                <i class="bi bi-bag-x text-3xl mb-2 block text-neutral-600"></i>
+                <p class="text-sm">Your bag is currently empty.</p>
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- Drawer Footer / Checkout Action -->
+          <div class="p-6 border-t border-white/10 bg-[#12121A]">
+            <div class="flex justify-between text-sm font-semibold mb-4">
+              <span class="text-neutral-400">Subtotal</span>
+              <span class="text-white font-bold">${{ cart.get_total_price|default:"0.00" }}</span>
+            </div>
+           <a 
+  href="{% url 'store:order_create' %}" 
+  class="block w-full text-center py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm font-bold text-white transition shadow-lg"
+>
+  Proceed to Checkout
+</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
