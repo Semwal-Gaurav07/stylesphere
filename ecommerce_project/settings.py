@@ -1,7 +1,12 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv  # <-- 1. Added import
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load local .env file
+load_dotenv(BASE_DIR / '.env')  # <-- 2. Added to load .env into os.environ
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-ecommerce-secret-key-change-in-production')
 
@@ -109,3 +114,9 @@ REST_FRAMEWORK = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Payment Gateways (Optional: loaded from .env if needed)
+STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY', '')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '')
+RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', '')
+RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', '')
