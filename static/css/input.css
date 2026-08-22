@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer utilities {
+  body {
+    @apply bg-[#09090B] text-zinc-100 min-h-screen selection:bg-blue-500 selection:text-white;
+    font-feature-settings: "rlig" 1, "calt" 1;
   /* Cyber Glassmorphism */
   .cyber-glass {
     background: rgba(18, 18, 26, 0.7);

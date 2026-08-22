@@ -3,10 +3,10 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>{% block title %}STYLESPHERE // FW26{% endblock %}</title>
 
-  <!-- Google Fonts: Syne (Display) & Plus Jakarta Sans (UI) -->
+  <!-- Google Fonts: Syne & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
@@ -27,88 +27,110 @@
 </head>
 
 <body 
-  class="bg-[#09090E] text-neutral-100 min-h-screen flex flex-col antialiased relative overflow-x-hidden selection:bg-indigo-500 selection:text-white"
+  class="bg-[#09090E] text-neutral-100 min-h-screen flex flex-col antialiased relative overflow-x-hidden"
   hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-  x-data="{ cartOpen: false }"
+  x-data="{ cartOpen: false, mobileMenuOpen: false }"
 >
-  <!-- Ambient Gradient Orbs (Background Glow) -->
-  <div class="fixed top-[-150px] left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-indigo-600/15 blur-[140px] pointer-events-none rounded-full z-0"></div>
-  <div class="fixed bottom-[-150px] right-[-100px] w-[500px] h-[350px] bg-emerald-600/10 blur-[140px] pointer-events-none rounded-full z-0"></div>
+  <!-- Ambient Gradient Background Glow -->
+  <div class="fixed top-[-100px] left-1/2 -translate-x-1/2 w-[350px] sm:w-[600px] h-[250px] bg-indigo-600/15 blur-[120px] pointer-events-none rounded-full z-0"></div>
 
-  <!-- 1. Infinite Streetwear Marquee Ticker -->
-  <div class="w-full bg-indigo-600 text-white text-[11px] font-extrabold tracking-widest uppercase overflow-hidden py-1.5 z-50 border-b border-indigo-500">
-    <div class="animate-marquee whitespace-nowrap flex items-center gap-8">
+  <!-- Announcement Bar -->
+  <div class="w-full bg-indigo-600 text-white text-[10px] sm:text-xs font-extrabold tracking-wider uppercase overflow-hidden py-1 z-50 border-b border-indigo-500">
+    <div class="animate-marquee whitespace-nowrap flex items-center gap-6">
       <span>⚡ STYLESPHERE // NEW COLLECTION DROPPED</span>
       <span>•</span>
-      <span>FREE WORLDWIDE SHIPPING ON ORDERS OVER $150</span>
+      <span>FREE SHIPPING OVER $150</span>
       <span>•</span>
-      <span>SECURE ENCRYPTED CHECKOUT</span>
-      <span>•</span>
-      <span>LIMITED EDITION STREETWEAR RUN</span>
+      <span>LIMITED EDITION STREETWEAR</span>
       <span>•</span>
       <span>⚡ STYLESPHERE // NEW COLLECTION DROPPED</span>
-      <span>•</span>
-      <span>FREE WORLDWIDE SHIPPING ON ORDERS OVER $150</span>
     </div>
   </div>
 
-  <!-- 2. Glassmorphic Navigation -->
+  <!-- Sticky Responsive Top Navigation -->
   <header class="sticky top-0 z-40 w-full cyber-glass border-b border-white/10">
-    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-      <!-- Logo -->
-      <a href="{% url 'store:product_list' %}" class="flex items-center gap-2 group">
-        <span class="h-2 w-2 rounded-full bg-indigo-500 group-hover:animate-ping"></span>
-        <span class="text-xl font-display font-black tracking-tighter text-white uppercase">
-          STYLE<span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-indigo-600">SPHERE</span>
-        </span>
-      </a>
+    <div class="max-w-7xl mx-auto px-4 h-14 sm:h-16 flex items-center justify-between">
+      
+      <!-- Mobile Hamburger Button & Logo -->
+      <div class="flex items-center gap-3">
+        <button 
+          @click="mobileMenuOpen = !mobileMenuOpen" 
+          class="sm:hidden p-1.5 text-neutral-400 hover:text-white"
+          aria-label="Toggle Menu"
+        >
+          <i class="bi bi-list text-xl"></i>
+        </button>
 
-      <!-- Navigation Actions -->
-      <div class="flex items-center gap-3 sm:gap-5">
+        <a href="{% url 'store:product_list' %}" class="flex items-center gap-2">
+          <span class="h-2 w-2 rounded-full bg-indigo-500"></span>
+          <span class="text-lg sm:text-xl font-display font-black tracking-tighter text-white uppercase">
+            STYLE<span class="text-indigo-500">SPHERE</span>
+          </span>
+        </a>
+      </div>
+
+      <!-- Right Navigation Actions -->
+      <div class="flex items-center gap-2 sm:gap-4">
         {% if user.is_authenticated %}
-          <a href="{% url 'accounts:profile' %}" class="p-2 text-neutral-400 hover:text-white transition rounded-lg hover:bg-white/5">
+          <a href="{% url 'accounts:profile' %}" class="hidden sm:flex p-2 text-neutral-400 hover:text-white transition rounded-lg hover:bg-white/5">
             <i class="bi bi-person text-lg"></i>
           </a>
         {% else %}
-          <a href="{% url 'accounts:login' %}" class="text-xs font-bold uppercase tracking-wider text-neutral-300 hover:text-indigo-400 transition">
+          <a href="{% url 'accounts:login' %}" class="hidden sm:inline-block text-xs font-bold uppercase tracking-wider text-neutral-300 hover:text-indigo-400 transition">
             Sign In
           </a>
         {% endif %}
 
-        <a href="{% url 'store:wishlist_detail' %}" class="p-2 text-neutral-400 hover:text-white transition rounded-lg hover:bg-white/5">
-          <i class="bi bi-heart text-lg"></i>
+        <a href="{% url 'store:wishlist_detail' %}" class="p-2 text-neutral-400 hover:text-white transition">
+          <i class="bi bi-heart text-base sm:text-lg"></i>
         </a>
 
         <!-- Cart Drawer Toggle -->
         <button 
           @click="cartOpen = true" 
-          class="relative px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white transition flex items-center gap-2"
+          class="relative px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white transition flex items-center gap-1.5 sm:gap-2"
         >
-          <i class="bi bi-bag text-sm"></i>
-          <span class="text-xs font-bold">Bag</span>
+          <i class="bi bi-bag text-xs sm:text-sm"></i>
+          <span class="text-[11px] sm:text-xs font-bold hidden xs:inline">Bag</span>
           <span 
             id="cart-count-badge" 
-            class="flex h-5 min-w-[20px] px-1 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-black text-white"
+            class="flex h-4 sm:h-5 min-w-[16px] sm:min-w-[20px] px-1 items-center justify-center rounded-full bg-indigo-600 text-[9px] sm:text-[10px] font-black text-white"
           >
             {{ cart|length|default:0 }}
           </span>
         </button>
       </div>
     </div>
+
+    <!-- Mobile Nav Dropdown -->
+    <div 
+      x-show="mobileMenuOpen" 
+      x-cloak 
+      @click.outside="mobileMenuOpen = false"
+      class="sm:hidden border-t border-white/10 bg-[#12121B] px-4 py-3 space-y-2 text-xs font-semibold"
+    >
+      <a href="{% url 'store:product_list' %}" class="block py-2 text-indigo-400">All Collections</a>
+      <a href="{% url 'store:wishlist_detail' %}" class="block py-2 text-neutral-300">My Wishlist</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'accounts:profile' %}" class="block py-2 text-neutral-300">My Account & Orders</a>
+      {% else %}
+        <a href="{% url 'accounts:login' %}" class="block py-2 text-neutral-300">Sign In / Register</a>
+      {% endif %}
+    </div>
   </header>
 
-  <!-- Slide-Over Cart Drawer -->
+  <!-- Slide-Over Cart Drawer (Included) -->
   {% include 'store/cart/_cart_drawer.html' %}
 
-  <!-- Main View -->
-  <main class="flex-1 max-w-7xl mx-auto w-full px-4 py-8 relative z-10">
+  <!-- Main Responsive Container -->
+  <main class="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 py-6 sm:py-8 relative z-10">
     {% block content %}{% endblock %}
   </main>
 
-  <footer class="border-t border-white/10 py-8 text-center text-xs text-neutral-500 relative z-10 bg-[#07070B]">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+  <footer class="border-t border-white/10 py-6 text-center text-xs text-neutral-500 bg-[#07070B]">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
       <p class="font-display font-bold tracking-widest text-neutral-400">STYLESPHERE / 2026</p>
-      <p>&copy; All rights reserved. Powered by Django, HTMX & Tailwind.</p>
+      <p>&copy; All rights reserved.</p>
     </div>
   </footer>
 </body>

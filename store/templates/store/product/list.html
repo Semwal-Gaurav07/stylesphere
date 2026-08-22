@@ -1,117 +1,227 @@
 {% extends 'store/base.html' %}
 
 {% block content %}
-<!-- Hero Spotlight Header -->
-<div class="mb-10 relative overflow-hidden rounded-3xl bg-gradient-to-r from-neutral-950 via-[#131320] to-neutral-950 border border-white/10 p-8 sm:p-12">
-  <div class="max-w-2xl">
-    <span class="inline-block px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-xs font-extrabold uppercase tracking-widest mb-4">
-      Season 2026 // Capsule Drop
-    </span>
-    <h1 class="text-3xl sm:text-5xl font-display font-black tracking-tight text-white uppercase leading-none mb-4">
-      DEFINED BY <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-indigo-500">STREETWEAR</span> LUXURY.
-    </h1>
-    <p class="text-sm text-neutral-400 leading-relaxed">
-      Curated apparel crafted from heavyweight textiles with modern oversized silhouettes and custom dyes.
-    </p>
+<div x-data="{ mobileFilterOpen: false }">
+
+  <!-- Responsive Hero Banner -->
+  <div class="mb-6 sm:mb-10 relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-r from-neutral-950 via-[#131320] to-neutral-950 border border-white/10 p-5 sm:p-10">
+    <div class="max-w-2xl">
+      <span class="inline-block px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-[10px] sm:text-xs font-extrabold uppercase tracking-widest mb-2 sm:mb-4">
+        Season 2026 // Capsule Drop
+      </span>
+      <h1 class="text-2xl sm:text-4xl lg:text-5xl font-display font-black tracking-tight text-white uppercase leading-tight mb-2 sm:mb-4">
+        STREETWEAR <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-indigo-500">LUXURY</span>.
+      </h1>
+      <p class="text-xs sm:text-sm text-neutral-400 leading-relaxed">
+        Curated heavyweight textiles with modern oversized silhouettes.
+      </p>
+    </div>
   </div>
-</div>
 
-<!-- Main Catalog Layout -->
-<div class="flex flex-col lg:flex-row gap-8 items-start">
-  
-  <!-- Cyber Filter Sidebar -->
-  <aside class="w-full lg:w-72 shrink-0">
-    <form 
-      id="filter-form"
-      hx-get="{% url 'store:product_list' %}"
-      hx-target="#product-grid"
-      hx-swap="outerHTML"
-      hx-trigger="input delay:350ms, change"
-      hx-push-url="true"
-      hx-indicator="#filter-indicator"
-      class="cyber-glass p-6 rounded-3xl space-y-6 sticky top-24"
+  <!-- Mobile Floating Filter Trigger Button (Visible only on < lg screens) -->
+  <div class="lg:hidden fixed bottom-6 inset-x-0 z-30 flex justify-center px-4 pointer-events-none">
+    <button 
+      @click="mobileFilterOpen = true" 
+      class="pointer-events-auto flex items-center gap-2 px-5 py-3 rounded-full bg-indigo-600 text-white text-xs font-bold uppercase tracking-wider shadow-2xl hover:bg-indigo-500 border border-indigo-400/30 transition-transform active:scale-95"
     >
-      <!-- Search Input -->
-      <div>
-        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-neutral-400 mb-2.5">Keyword Search</label>
-        <div class="relative">
-          <input 
-            type="text" 
-            name="q" 
-            value="{{ search_query|default:'' }}" 
-            placeholder="e.g. Hoodie, Cargo, Tee..." 
-            class="w-full bg-[#0A0A10] border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-indigo-500 transition"
-          />
-          <i class="bi bi-search absolute right-3.5 top-3 text-neutral-600 text-xs"></i>
-        </div>
-      </div>
+      <i class="bi bi-sliders"></i>
+      <span>Filters & Sort</span>
+    </button>
+  </div>
 
-      <!-- Categories Navigation -->
-      <div>
-        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-neutral-400 mb-2.5">Collections</label>
-        <div class="space-y-1">
-          <a 
-            href="{% url 'store:product_list' %}" 
-            class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition {% if not category %}bg-indigo-600/20 text-indigo-400 border border-indigo-500/30{% else %}text-neutral-400 hover:text-white hover:bg-white/5{% endif %}"
-          >
-            <span>All Releases</span>
-            <i class="bi bi-chevron-right text-[10px]"></i>
-          </a>
-          {% for c in categories %}
-            <a 
-              href="{{ c.get_absolute_url }}" 
-              class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition {% if category.slug == c.slug %}bg-indigo-600/20 text-indigo-400 border border-indigo-500/30{% else %}text-neutral-400 hover:text-white hover:bg-white/5{% endif %}"
-            >
-              <span>{{ c.name }}</span>
-              <i class="bi bi-chevron-right text-[10px]"></i>
-            </a>
-          {% endfor %}
+  <!-- Main Catalog Grid Layout -->
+  <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
+    
+    <!-- 1. Desktop Filter Sidebar (Hidden on mobile, visible on lg+) -->
+    <aside class="hidden lg:block w-72 shrink-0">
+      <form 
+        id="desktop-filter-form"
+        hx-get="{% url 'store:product_list' %}"
+        hx-target="#product-grid"
+        hx-swap="outerHTML"
+        hx-trigger="input delay:350ms, change"
+        hx-push-url="true"
+        hx-indicator="#filter-indicator"
+        class="cyber-glass p-6 rounded-3xl space-y-6 sticky top-24"
+      >
+        <!-- Search Input -->
+        <div>
+          <label class="block text-[11px] font-extrabold uppercase tracking-widest text-neutral-400 mb-2">Search</label>
+          <div class="relative">
+            <input 
+              type="text" 
+              name="q" 
+              value="{{ search_query|default:'' }}" 
+              placeholder="Search apparel..." 
+              class="w-full bg-[#0A0A10] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-indigo-500"
+            />
+            <i class="bi bi-search absolute right-3.5 top-3 text-neutral-600 text-xs"></i>
+          </div>
         </div>
-      </div>
 
-      <!-- Price Range Slider Controls -->
-      <div>
-        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-neutral-400 mb-2.5">Price Range ($)</label>
-        <div class="grid grid-cols-2 gap-2">
-          <input 
-            type="number" 
-            name="min_price" 
-            placeholder="Min" 
-            class="w-full bg-[#0A0A10] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
-          />
-          <input 
-            type="number" 
-            name="max_price" 
-            placeholder="Max" 
-            class="w-full bg-[#0A0A10] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
-          />
+        <!-- Price Range -->
+        <div>
+          <label class="block text-[11px] font-extrabold uppercase tracking-widest text-neutral-400 mb-2">Price Range ($)</label>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="number" name="min_price" placeholder="Min" class="w-full bg-[#0A0A10] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
+            <input type="number" name="max_price" placeholder="Max" class="w-full bg-[#0A0A10] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
+          </div>
         </div>
-      </div>
 
-      <!-- Sorting Select -->
-      <div>
-        <label class="block text-[11px] font-extrabold uppercase tracking-widest text-neutral-400 mb-2.5">Sort Order</label>
-        <select 
-          name="sort" 
-          class="w-full bg-[#0A0A10] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+        <!-- Sort -->
+        <div>
+          <label class="block text-[11px] font-extrabold uppercase tracking-widest text-neutral-400 mb-2">Sort</label>
+          <select name="sort" class="w-full bg-[#0A0A10] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+            <option value="newest">Newest First</option>
+            <option value="price_low">Price: Low to High</option>
+            <option value="price_high">Price: High to Low</option>
+          </select>
+        </div>
+      </form>
+    </aside>
+
+    <!-- 2. Mobile Filter Bottom Sheet / Modal (Slide-up Drawer) -->
+    <div 
+      x-show="mobileFilterOpen" 
+      x-cloak 
+      class="lg:hidden relative z-50" 
+      role="dialog" 
+      aria-modal="true"
+    >
+      <div 
+        x-show="mobileFilterOpen" 
+        x-transition:enter="transition-opacity ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition-opacity ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        @click="mobileFilterOpen = false" 
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm"
+      ></div>
+
+      <div class="fixed inset-x-0 bottom-0 max-h-[85vh] bg-[#12121B] border-t border-white/10 rounded-t-3xl p-6 overflow-y-auto z-50">
+        <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-white">Filter & Sort</h3>
+          <button @click="mobileFilterOpen = false" class="p-1 text-neutral-400 hover:text-white">
+            <i class="bi bi-x-lg text-lg"></i>
+          </button>
+        </div>
+
+        <form 
+          hx-get="{% url 'store:product_list' %}"
+          hx-target="#product-grid"
+          hx-swap="outerHTML"
+          hx-trigger="input delay:350ms, change"
+          hx-push-url="true"
+          hx-indicator="#filter-indicator"
+          class="space-y-5"
         >
-          <option value="newest">Featured / New Drops</option>
-          <option value="price_low">Price: Low to High</option>
-          <option value="price_high">Price: High to Low</option>
-        </select>
-      </div>
-    </form>
-  </aside>
+          <div>
+            <label class="block text-xs font-bold uppercase text-neutral-400 mb-2">Search</label>
+            <input type="text" name="q" value="{{ search_query|default:'' }}" placeholder="Search products..." class="w-full bg-[#0A0A10] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white" />
+          </div>
 
-  <!-- Product Catalog Grid -->
-  <section class="flex-1 w-full">
-    <!-- Live Loading Indicator -->
-    <div id="filter-indicator" class="htmx-indicator mb-4 text-xs font-semibold text-indigo-400 flex items-center gap-2 bg-indigo-950/40 border border-indigo-800/40 px-3.5 py-2 rounded-xl w-fit">
-      <span class="loading loading-spinner loading-xs"></span> Syncing Catalog...
+          <div>
+            <label class="block text-xs font-bold uppercase text-neutral-400 mb-2">Sort</label>
+            <select name="sort" class="w-full bg-[#0A0A10] border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+              <option value="newest">Newest First</option>
+              <option value="price_low">Price: Low to High</option>
+              <option value="price_high">Price: High to Low</option>
+            </select>
+          </div>
+
+          <button @click="mobileFilterOpen = false" type="button" class="w-full py-3 rounded-xl bg-indigo-600 text-white text-xs font-bold uppercase tracking-wider">
+            Apply Filters
+          </button>
+        </form>
+      </div>
     </div>
 
-    {% include 'store/product/_product_list_partial.html' %}
-  </section>
+    <!-- 3. Product Catalog Section (With Horizontal Collection Tabs + More Dropdown) -->
+    <section class="flex-1 w-full">
+      
+      <!-- HORIZONTAL COLLECTION TABS BAR -->
+      <div 
+        class="mb-6 flex items-center gap-2 flex-wrap" 
+        x-data="{ moreDropdownOpen: false }"
+      >
+        <!-- 'All Releases' Tab -->
+        <a 
+          href="{% url 'store:product_list' %}" 
+          class="px-4 py-2 rounded-full text-xs font-semibold transition {% if not category %}bg-indigo-600 text-white shadow-lg{% else %}bg-white/5 text-neutral-400 hover:text-white hover:bg-white/10 border border-white/10{% endif %}"
+        >
+          All Releases
+        </a>
 
+        <!-- First 3 Visible Category Tabs -->
+        {% for c in categories|slice:":3" %}
+          <a 
+            href="{{ c.get_absolute_url }}" 
+            class="px-4 py-2 rounded-full text-xs font-semibold transition {% if category.slug == c.slug %}bg-indigo-600 text-white shadow-lg{% else %}bg-white/5 text-neutral-400 hover:text-white hover:bg-white/10 border border-white/10{% endif %}"
+          >
+            {{ c.name }}
+          </a>
+        {% endfor %}
+
+        <!-- 'More' Dropdown for Remaining Categories (4th and beyond) -->
+        {% if categories|length > 3 %}
+          <div class="relative inline-block text-left" @click.outside="moreDropdownOpen = false">
+            <button 
+              @click="moreDropdownOpen = !moreDropdownOpen" 
+              type="button" 
+              class="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition border {% if category and category not in categories|slice:':3' %}bg-indigo-600 text-white border-indigo-500 shadow-lg{% else %}bg-white/5 text-neutral-400 hover:text-white hover:bg-white/10 border-white/10{% endif %}"
+            >
+              <span>
+                {% if category and category not in categories|slice:':3' %}
+                  {{ category.name }}
+                {% else %}
+                  More
+                {% endif %}
+              </span>
+              <i class="bi bi-chevron-down text-[10px] transition-transform duration-200" :class="{ 'rotate-180': moreDropdownOpen }"></i>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div 
+              x-show="moreDropdownOpen" 
+              x-cloak 
+              x-transition:enter="transition ease-out duration-200" 
+              x-transition:enter-start="opacity-0 translate-y-1 scale-95" 
+              x-transition:enter-end="opacity-100 translate-y-0 scale-100" 
+              x-transition:leave="transition ease-in duration-150" 
+              x-transition:leave-start="opacity-100 translate-y-0 scale-100" 
+              x-transition:leave-end="opacity-0 translate-y-1 scale-95" 
+              class="absolute left-0 mt-2 w-52 rounded-2xl bg-[#16161F] border border-white/15 shadow-2xl p-1.5 z-50 focus:outline-none"
+            >
+              <div class="py-1">
+                {% for c in categories|slice:"3:" %}
+                  <a 
+                    href="{{ c.get_absolute_url }}" 
+                    @click="moreDropdownOpen = false" 
+                    class="flex items-center justify-between px-3.5 py-2 text-xs font-medium rounded-xl transition {% if category.slug == c.slug %}bg-indigo-600 text-white font-semibold{% else %}text-neutral-300 hover:bg-white/10 hover:text-white{% endif %}"
+                  >
+                    <span>{{ c.name }}</span>
+                    {% if category.slug == c.slug %}
+                      <i class="bi bi-check text-xs"></i>
+                    {% endif %}
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Syncing Indicator -->
+      <div id="filter-indicator" class="htmx-indicator mb-4 text-xs font-semibold text-indigo-400 flex items-center gap-2 bg-indigo-950/40 border border-indigo-800/40 px-3 py-1.5 rounded-xl w-fit">
+        <span class="loading loading-spinner loading-xs"></span> Syncing Catalog...
+      </div>
+
+      <!-- Product Cards Partial -->
+      {% include 'store/product/_product_list_partial.html' %}
+    </section>
+
+  </div>
 </div>
 {% endblock %}
