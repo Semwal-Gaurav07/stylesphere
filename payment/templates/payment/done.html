@@ -12,17 +12,21 @@
 
         <h1 class="text-2xl font-black text-white font-heading">ORDER CONFIRMED!</h1>
         <p class="text-xs text-slate-400">
-            Thank you for shopping at Style Sphere. Your order has been placed and is being prepped for dispatch.
+            Thank you for shopping at Style Sphere. Your order has been placed and assigned for courier dispatch.
         </p>
 
         {% if order %}
-            <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-xs text-left space-y-1 my-3">
+            <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-xs text-left space-y-1.5 my-3">
                 <div class="flex justify-between">
                     <span class="text-slate-400">Order ID:</span>
                     <span class="font-bold text-brand-neon">#{{ order.id }}</span>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-slate-400">Total Paid:</span>
+                    <span class="text-slate-400">AWB Tracking:</span>
+                    <span class="font-mono text-white">{{ order.tracking_number }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400">Total:</span>
                     <span class="font-bold text-emerald-400">₹{{ order.get_total_cost }}</span>
                 </div>
                 <div class="flex justify-between">
@@ -32,6 +36,11 @@
             </div>
 
             <div class="flex flex-col gap-2 pt-2">
+                {% if whatsapp_url %}
+                    <a href="{{ whatsapp_url }}" target="_blank" class="btn btn-sm bg-emerald-500 hover:bg-emerald-400 text-white font-cta font-bold rounded-full border-none shadow-md">
+                        <i class="bi bi-whatsapp mr-1"></i> Receive WhatsApp Receipt
+                    </a>
+                {% endif %}
                 <a href="{% url 'store:order_invoice' order.id %}" target="_blank" class="btn btn-sm bg-slate-800 text-white font-cta rounded-full">
                     📄 DOWNLOAD TAX INVOICE
                 </a>

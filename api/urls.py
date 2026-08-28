@@ -5,6 +5,8 @@ from . import views
 router = DefaultRouter()
 router.register(r'categories', views.CategoryViewSet, basename='category')
 router.register(r'products', views.ProductViewSet, basename='product')
+router.register(r'reviews', views.ReviewViewSet, basename='review')
+router.register(r'wishlist', views.WishlistViewSet, basename='wishlist')
 
 app_name = 'api'
 

@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <!-- 3 Payment Option Tabs via DaisyUI -->
+        <!-- Payment Options Accordion -->
         <div class="space-y-4">
             
             <!-- Option 1: UPI & Deep Links -->
@@ -30,24 +30,24 @@
                     <p class="text-xs text-slate-400">Pay directly from your phone with 1-tap:</p>
                     
                     <div class="grid grid-cols-2 gap-2">
-                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
+                        <a href="upi://pay?pa={{ store_upi_id }}&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
                             <i class="bi bi-google text-brand-neon"></i> Google Pay
                         </a>
-                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
+                        <a href="upi://pay?pa={{ store_upi_id }}&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
                             <span class="text-purple-400 font-bold">PhonePe</span>
                         </a>
-                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
+                        <a href="upi://pay?pa={{ store_upi_id }}&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
                             <span class="text-cyan-400 font-bold">Paytm</span>
                         </a>
-                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
+                        <a href="upi://pay?pa={{ store_upi_id }}&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
                             <i class="bi bi-qr-code text-brand-lime"></i> Any UPI
                         </a>
                     </div>
 
                     <!-- Dynamic QR Code -->
                     <div class="text-center p-4 bg-white rounded-2xl max-w-xs mx-auto">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR" alt="UPI QR" class="mx-auto rounded-lg mb-2">
-                        <span class="text-[11px] text-slate-800 font-bold block">UPI ID: 9781855165@upi</span>
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa={{ store_upi_id }}&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR" alt="UPI QR" class="mx-auto rounded-lg mb-2">
+                        <span class="text-[11px] text-slate-800 font-bold block">UPI ID: {{ store_upi_id }}</span>
                     </div>
 
                     <form method="post" action="{% url 'payment:process' %}">

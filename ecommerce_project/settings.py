@@ -1,12 +1,7 @@
 import os
 from pathlib import Path
-from dotenv import load_dotenv  # <-- 1. Added import
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Load local .env file
-load_dotenv(BASE_DIR / '.env')  # <-- 2. Added to load .env into os.environ
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-ecommerce-secret-key-change-in-production')
 
@@ -31,6 +26,17 @@ INSTALLED_APPS = [
     'payment.apps.PaymentConfig',
     'api.apps.ApiConfig',
 ]
+
+# Optional Cloudinary support
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', ''),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY', ''),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', ''),
+}
+if os.environ.get('CLOUDINARY_CLOUD_NAME'):
+    INSTALLED_APPS.insert(INSTALLED_APPS.index('django.contrib.staticfiles') + 1, 'cloudinary_storage')
+    INSTALLED_APPS.insert(INSTALLED_APPS.index('cloudinary_storage') + 1, 'cloudinary')
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -79,7 +85,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
@@ -108,15 +114,21 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
 ]
 
+# Payment Gateways (Live & Test Environment Keys)
+RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', 'rzp_test_stylesphere_live')
+RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', 'test_secret_stylesphere_key')
+
+STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', 'pk_test_stylesphere_sample')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', 'sk_test_stylesphere_sample')
+STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET', 'whsec_sample')
+
+# Store Support & Notification Numbers
+STORE_WHATSAPP_NUMBER = os.environ.get('STORE_WHATSAPP_NUMBER', '919781855165')
+STORE_UPI_ID = os.environ.get('STORE_UPI_ID', '9781855165@upi')
+
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 12,
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Payment Gateways (Optional: loaded from .env if needed)
-STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY', '')
-STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '')
-RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', '')
-RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', '')

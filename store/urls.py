@@ -16,4 +16,6 @@ urlpatterns = [
     path('wishlist/toggle/<int:product_id>/', views.wishlist_toggle, name='wishlist_toggle'),
     path('orders/create/', views.order_create, name='order_create'),
     path('orders/<int:order_id>/invoice/', views.order_invoice, name='order_invoice'),
+    path('api/check-pincode/', views.check_pincode, name='check_pincode'),
+    path('dashboard/analytics/', views.admin_analytics_dashboard, name='admin_analytics'),
 ]

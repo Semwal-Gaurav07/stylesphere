@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
+from datetime import datetime, timedelta
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
@@ -64,8 +65,9 @@ class Coupon(models.Model):
 class Order(models.Model):
     STATUS_CHOICES = (
         ('Placed', 'Order Placed'),
-        ('Processing', 'Processing'),
-        ('Shipped', 'Shipped'),
+        ('Processing', 'Processing / Packed'),
+        ('Shipped', 'Handed to Courier'),
+        ('Out for Delivery', 'Out for Delivery'),
         ('Delivered', 'Delivered'),
         ('Cancelled', 'Cancelled'),
     )
@@ -74,21 +76,35 @@ class Order(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True, default='')
     address = models.CharField(max_length=250)
     postal_code = models.CharField(max_length=20)
     city = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
-    payment_method = models.CharField(max_length=50, default='Cash on Delivery (COD)')
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Placed')
+    payment_method = models.CharField(max_length=80, default='Cash on Delivery (COD)')
+    payment_id = models.CharField(max_length=100, blank=True, default='')
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='Placed')
     discount = models.IntegerField(default=0)
+    
+    # Logistics & Tracking
+    tracking_number = models.CharField(max_length=50, blank=True, default='')
+    courier_partner = models.CharField(max_length=50, blank=True, default='Bluedart Express')
+    estimated_delivery = models.DateField(null=True, blank=True)
 
     class Meta:
         ordering = ['-created']
 
     def __str__(self):
         return f'Order {self.id}'
+
+    def save(self, *args, **kwargs):
+        if not self.tracking_number and self.id:
+            self.tracking_number = f"SS-IND-{self.id:06d}"
+        if not self.estimated_delivery:
+            self.estimated_delivery = (datetime.now() + timedelta(days=3)).date()
+        super().save(*args, **kwargs)
 
     def get_subtotal_cost(self):
         return sum(item.get_cost() for item in self.items.all())
