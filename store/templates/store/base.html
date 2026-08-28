@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>{% block title %}Style Sphere - Streetwear, Sneakers & Merch{% endblock %}</title>
+    <title>{% block title %}Style Sphere - Official Streetwear, Sneakers & Merch{% endblock %}</title>
 
     <!-- SEO & Metadata -->
     <meta name="description" content="Shop limited edition sneakers, sunglasses, oversized graphic tees, and streetwear hoodies at Style Sphere. Fast dispatch and Cash on Delivery available across India.">
@@ -24,7 +24,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
 
-    <!-- Tailwind Config -->
+    <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
             darkMode: ["class", '[data-theme="dark"]'],
@@ -69,7 +69,7 @@
         }
     </script>
 
-    <!-- Theme State Handler -->
+    <!-- Theme State Script -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -208,7 +208,7 @@
                         <label tabindex="0" class="cursor-pointer text-slate-300 hover:text-brand-neon flex items-center gap-1">
                             Products <i class="bi bi-chevron-down text-xs"></i>
                         </label>
-                        <ul tabindex="0" class="dropdown-content z- menu p-2 shadow-2xl bg-brand-card border border-slate-800 rounded-2xl w-56">
+                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-2xl bg-brand-card border border-slate-800 rounded-2xl w-56">
                             <li><a href="{% url 'store:product_list' %}"><i class="bi bi-grid-fill text-brand-neon"></i> All Collections</a></li>
                             {% for c in categories %}
                                 <li><a href="{{ c.get_absolute_url }}"><i class="bi bi-tag-fill text-brand-pink"></i> {{ c.name }}</a></li>
@@ -217,7 +217,7 @@
                     </div>
 
                     <a href="#productGrid" class="text-slate-300 hover:text-brand-neon transition-colors">Catalog</a>
-                    <a href="{% url 'store:admin_analytics' %}" class="text-slate-300 hover:text-brand-neon transition-colors"><i class="bi bi-graph-up text-brand-neon"></i> Analytics</a>
+                    <a href="#about" class="text-slate-300 hover:text-brand-neon transition-colors">About Us</a>
                     <a href="https://wa.me/919781855165" target="_blank" class="text-slate-300 hover:text-brand-neon transition-colors">Contact</a>
                 </nav>
 
@@ -264,14 +264,16 @@
                                 <i class="bi bi-person text-lg text-brand-neon"></i>
                             </div>
                         </label>
-                        <ul tabindex="0" class="dropdown-content z- menu p-2 shadow-2xl bg-brand-card border border-slate-800 rounded-2xl w-56 mt-3">
+                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-2xl bg-brand-card border border-slate-800 rounded-2xl w-56 mt-3">
                             {% if user.is_authenticated %}
                                 <li class="menu-title px-4 py-2 text-slate-400 border-b border-slate-800">
                                     <span class="text-xs font-bold text-brand-neon">VIP: {{ user.username }}</span>
                                 </li>
                                 <li><a href="{% url 'accounts:profile' %}"><i class="bi bi-truck text-brand-neon"></i> My Orders & Tracking</a></li>
                                 <li><a href="{% url 'store:wishlist_detail' %}"><i class="bi bi-heart text-brand-pink"></i> My Wishlist</a></li>
-                                <li><a href="{% url 'store:admin_analytics' %}"><i class="bi bi-bar-chart text-emerald-400"></i> Sales Analytics</a></li>
+                                {% if user.is_staff or user.is_superuser %}
+                                    <li><a href="{% url 'store:admin_analytics' %}" class="text-emerald-400 font-bold"><i class="bi bi-graph-up-arrow"></i> Sales Analytics</a></li>
+                                {% endif %}
                                 <li><a href="{% url 'api:product-list' %}"><i class="bi bi-code-slash text-brand-lime"></i> REST API</a></li>
                                 <li><hr class="border-slate-800 my-1"></li>
                                 <li><a href="{% url 'accounts:logout' %}" class="text-rose-400"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
@@ -345,6 +347,27 @@
         <i class="bi bi-whatsapp"></i>
     </a>
 
+    <!-- Exit-Intent Cart Recovery Modal -->
+    <dialog id="exitIntentModal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box bg-brand-card border border-brand-pink/40 rounded-3xl p-6 text-center space-y-4">
+            <div class="w-14 h-14 rounded-2xl bg-brand-pink/20 text-brand-pink flex items-center justify-center text-3xl mx-auto">
+                <i class="bi bi-gift-fill"></i>
+            </div>
+            <h3 class="font-heading font-black text-2xl text-white">WAIT! DON'T LEAVE YOUR BAG</h3>
+            <p class="text-xs text-slate-300">
+                Unlock an instant extra <strong class="text-brand-neon">5% OFF</strong> on your entire bag before midnight!
+            </p>
+            <div class="p-3 bg-slate-900 rounded-2xl border border-dashed border-slate-700 flex items-center justify-center gap-3">
+                <span class="font-mono font-black text-lg text-brand-neon">STAY5</span>
+                <button onclick="navigator.clipboard.writeText('STAY5'); alert('Coupon STAY5 copied!');" class="btn btn-xs bg-slate-800 text-slate-300">COPY</button>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <a href="{% url 'store:cart_detail' %}" class="flex-1 btn bg-brand-neon text-black font-cta rounded-full">CLAIM & CHECKOUT</a>
+                <form method="dialog"><button class="btn btn-ghost rounded-full text-xs text-slate-400">No thanks</button></form>
+            </div>
+        </div>
+    </dialog>
+
     <!-- Mobile App-Style Fixed Bottom Nav Bar -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0A0C10]/95 backdrop-blur-lg border-t border-slate-800 flex justify-around items-center h-15 py-1">
         <a href="{% url 'store:product_list' %}" class="flex flex-col items-center text-xs font-bold {% if request.path == '/' %}text-brand-neon{% else %}text-slate-400{% endif %}">
@@ -388,41 +411,6 @@
         {% endif %}
     </nav>
 
-    <!-- Exit-Intent Cart Recovery Modal -->
-    <dialog id="exitIntentModal" class="modal modal-bottom sm:modal-middle">
-        <div class="modal-box bg-brand-card border border-brand-neon/40 rounded-3xl p-6 sm:p-8 text-center relative overflow-hidden shadow-2xl">
-            <div class="absolute -top-16 -right-16 w-36 h-36 bg-brand-neon/20 rounded-full blur-2xl pointer-events-none"></div>
-            
-            <form method="dialog"><button class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-slate-400">✕</button></form>
-            
-            <div class="w-14 h-14 rounded-2xl bg-brand-neon/10 text-brand-neon flex items-center justify-center text-2xl mx-auto mb-3">
-                <i class="bi bi-gift-fill"></i>
-            </div>
-
-            <span class="badge bg-brand-pink text-white font-cta font-bold text-xs px-3 py-1 mb-2">SPECIAL RECOVERY OFFER</span>
-            <h3 class="text-2xl font-black text-white font-heading mb-1">Wait! Don't Leave Your Drop</h3>
-            <p class="text-xs text-slate-400 max-w-sm mx-auto mb-4">
-                Take an instant <span class="text-brand-neon font-bold">5% OFF</span> your order right now with our exclusive recovery promo code.
-            </p>
-
-            <div class="p-3 bg-slate-900 rounded-2xl border border-dashed border-brand-neon/60 flex items-center justify-between max-w-xs mx-auto mb-4">
-                <span class="font-mono font-black text-brand-neon tracking-wider">STAY5</span>
-                <button type="button" onclick="applyExitCoupon('STAY5')" class="btn btn-xs bg-brand-neon text-black font-cta font-bold rounded-lg border-none px-3">
-                    APPLY CODE
-                </button>
-            </div>
-
-            <form action="{% url 'store:coupon_apply' %}" method="post" id="exitCouponForm" class="hidden">
-                {% csrf_token %}
-                <input type="hidden" name="code" id="exitCouponCode" value="STAY5">
-            </form>
-
-            <a href="{% url 'store:cart_detail' %}" class="btn btn-sm bg-slate-800 text-slate-300 font-cta rounded-full px-6">
-                VIEW MY BAG ({{ cart|length }})
-            </a>
-        </div>
-    </dialog>
-
     <!-- Footer -->
     <footer class="bg-black text-slate-400 border-t border-slate-900 py-12 mt-12" id="about">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -460,7 +448,7 @@
         </div>
     </footer>
 
-    <!-- Theme Switcher & Exit-Intent Scripts -->
+    <!-- Theme Switcher & Exit-Intent Trigger JS -->
     <script>
         function toggleTheme() {
             const current = document.documentElement.getAttribute('data-theme') || 'dark';
@@ -478,23 +466,18 @@
             }
         }
 
-        // Exit-Intent Trigger for Cart Recovery
-        let exitModalShown = sessionStorage.getItem('exit_modal_shown') || false;
-        document.addEventListener('mouseleave', function (e) {
-            if (e.clientY <= 0 && !exitModalShown) {
+        // Exit-Intent Trigger (Triggers when user moves cursor out of the viewport on desktop)
+        let exitModalShown = sessionStorage.getItem('exitModalShown');
+        document.addEventListener('mouseleave', function(e) {
+            if (e.clientY <= 5 && !exitModalShown) {
                 const modal = document.getElementById('exitIntentModal');
                 if (modal) {
                     modal.showModal();
-                    sessionStorage.setItem('exit_modal_shown', 'true');
+                    sessionStorage.setItem('exitModalShown', 'true');
                     exitModalShown = true;
                 }
             }
         });
-
-        function applyExitCoupon(code) {
-            document.getElementById('exitCouponCode').value = code;
-            document.getElementById('exitCouponForm').submit();
-        }
     </script>
 </body>
 </html>

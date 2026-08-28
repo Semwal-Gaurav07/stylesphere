@@ -1,7 +1,5 @@
-import json
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.http import JsonResponse
@@ -12,6 +10,7 @@ from .models import Category, Product, Order, OrderItem, Coupon, Review, Wishlis
 from accounts.models import Profile
 from .cart import Cart
 from .forms import CartAddProductForm, OrderCreateForm, CouponApplyForm, ReviewForm
+from .utils import check_pincode_serviceability, generate_admin_whatsapp_url
 
 def product_list(request, category_slug=None):
     category = None
@@ -58,12 +57,16 @@ def product_list(request, category_slug=None):
         'user_wishlist_ids': user_wishlist_ids
     })
 
-def product_detail(request, id, slug):
-    product = Product.objects.filter(id=id, slug=slug, available=True).first()
-    if not product:
+def product_detail(request, id=None, slug=None):
+    product = None
+    if id and slug:
+        product = Product.objects.filter(id=id, slug=slug, available=True).first()
+    if not product and slug:
         product = Product.objects.filter(slug=slug, available=True).first()
+    if not product and id:
+        product = Product.objects.filter(id=id, available=True).first()
     if not product:
-        product = get_object_or_404(Product, id=id, available=True)
+        product = get_object_or_404(Product, available=True)
 
     related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
     cart_product_form = CartAddProductForm()
@@ -173,6 +176,11 @@ def wishlist_detail(request):
     wishlist_items = Wishlist.objects.filter(user=request.user)
     return render(request, 'store/wishlist/detail.html', {'wishlist_items': wishlist_items})
 
+def pincode_check(request):
+    pincode = request.GET.get('pincode', '')
+    res = check_pincode_serviceability(pincode)
+    return JsonResponse(res)
+
 def order_create(request):
     cart = Cart(request)
     if len(cart) == 0:
@@ -205,12 +213,14 @@ def order_create(request):
             order = form.save(commit=False)
             order.user = request.user
             order.discount = discount
+            order.phone_number = request.POST.get('phone_number', profile.phone_number or '')
             order.save()
 
             if not profile.address:
                 profile.address = order.address
                 profile.city = order.city
                 profile.postal_code = order.postal_code
+                profile.phone_number = order.phone_number
                 profile.save()
 
             for item in cart:
@@ -240,62 +250,42 @@ def order_create(request):
 
 @login_required
 def order_invoice(request, order_id):
-    order = get_object_or_404(Order, id=order_id)
-    if not request.user.is_superuser and order.user != request.user:
-        messages.error(request, "Permission denied.")
-        return redirect('store:product_list')
+    order = get_object_or_404(Order, id=order_id, user=request.user)
     return render(request, 'store/orders/invoice.html', {'order': order})
 
-def check_pincode(request):
-    pincode = request.GET.get('pincode', '').strip()
-    if len(pincode) == 6 and pincode.isdigit():
-        # Serviceability calculation
-        days = 3 if pincode.startswith(('1', '2', '3', '4')) else 4
-        date_str = (datetime.now() + timedelta(days=days)).strftime("%A, %b %d")
-        return JsonResponse({
-            'valid': True,
-            'pincode': pincode,
-            'serviceable': True,
-            'cod_available': True,
-            'delivery_date': date_str,
-            'courier': 'Bluedart & Delhivery Air Express',
-            'message': f'Delivery available by {date_str}. Cash on Delivery is active!'
-        })
-    return JsonResponse({
-        'valid': False,
-        'message': 'Please enter a valid 6-digit Indian postal pincode.'
-    })
-
 @login_required
-def admin_analytics_dashboard(request):
+def admin_analytics(request):
+    """
+    Staff / Admin Revenue & Sales Analytics Dashboard
+    """
     if not request.user.is_staff and not request.user.is_superuser:
-        messages.error(request, "Staff / Admin authorization required.")
+        messages.error(request, 'Admin access required to view business analytics.')
         return redirect('store:product_list')
 
     total_orders = Order.objects.count()
-    total_revenue = sum(o.get_total_cost() for o in Order.objects.all())
     paid_orders = Order.objects.filter(paid=True).count()
     cod_orders = Order.objects.filter(payment_method__icontains='COD').count()
     
-    total_products = Product.objects.count()
-    low_stock_products = Product.objects.filter(stock__lte=3)
-    
-    recent_orders = Order.objects.all().order_by('-created')[:15]
-    
-    # Top sizes sold
-    size_breakdown = OrderItem.objects.values('size').annotate(total_sold=Sum('quantity')).order_by('-total_sold')
-    
-    # Category popularity
-    category_sales = OrderItem.objects.values('product__category__name').annotate(total=Sum('quantity')).order_by('-total')
+    total_revenue = sum(o.get_total_cost() for o in Order.objects.all())
+    paid_revenue = sum(o.get_total_cost() for o in Order.objects.filter(paid=True))
 
-    return render(request, 'store/analytics.html', {
+    recent_orders = Order.objects.select_related('user').prefetch_related('items__product').order_by('-created')[:8]
+    low_stock_products = Product.objects.filter(stock__lte=3).order_by('stock')
+
+    # Top selling sizes
+    size_breakdown = OrderItem.objects.values('size').annotate(total_qty=Sum('quantity')).order_by('-total_qty')
+
+    # Status Breakdown
+    status_counts = Order.objects.values('status').annotate(count=Count('id'))
+
+    return render(request, 'store/admin/analytics.html', {
         'total_orders': total_orders,
-        'total_revenue': total_revenue,
         'paid_orders': paid_orders,
         'cod_orders': cod_orders,
-        'total_products': total_products,
-        'low_stock_products': low_stock_products,
+        'total_revenue': total_revenue,
+        'paid_revenue': paid_revenue,
         'recent_orders': recent_orders,
+        'low_stock_products': low_stock_products,
         'size_breakdown': size_breakdown,
-        'category_sales': category_sales,
+        'status_counts': status_counts,
     })

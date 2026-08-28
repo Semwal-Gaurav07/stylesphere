@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
-from datetime import datetime, timedelta
+import uuid
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
@@ -65,45 +65,51 @@ class Coupon(models.Model):
 class Order(models.Model):
     STATUS_CHOICES = (
         ('Placed', 'Order Placed'),
-        ('Processing', 'Processing / Packed'),
-        ('Shipped', 'Handed to Courier'),
-        ('Out for Delivery', 'Out for Delivery'),
+        ('Processing', 'Processing / Packing'),
+        ('Shipped', 'Shipped / In Transit'),
+        ('Out_for_Delivery', 'Out for Delivery'),
         ('Delivered', 'Delivered'),
         ('Cancelled', 'Cancelled'),
+    )
+
+    PAYMENT_METHOD_CHOICES = (
+        ('Cash on Delivery (COD)', 'Cash on Delivery (COD)'),
+        ('UPI', 'UPI (Google Pay / PhonePe / Paytm)'),
+        ('Card', 'Credit / Debit Card'),
+        ('Razorpay', 'Razorpay Online Gateway'),
+        ('Stripe', 'Stripe Online Gateway'),
     )
 
     user = models.ForeignKey(User, related_name='orders', on_delete=models.SET_NULL, null=True, blank=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField()
-    phone = models.CharField(max_length=20, blank=True, default='')
+    phone_number = models.CharField(max_length=20, blank=True)
     address = models.CharField(max_length=250)
     postal_code = models.CharField(max_length=20)
     city = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
-    payment_method = models.CharField(max_length=80, default='Cash on Delivery (COD)')
-    payment_id = models.CharField(max_length=100, blank=True, default='')
+    payment_method = models.CharField(max_length=50, default='Cash on Delivery (COD)')
     status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='Placed')
     discount = models.IntegerField(default=0)
     
-    # Logistics & Tracking
-    tracking_number = models.CharField(max_length=50, blank=True, default='')
-    courier_partner = models.CharField(max_length=50, blank=True, default='Bluedart Express')
+    # Courier Logistics & Live Tracking
+    tracking_number = models.CharField(max_length=100, blank=True)
+    courier_partner = models.CharField(max_length=100, default='BlueDart / Delhivery Express')
     estimated_delivery = models.DateField(null=True, blank=True)
+    transaction_id = models.CharField(max_length=150, blank=True)
 
     class Meta:
         ordering = ['-created']
 
     def __str__(self):
-        return f'Order {self.id}'
+        return f'Order #{self.id} - {self.first_name} {self.last_name}'
 
     def save(self, *args, **kwargs):
-        if not self.tracking_number and self.id:
-            self.tracking_number = f"SS-IND-{self.id:06d}"
-        if not self.estimated_delivery:
-            self.estimated_delivery = (datetime.now() + timedelta(days=3)).date()
+        if not self.tracking_number:
+            self.tracking_number = f"SS-EXP-{uuid.uuid4().hex[:8].upper()}"
         super().save(*args, **kwargs)
 
     def get_subtotal_cost(self):
@@ -125,7 +131,7 @@ class OrderItem(models.Model):
     size = models.CharField(max_length=10, default='M')
 
     def __str__(self):
-        return f'{self.product.name} ({self.size})'
+        return f'{self.product.name} ({self.size}) x {self.quantity}'
 
     def get_cost(self):
         return self.price * self.quantity

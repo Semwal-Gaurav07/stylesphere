@@ -1,0 +1,166 @@
+{% extends "store/base.html" %}
+
+{% block title %}Business & Revenue Analytics - Style Sphere Admin{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-4">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-800 text-indigo-400 text-xs font-cta font-bold uppercase tracking-wider mb-1">
+                <i class="bi bi-graph-up-arrow"></i> EXECUTIVE DASHBOARD
+            </div>
+            <h1 class="text-3xl font-black text-white font-heading">Business & Revenue Insights</h1>
+        </div>
+        <div class="flex items-center gap-2">
+            <a href="/admin/" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
+                <i class="bi bi-sliders"></i> Django Admin
+            </a>
+            <a href="{% url 'store:product_list' %}" class="btn btn-sm bg-brand-neon hover:bg-cyan-300 text-black font-cta rounded-xl">
+                View Storefront →
+            </a>
+        </div>
+    </div>
+
+    <!-- Key Metrics Grid -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <!-- Metric 1: Total Revenue -->
+        <div class="glass-card p-5 rounded-3xl border border-slate-800 space-y-1">
+            <span class="text-xs font-bold text-slate-400 uppercase font-cta tracking-wider">Gross Revenue</span>
+            <div class="text-2xl sm:text-3xl font-black text-brand-neon font-heading">₹{{ total_revenue }}</div>
+            <span class="text-[11px] text-emerald-400 font-semibold block">₹{{ paid_revenue }} Collected Online</span>
+        </div>
+
+        <!-- Metric 2: Total Orders -->
+        <div class="glass-card p-5 rounded-3xl border border-slate-800 space-y-1">
+            <span class="text-xs font-bold text-slate-400 uppercase font-cta tracking-wider">Total Orders</span>
+            <div class="text-2xl sm:text-3xl font-black text-white font-heading">{{ total_orders }}</div>
+            <span class="text-[11px] text-indigo-400 font-semibold block">{{ paid_orders }} Paid / {{ cod_orders }} COD</span>
+        </div>
+
+        <!-- Metric 3: Paid Rate -->
+        <div class="glass-card p-5 rounded-3xl border border-slate-800 space-y-1">
+            <span class="text-xs font-bold text-slate-400 uppercase font-cta tracking-wider">Average Order Value</span>
+            <div class="text-2xl sm:text-3xl font-black text-amber-400 font-heading">
+                {% if total_orders > 0 %}
+                    ₹{% widthratio total_revenue total_orders 1 %}
+                {% else %}
+                    ₹0
+                {% endif %}
+            </div>
+            <span class="text-[11px] text-slate-400 font-semibold block">Across All Drops</span>
+        </div>
+
+        <!-- Metric 4: Inventory Alerts -->
+        <div class="glass-card p-5 rounded-3xl border border-slate-800 space-y-1">
+            <span class="text-xs font-bold text-slate-400 uppercase font-cta tracking-wider">Low Stock Items</span>
+            <div class="text-2xl sm:text-3xl font-black text-brand-pink font-heading">{{ low_stock_products.count }}</div>
+            <span class="text-[11px] text-rose-400 font-semibold block">≤ 3 Units Remaining</span>
+        </div>
+    </div>
+
+    <!-- Charts & Breakdown Rows -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+        
+        <!-- Top Selling Sizes -->
+        <div class="lg:col-span-6 glass-card p-6 rounded-3xl border border-slate-800 shadow-sm space-y-4">
+            <h3 class="font-heading font-bold text-base text-white flex items-center justify-between">
+                <span>Top Selling Sizes</span>
+                <i class="bi bi-bar-chart-fill text-brand-neon"></i>
+            </h3>
+            
+            <div class="space-y-3">
+                {% for s in size_breakdown %}
+                    <div>
+                        <div class="flex justify-between text-xs font-bold mb-1">
+                            <span class="text-white">Size: {{ s.size }}</span>
+                            <span class="text-brand-neon">{{ s.total_qty }} units sold</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-brand-neon to-brand-purple h-2 rounded-full" style="width: {% widthratio s.total_qty total_orders 100 %}%;"></div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-xs text-slate-500 py-4">No size sales data recorded yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Low Stock Inventory Radar -->
+        <div class="lg:col-span-6 glass-card p-6 rounded-3xl border border-slate-800 shadow-sm space-y-4">
+            <h3 class="font-heading font-bold text-base text-white flex items-center justify-between">
+                <span>Critical Inventory Alerts</span>
+                <i class="bi bi-exclamation-triangle-fill text-brand-pink"></i>
+            </h3>
+
+            <div class="divide-y divide-slate-800 max-h-64 overflow-y-auto">
+                {% for p in low_stock_products %}
+                    <div class="py-2.5 flex items-center justify-between text-xs">
+                        <div>
+                            <span class="font-bold text-white block">{{ p.name }}</span>
+                            <span class="text-slate-400">{{ p.category.name }} • ₹{{ p.price }}</span>
+                        </div>
+                        <span class="badge bg-rose-950 text-rose-300 border border-rose-800 font-bold px-2 py-0.5">
+                            {{ p.stock }} Left
+                        </span>
+                    </div>
+                {% empty %}
+                    <p class="text-xs text-emerald-400 py-4 text-center">All inventory healthy! No critical stock shortages.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Recent Orders Table -->
+    <div class="glass-card p-6 rounded-3xl border border-slate-800 shadow-sm space-y-4">
+        <h3 class="font-heading font-bold text-base text-white flex items-center justify-between">
+            <span>Recent Orders & Courier Tracking</span>
+            <i class="bi bi-clock-history text-indigo-400"></i>
+        </h3>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left">
+                <thead class="text-slate-400 border-b border-slate-800 font-cta uppercase">
+                    <tr>
+                        <th class="py-3 px-3">Order</th>
+                        <th class="py-3 px-3">Customer</th>
+                        <th class="py-3 px-3">Total</th>
+                        <th class="py-3 px-3">Payment</th>
+                        <th class="py-3 px-3">Status</th>
+                        <th class="py-3 px-3">AWB Tracking</th>
+                        <th class="py-3 px-3 text-right">Invoice</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 text-slate-300">
+                    {% for o in recent_orders %}
+                        <tr class="hover:bg-slate-900/50 transition-colors">
+                            <td class="py-3 px-3 font-bold text-brand-neon">#{{ o.id }}</td>
+                            <td class="py-3 px-3 font-semibold text-white">{{ o.first_name }} {{ o.last_name }}</td>
+                            <td class="py-3 px-3 font-bold text-emerald-400">₹{{ o.get_total_cost }}</td>
+                            <td class="py-3 px-3">
+                                {% if o.paid %}
+                                    <span class="badge bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-bold">PAID ({{ o.payment_method }})</span>
+                                {% else %}
+                                    <span class="badge bg-amber-950 text-amber-400 border border-amber-800 text-[10px] font-bold">COD (UNPAID)</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-3 px-3">
+                                <span class="badge bg-slate-800 text-slate-300 text-[10px]">{{ o.status }}</span>
+                            </td>
+                            <td class="py-3 px-3 font-mono text-[11px] text-slate-400">{{ o.tracking_number }}</td>
+                            <td class="py-3 px-3 text-right">
+                                <a href="{% url 'store:order_invoice' o.id %}" target="_blank" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-bold text-[10px]">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="7" class="text-center py-6 text-slate-500">No orders placed yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
