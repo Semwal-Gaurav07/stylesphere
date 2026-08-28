@@ -1,137 +1,446 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>{% block title %}STYLESPHERE // FW26{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% block title %}Style Sphere - Official Streetwear, Sneakers & Merch{% endblock %}</title>
 
-  <!-- Google Fonts: Syne & Plus Jakarta Sans -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+    <!-- SEO & Metadata -->
+    <meta name="description" content="Shop limited edition sneakers, sunglasses, oversized graphic tees, and streetwear hoodies at Style Sphere. Fast dispatch and Cash on Delivery available across India.">
+    <meta property="og:title" content="Style Sphere - Streetwear, Sneakers & Sunglasses">
+    <meta property="og:image" content="https://stylesphere-store.onrender.com/static/images/stylesphere_logo_primary.png">
+    <link rel="icon" type="image/png" href="{% static 'images/stylesphere_icon.png' %}">
 
-  <!-- Compiled Tailwind CSS -->
-  <link rel="stylesheet" href="{% static 'css/output.css' %}" />
-  <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <!-- Google Fonts: Poppins (Headings), Inter (Body), Oswald (CTAs) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@500;600;700&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- HTMX & Alpine.js -->
-  <script src="https://unpkg.com/htmx.org@1.9.10" defer></script>
-  <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-  <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    h1, h2, h3, .font-display { font-family: 'Syne', sans-serif; }
-  </style>
+    <!-- TailwindCSS & DaisyUI CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: ["class", '[data-theme="dark"]'],
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                        cta: ['Oswald', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            neon: '#00F0FF',
+                            pink: '#FF0055',
+                            lime: '#CCFF00',
+                            purple: '#7928CA',
+                            dark: '#0A0C10',
+                            card: '#121620'
+                        }
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(24px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        floatSlow: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-10px) rotate(1.5deg)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.35', transform: 'scale(1)' },
+                            '50%': { opacity: '0.75', transform: 'scale(1.08)' },
+                        }
+                    },
+                    animation: {
+                        fadeInUp: 'fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        float: 'floatSlow 4.5s ease-in-out infinite',
+                        pulseGlow: 'pulseGlow 6s ease-in-out infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Theme State Script -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Poppins', sans-serif; }
+        .font-cta { font-family: 'Oswald', sans-serif; letter-spacing: 0.05em; text-transform: uppercase; }
+        
+        .glass-nav {
+            background: rgba(10, 12, 16, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        [data-theme="light"] .glass-nav {
+            background: rgba(255, 255, 255, 0.92);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        .glass-card {
+            background: rgba(18, 22, 32, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        [data-theme="light"] .glass-card {
+            background: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        .glass-card:hover {
+            border-color: rgba(0, 240, 255, 0.5);
+            box-shadow: 0 10px 30px -10px rgba(0, 240, 255, 0.25);
+        }
+
+        .cat-bubble-container {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 10px 4px 16px 4px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .cat-bubble-container::-webkit-scrollbar { display: none; }
+        .cat-bubble {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            min-width: 76px;
+            text-align: center;
+        }
+        .cat-bubble-img {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 2px;
+        }
+        .cat-bubble:hover .cat-bubble-img { transform: scale(1.1) rotate(2deg); }
+        .cat-bubble-text {
+            font-size: 0.72rem;
+            font-weight: 800;
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+        }
+
+        .ring-all { background: linear-gradient(135deg, #00F0FF, #7928CA); color: #000; }
+        .ring-sneakers { background: linear-gradient(135deg, #00F0FF, #0070F3); color: #000; }
+        .ring-sunglasses { background: linear-gradient(135deg, #CCFF00, #00F0FF); color: #000; }
+        .ring-tshirts { background: linear-gradient(135deg, #FF0055, #FFB199); color: #fff; }
+        .ring-hoodies { background: linear-gradient(135deg, #7928CA, #FF0055); color: #fff; }
+        .ring-bottoms { background: linear-gradient(135deg, #10B981, #CCFF00); color: #000; }
+        .ring-acc { background: linear-gradient(135deg, #F59E0B, #FF0055); color: #fff; }
+
+        .fandom-badge-box {
+            border-radius: 16px;
+            color: #ffffff;
+            text-align: center;
+            padding: 24px 14px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transition: transform 0.25s ease;
+        }
+        .fandom-badge-box:hover { transform: translateY(-4px); }
+        .badge-anime { background: linear-gradient(135deg, #e11d48, #fb7185); }
+        .badge-marvel { background: linear-gradient(135deg, #2563eb, #60a5fa); }
+        .badge-gaming { background: linear-gradient(135deg, #059669, #34d399); }
+        .badge-originals { background: linear-gradient(135deg, #7c3aed, #c084fc); }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    </style>
 </head>
+<body class="bg-[#0A0C10] dark:bg-[#0A0C10] text-slate-100 antialiased min-h-screen flex flex-col justify-between selection:bg-brand-neon selection:text-black pb-16 md:pb-0">
 
-<body 
-  class="bg-[#09090E] text-neutral-100 min-h-screen flex flex-col antialiased relative overflow-x-hidden"
-  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-  x-data="{ cartOpen: false, mobileMenuOpen: false }"
->
-  <!-- Ambient Gradient Background Glow -->
-  <div class="fixed top-[-100px] left-1/2 -translate-x-1/2 w-[350px] sm:w-[600px] h-[250px] bg-indigo-600/15 blur-[120px] pointer-events-none rounded-full z-0"></div>
-
-  <!-- Announcement Bar -->
-  <div class="w-full bg-indigo-600 text-white text-[10px] sm:text-xs font-extrabold tracking-wider uppercase overflow-hidden py-1 z-50 border-b border-indigo-500">
-    <div class="animate-marquee whitespace-nowrap flex items-center gap-6">
-      <span>⚡ STYLESPHERE // NEW COLLECTION DROPPED</span>
-      <span>•</span>
-      <span>FREE SHIPPING OVER $150</span>
-      <span>•</span>
-      <span>LIMITED EDITION STREETWEAR</span>
-      <span>•</span>
-      <span>⚡ STYLESPHERE // NEW COLLECTION DROPPED</span>
+    <!-- Top Announcement Ticker -->
+    <div class="bg-gradient-to-r from-brand-purple via-brand-pink to-brand-neon text-white text-xs py-1.5 px-4 text-center font-bold tracking-wide">
+        ⚡ FLASH DROP: USE CODE <span class="bg-black text-brand-neon px-2 py-0.5 rounded-full font-extrabold mx-1">FIRST10</span> FOR 10% OFF + FREE SHIPPING ON ORDERS OVER ₹999 🕶️👟
     </div>
-  </div>
 
-  <!-- Sticky Responsive Top Navigation -->
-  <header class="sticky top-0 z-40 w-full cyber-glass border-b border-white/10">
-    <div class="max-w-7xl mx-auto px-4 h-14 sm:h-16 flex items-center justify-between">
-      
-      <!-- Mobile Hamburger Button & Logo -->
-      <div class="flex items-center gap-3">
-        <button 
-          @click="mobileMenuOpen = !mobileMenuOpen" 
-          class="sm:hidden p-1.5 text-neutral-400 hover:text-white"
-          aria-label="Toggle Menu"
-        >
-          <i class="bi bi-list text-xl"></i>
-        </button>
+    <!-- Glassmorphic Navbar -->
+    <header class="sticky top-0 z-40 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <a href="{% url 'store:product_list' %}" class="flex items-center gap-2 group">
+                        <img src="{% static 'images/stylesphere_logo_white.png' %}" alt="Style Sphere" class="h-9 block">
+                    </a>
+                </div>
 
-        <a href="{% url 'store:product_list' %}" class="flex items-center gap-2">
-          <span class="h-2 w-2 rounded-full bg-indigo-500"></span>
-          <span class="text-lg sm:text-xl font-display font-black tracking-tighter text-white uppercase">
-            STYLE<span class="text-indigo-500">SPHERE</span>
-          </span>
-        </a>
-      </div>
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold">
+                    <a href="{% url 'store:product_list' %}" class="text-white hover:text-brand-neon transition-colors {% if not category %}text-brand-neon font-bold{% endif %}">Home</a>
+                    
+                    <div class="dropdown dropdown-hover">
+                        <label tabindex="0" class="cursor-pointer text-slate-300 hover:text-brand-neon flex items-center gap-1">
+                            Products <i class="bi bi-chevron-down text-xs"></i>
+                        </label>
+                        <ul tabindex="0" class="dropdown-content z- menu p-2 shadow-2xl bg-brand-card border border-slate-800 rounded-2xl w-56">
+                            <li><a href="{% url 'store:product_list' %}"><i class="bi bi-grid-fill text-brand-neon"></i> All Collections</a></li>
+                            {% for c in categories %}
+                                <li><a href="{{ c.get_absolute_url }}"><i class="bi bi-tag-fill text-brand-pink"></i> {{ c.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
 
-      <!-- Right Navigation Actions -->
-      <div class="flex items-center gap-2 sm:gap-4">
-        {% if user.is_authenticated %}
-          <a href="{% url 'accounts:profile' %}" class="hidden sm:flex p-2 text-neutral-400 hover:text-white transition rounded-lg hover:bg-white/5">
-            <i class="bi bi-person text-lg"></i>
-          </a>
-        {% else %}
-          <a href="{% url 'accounts:login' %}" class="hidden sm:inline-block text-xs font-bold uppercase tracking-wider text-neutral-300 hover:text-indigo-400 transition">
-            Sign In
-          </a>
+                    <a href="#productGrid" class="text-slate-300 hover:text-brand-neon transition-colors">Catalog</a>
+                    <a href="#about" class="text-slate-300 hover:text-brand-neon transition-colors">About Us</a>
+                    <a href="https://wa.me/919781855165" target="_blank" class="text-slate-300 hover:text-brand-neon transition-colors">Contact</a>
+                </nav>
+
+                <!-- Search Bar (Desktop) -->
+                <div class="hidden md:flex items-center flex-1 max-w-xs mx-6">
+                    <form action="{% url 'store:product_list' %}" method="get" class="w-full relative">
+                        <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search sneakers, shades, tees..." 
+                               class="w-full bg-slate-900/90 border border-slate-700/60 rounded-full py-2 pl-10 pr-4 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-brand-neon focus:ring-1 focus:ring-brand-neon transition-all">
+                        <button type="submit" class="absolute left-3.5 top-2 text-slate-400 hover:text-brand-neon">
+                            <i class="bi bi-search text-xs"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right Action Icons: Cart, Wishlist, Account, Theme Toggle -->
+                <div class="flex items-center gap-3">
+                    
+                    <!-- Wishlist Icon with Counter Badge -->
+                    <a href="{% url 'store:wishlist_detail' %}" class="btn btn-ghost btn-circle btn-sm text-slate-300 hover:text-brand-pink relative" title="My Wishlist">
+                        <i class="bi bi-heart text-lg"></i>
+                        {% if user.is_authenticated and user.wishlist.count > 0 %}
+                            <span class="badge badge-xs bg-brand-pink border-none text-white absolute -top-1 -right-1 font-bold">
+                                {{ user.wishlist.count }}
+                            </span>
+                        {% endif %}
+                    </a>
+
+                    <!-- Cart Drawer Trigger with Counter Badge -->
+                    <a href="{% url 'store:cart_detail' %}" class="btn btn-ghost btn-circle btn-sm text-slate-300 hover:text-brand-neon relative" title="Shopping Cart">
+                        <i class="bi bi-bag text-lg"></i>
+                        {% with total_items=cart|length %}
+                            {% if total_items > 0 %}
+                                <span class="badge badge-xs bg-brand-neon border-none text-black font-extrabold absolute -top-1 -right-1">
+                                    {{ total_items }}
+                                </span>
+                            {% endif %}
+                        {% endwith %}
+                    </a>
+
+                    <!-- User Account Dropdown -->
+                    <div class="dropdown dropdown-end">
+                        <label tabindex="0" class="btn btn-ghost btn-circle btn-sm avatar border border-slate-700 hover:border-brand-neon">
+                            <div class="w-8 rounded-full bg-slate-800 flex items-center justify-center">
+                                <i class="bi bi-person text-lg text-brand-neon"></i>
+                            </div>
+                        </label>
+                        <ul tabindex="0" class="dropdown-content z- menu p-2 shadow-2xl bg-brand-card border border-slate-800 rounded-2xl w-56 mt-3">
+                            {% if user.is_authenticated %}
+                                <li class="menu-title px-4 py-2 text-slate-400 border-b border-slate-800">
+                                    <span class="text-xs font-bold text-brand-neon">VIP: {{ user.username }}</span>
+                                </li>
+                                <li><a href="{% url 'accounts:profile' %}"><i class="bi bi-truck text-brand-neon"></i> My Orders & Tracking</a></li>
+                                <li><a href="{% url 'store:wishlist_detail' %}"><i class="bi bi-heart text-brand-pink"></i> My Wishlist</a></li>
+                                <li><a href="{% url 'api:product-list' %}"><i class="bi bi-code-slash text-brand-lime"></i> REST API</a></li>
+                                <li><hr class="border-slate-800 my-1"></li>
+                                <li><a href="{% url 'accounts:logout' %}" class="text-rose-400"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                            {% else %}
+                                <li><a href="{% url 'accounts:login' %}"><i class="bi bi-box-arrow-in-right text-brand-neon"></i> Login</a></li>
+                                <li><a href="{% url 'accounts:register' %}"><i class="bi bi-person-plus text-brand-pink"></i> Sign Up</a></li>
+                                <li><a href="{% url 'accounts:login' %}"><i class="bi bi-gear text-brand-lime"></i> My Account</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    <!-- Theme Toggle (Dark & Light) -->
+                    <button onclick="toggleTheme()" class="btn btn-ghost btn-circle btn-sm text-slate-300 hover:text-amber-400" title="Toggle Theme">
+                        <i id="themeToggleIcon" class="bi bi-moon-stars text-lg"></i>
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- Mobile Search Bar -->
+            <div class="md:hidden pb-3">
+                <form action="{% url 'store:product_list' %}" method="get" class="w-full relative">
+                    <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search sneakers, shades, drops..." 
+                           class="w-full bg-slate-900 border border-slate-700 rounded-full py-2 pl-10 pr-4 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-brand-neon">
+                    <button type="submit" class="absolute left-3.5 top-2 text-slate-400">
+                        <i class="bi bi-search text-xs"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sub-Navbar Category Tabs (Desktop) -->
+    <nav class="hidden md:block bg-brand-card/60 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-center gap-2 py-2">
+                <a href="{% url 'store:product_list' %}" 
+                   class="px-4 py-1.5 rounded-full text-xs font-cta font-bold transition-all {% if not category %}bg-brand-neon text-black{% else %}text-slate-400 hover:text-white{% endif %}">
+                    ALL ITEMS
+                </a>
+                {% for c in categories %}
+                    <a href="{{ c.get_absolute_url }}" 
+                       class="px-4 py-1.5 rounded-full text-xs font-cta font-bold transition-all {% if category.slug == c.slug %}bg-brand-neon text-black{% else %}text-slate-400 hover:text-white{% endif %}">
+                        {{ c.name|upper }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {% if messages %}
+            <div class="mb-6 space-y-2">
+                {% for message in messages %}
+                    <div class="p-3.5 rounded-2xl text-xs font-bold flex items-center justify-between {% if message.tags == 'success' %}bg-emerald-950/60 text-emerald-300 border border-emerald-800{% elif message.tags == 'error' %}bg-rose-950/60 text-rose-300 border border-rose-800{% else %}bg-indigo-950/60 text-indigo-300 border border-indigo-800{% endif %}">
+                        <span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
 
-        <a href="{% url 'store:wishlist_detail' %}" class="p-2 text-neutral-400 hover:text-white transition">
-          <i class="bi bi-heart text-base sm:text-lg"></i>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Floating WhatsApp Support Button -->
+    <a href="https://wa.me/919781855165?text=Hello%20Style%20Sphere,%20I%20have%20an%20inquiry%20about%20my%20order" 
+       target="_blank" 
+       class="fixed bottom-20 md:bottom-6 right-5 z-40 w-12 h-12 p-3 bg-emerald-500 hover:bg-emerald-400 text-white rounded-full shadow-lg hover:shadow-emerald-500/30 flex items-center justify-center text-2xl transition-all transform hover:scale-110" 
+       title="Chat on WhatsApp (+91 9781855165)">
+        <i class="bi bi-whatsapp"></i>
+    </a>
+
+    <!-- Mobile App-Style Fixed Bottom Nav Bar -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0A0C10]/95 backdrop-blur-lg border-t border-slate-800 flex justify-around items-center h-15 py-1">
+        <a href="{% url 'store:product_list' %}" class="flex flex-col items-center text-xs font-bold {% if request.path == '/' %}text-brand-neon{% else %}text-slate-400{% endif %}">
+            <i class="bi bi-house-door text-lg mb-0.5"></i>
+            <span>Home</span>
         </a>
+        <a href="#productGrid" class="flex flex-col items-center text-xs font-bold text-slate-400 hover:text-brand-neon">
+            <i class="bi bi-grid text-lg mb-0.5"></i>
+            <span>Drops</span>
+        </a>
+        <a href="{% url 'store:wishlist_detail' %}" class="relative flex flex-col items-center text-xs font-bold {% if 'wishlist' in request.path %}text-brand-pink{% else %}text-slate-400{% endif %}">
+            <i class="bi bi-heart text-lg mb-0.5"></i>
+            <span>Wishlist</span>
+            {% if user.is_authenticated and user.wishlist.count > 0 %}
+                <span class="absolute -top-1 right-2 bg-brand-pink text-white text-[9px] font-black w-3.5 h-3.5 rounded-full flex items-center justify-center">
+                    {{ user.wishlist.count }}
+                </span>
+            {% endif %}
+        </a>
+        <a href="{% url 'store:cart_detail' %}" class="relative flex flex-col items-center text-xs font-bold {% if 'cart' in request.path %}text-brand-neon{% else %}text-slate-400{% endif %}">
+            <i class="bi bi-bag text-lg mb-0.5"></i>
+            <span>Cart</span>
+            {% with total_items=cart|length %}
+                {% if total_items > 0 %}
+                    <span class="absolute -top-1 right-1 bg-brand-neon text-black text-[9px] font-black w-3.5 h-3.5 rounded-full flex items-center justify-center">
+                        {{ total_items }}
+                    </span>
+                {% endif %}
+            {% endwith %}
+        </a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'accounts:profile' %}" class="flex flex-col items-center text-xs font-bold {% if 'profile' in request.path %}text-brand-neon{% else %}text-slate-400{% endif %}">
+                <i class="bi bi-person text-lg mb-0.5"></i>
+                <span>Profile</span>
+            </a>
+        {% else %}
+            <a href="{% url 'accounts:login' %}" class="flex flex-col items-center text-xs font-bold text-slate-400 hover:text-brand-neon">
+                <i class="bi bi-person text-lg mb-0.5"></i>
+                <span>Sign In</span>
+            </a>
+        {% endif %}
+    </nav>
 
-        <!-- Cart Drawer Toggle -->
-        <button 
-          @click="cartOpen = true" 
-          class="relative px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white transition flex items-center gap-1.5 sm:gap-2"
-        >
-          <i class="bi bi-bag text-xs sm:text-sm"></i>
-          <span class="text-[11px] sm:text-xs font-bold hidden xs:inline">Bag</span>
-          <span 
-            id="cart-count-badge" 
-            class="flex h-4 sm:h-5 min-w-[16px] sm:min-w-[20px] px-1 items-center justify-center rounded-full bg-indigo-600 text-[9px] sm:text-[10px] font-black text-white"
-          >
-            {{ cart|length|default:0 }}
-          </span>
-        </button>
-      </div>
-    </div>
+    <!-- Footer -->
+    <footer class="bg-black text-slate-400 border-t border-slate-900 py-12 mt-12" id="about">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h4 class="text-white font-heading font-bold text-sm mb-4">Shop Collections</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="{% url 'store:product_list' %}" class="hover:text-brand-neon">Sneakers & Kicks</a></li>
+                        <li><a href="{% url 'store:product_list' %}" class="hover:text-brand-neon">Polarized Sunglasses</a></li>
+                        <li><a href="{% url 'store:product_list' %}" class="hover:text-brand-neon">Oversized Graphic Tees</a></li>
+                        <li><a href="{% url 'store:product_list' %}" class="hover:text-brand-neon">Heavyweight Hoodies</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-heading font-bold text-sm mb-4">Customer Support</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="{% url 'accounts:profile' %}" class="hover:text-brand-neon">Track Order Status</a></li>
+                        <li><a href="{% url 'store:wishlist_detail' %}" class="hover:text-brand-neon">My Wishlist</a></li>
+                        <li><a href="https://wa.me/919781855165" target="_blank" class="hover:text-brand-neon">WhatsApp Support (+91 9781855165)</a></li>
+                    </ul>
+                </div>
+                <div class="col-span-2 md:text-right">
+                    <h4 class="text-white font-heading font-bold text-sm mb-2">Style Sphere Streetwear</h4>
+                    <p class="text-xs text-slate-400 max-w-md md:ml-auto mb-3">
+                        Curating sneakers, aerodynamic optics, anime drops, and 240 GSM heavy French Terry cotton.
+                    </p>
+                    <div class="text-xs font-semibold text-slate-500">
+                        ⚡ 100% Encrypted Payments • UPI • Credit/Debit Cards • NetBanking • Cash on Delivery (COD)
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-slate-900 pt-6 text-center text-xs text-slate-500">
+                &copy; {% now "Y" %} Style Sphere Inc. All rights reserved.
+            </div>
+        </div>
+    </footer>
 
-    <!-- Mobile Nav Dropdown -->
-    <div 
-      x-show="mobileMenuOpen" 
-      x-cloak 
-      @click.outside="mobileMenuOpen = false"
-      class="sm:hidden border-t border-white/10 bg-[#12121B] px-4 py-3 space-y-2 text-xs font-semibold"
-    >
-      <a href="{% url 'store:product_list' %}" class="block py-2 text-indigo-400">All Collections</a>
-      <a href="{% url 'store:wishlist_detail' %}" class="block py-2 text-neutral-300">My Wishlist</a>
-      {% if user.is_authenticated %}
-        <a href="{% url 'accounts:profile' %}" class="block py-2 text-neutral-300">My Account & Orders</a>
-      {% else %}
-        <a href="{% url 'accounts:login' %}" class="block py-2 text-neutral-300">Sign In / Register</a>
-      {% endif %}
-    </div>
-  </header>
-
-  <!-- Slide-Over Cart Drawer (Included) -->
-  {% include 'store/cart/_cart_drawer.html' %}
-
-  <!-- Main Responsive Container -->
-  <main class="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 py-6 sm:py-8 relative z-10">
-    {% block content %}{% endblock %}
-  </main>
-
-  <footer class="border-t border-white/10 py-6 text-center text-xs text-neutral-500 bg-[#07070B]">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <p class="font-display font-bold tracking-widest text-neutral-400">STYLESPHERE / 2026</p>
-      <p>&copy; All rights reserved.</p>
-    </div>
-  </footer>
+    <!-- Theme Switcher JS -->
+    <script>
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            if (next === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            localStorage.setItem('theme', next);
+            const icon = document.getElementById('themeToggleIcon');
+            if (icon) {
+                icon.className = next === 'dark' ? 'bi bi-moon-stars text-lg text-slate-300' : 'bi bi-sun text-lg text-amber-500';
+            }
+        }
+    </script>
 </body>
 </html>
