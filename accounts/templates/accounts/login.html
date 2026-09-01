@@ -1,44 +1,181 @@
 {% extends "store/base.html" %}
 
-{% block title %}Sign In - Style Sphere VIP{% endblock %}
+{% block title %}VIP Sign In - Style Sphere{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto py-8">
-    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-800">
+<div class="max-w-5xl mx-auto py-4 sm:py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 rounded-3xl overflow-hidden glass-card border border-slate-800 shadow-2xl">
         
-        <!-- Header -->
-        <div class="text-center mb-6">
-            <div class="w-14 h-14 rounded-2xl bg-brand-neon/10 text-brand-neon flex items-center justify-center text-2xl mx-auto mb-3">
-                <i class="bi bi-person-fill"></i>
+        <!-- Left: Cyber Showcase Panel (Desktop) -->
+        <div class="lg:col-span-5 relative p-8 sm:p-10 flex flex-col justify-between overflow-hidden bg-gradient-to-br from-[#0c0f1d] via-[#1e1b4b] to-[#121620] border-b lg:border-b-0 lg:border-r border-slate-800">
+            <!-- Ambient Glow Orbs -->
+            <div class="absolute -top-20 -left-20 w-64 h-64 bg-brand-neon/20 rounded-full blur-3xl pointer-events-none animate-pulseGlow"></div>
+            <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-brand-pink/20 rounded-full blur-3xl pointer-events-none animate-pulseGlow" style="animation-delay: 2s;"></div>
+
+            <div class="relative z-10 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-brand-neon/40 text-brand-neon text-[11px] font-cta uppercase tracking-widest backdrop-blur-md">
+                    <span class="w-2 h-2 rounded-full bg-brand-neon animate-ping"></span>
+                    INNER SPHERE // ACCESS
+                </div>
+
+                <h2 class="text-3xl sm:text-4xl font-black text-white font-heading tracking-tight leading-tight">
+                    ENTER THE <span class="bg-gradient-to-r from-brand-neon via-brand-purple to-brand-pink bg-clip-text text-transparent">STREETWEAR</span> DIMENSION.
+                </h2>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    Unlock exclusive midnight streetwear drops, 240 GSM heavy graphic tees, and secret discount capsules.
+                </p>
             </div>
-            <h2 class="text-2xl font-black text-white font-heading">VIP MEMBER SIGN IN</h2>
-            <p class="text-xs text-slate-400 mt-1">Access drop alerts, order history, and exclusive streetwear discounts.</p>
+
+            <!-- VIP Member Perks List -->
+            <div class="relative z-10 space-y-3 my-8">
+                <div class="flex items-center gap-3 p-3 rounded-2xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-sm">
+                    <div class="w-9 h-9 rounded-xl bg-brand-neon/10 text-brand-neon flex items-center justify-center text-lg flex-shrink-0">
+                        <i class="bi bi-tag-fill"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">Instant 10% Welcome Discount</h4>
+                        <p class="text-[11px] text-slate-400">Use promo code <span class="text-brand-neon font-bold">FIRST10</span></p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 p-3 rounded-2xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-sm">
+                    <div class="w-9 h-9 rounded-xl bg-brand-pink/10 text-brand-pink flex items-center justify-center text-lg flex-shrink-0">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">Live Courier & AWB Tracking</h4>
+                        <p class="text-[11px] text-slate-400">Real-time status updates on all orders</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 p-3 rounded-2xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-sm">
+                    <div class="w-9 h-9 rounded-xl bg-brand-lime/10 text-brand-lime flex items-center justify-center text-lg flex-shrink-0">
+                        <i class="bi bi-stars"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">Priority Sneaker & Shades Access</h4>
+                        <p class="text-[11px] text-slate-400">Reserve limited anime and cyberpunk drops</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative z-10 pt-4 border-t border-slate-800/80 text-[11px] text-slate-500 font-semibold flex items-center justify-between">
+                <span>⚡ 100% Encrypted Authentication</span>
+                <span>Style Sphere VIP</span>
+            </div>
         </div>
 
-        <!-- Form -->
-        <form method="post" class="space-y-4">
-            {% csrf_token %}
-            <div>
-                <label class="text-xs font-bold text-slate-400 block mb-1">Username</label>
-                <input type="text" name="username" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-brand-neon transition-all" required autofocus placeholder="Enter your username">
+        <!-- Right: Animated Glassmorphic Login Form -->
+        <div class="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-center bg-slate-950/70">
+            
+            <div class="max-w-md mx-auto w-full space-y-6">
+                <!-- Header Tabs -->
+                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                    <div>
+                        <h3 class="text-2xl font-black text-white font-heading tracking-tight">VIP SIGN IN</h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Welcome back! Please enter your credentials.</p>
+                    </div>
+                    <a href="{% url 'accounts:register' %}{% if next %}?next={{ next }}{% endif %}" class="px-4 py-1.5 rounded-full text-xs font-cta font-bold text-brand-pink hover:bg-brand-pink/10 border border-brand-pink/30 transition-all">
+                        CREATE ACCOUNT
+                    </a>
+                </div>
+
+                <!-- Social Sign In Quick Mockups -->
+                <div class="grid grid-cols-2 gap-3">
+                    <button type="button" onclick="alert('Google One-Tap sign-in simulated!')" class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-white transition-all">
+                        <i class="bi bi-google text-brand-neon"></i> Google
+                    </button>
+                    <button type="button" onclick="alert('Apple ID sign-in simulated!')" class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-white transition-all">
+                        <i class="bi bi-apple"></i> Apple ID
+                    </button>
+                </div>
+
+                <div class="relative flex items-center justify-center my-4">
+                    <div class="border-t border-slate-800 w-full"></div>
+                    <span class="bg-[#0A0C10] px-3 text-[11px] font-bold text-slate-500 uppercase tracking-widest">Or sign in with</span>
+                    <div class="border-t border-slate-800 w-full"></div>
+                </div>
+
+                <!-- Django Authentication Form -->
+                <form method="post" class="space-y-4" id="loginForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next|default:'' }}">
+
+                    <!-- Username Field -->
+                    <div>
+                        <label class="text-xs font-bold text-slate-300 block mb-1.5">
+                            <i class="bi bi-person text-brand-neon mr-1"></i> Username or Email
+                        </label>
+                        <div class="relative">
+                            <input type="text" 
+                                   name="username" 
+                                   required 
+                                   autofocus 
+                                   placeholder="e.g. raven_07" 
+                                   class="w-full px-4 py-3 pl-11 rounded-xl bg-slate-900/90 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-neon focus:ring-2 focus:ring-brand-neon/20 transition-all">
+                            <i class="bi bi-person-fill absolute left-4 top-3.5 text-slate-400"></i>
+                        </div>
+                    </div>
+
+                    <!-- Password Field with Show/Hide Toggle -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="text-xs font-bold text-slate-300">
+                                <i class="bi bi-lock text-brand-pink mr-1"></i> Password
+                            </label>
+                            <a href="javascript:void(0)" onclick="alert('To reset your password, contact support or run python manage.py changepassword in your terminal.')" class="text-[11px] text-slate-400 hover:text-brand-neon">
+                                Forgot password?
+                            </a>
+                        </div>
+                        <div class="relative">
+                            <input type="password" 
+                                   name="password" 
+                                   id="loginPasswordInput"
+                                   required 
+                                   placeholder="••••••••••••" 
+                                   class="w-full px-4 py-3 pl-11 pr-11 rounded-xl bg-slate-900/90 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-neon focus:ring-2 focus:ring-brand-neon/20 transition-all">
+                            <i class="bi bi-shield-lock-fill absolute left-4 top-3.5 text-slate-400"></i>
+                            <button type="button" onclick="togglePasswordVisibility('loginPasswordInput', 'passwordEyeIcon')" class="absolute right-4 top-3 text-slate-400 hover:text-white p-1">
+                                <i id="passwordEyeIcon" class="bi bi-eye-slash text-base"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button with Glowing Pulse -->
+                    <button type="submit" class="w-full py-3.5 bg-brand-neon hover:bg-cyan-300 text-black font-cta font-black text-base tracking-wider rounded-xl shadow-lg shadow-brand-neon/25 hover:shadow-brand-neon/40 transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 mt-2">
+                        <span>SIGN IN TO VIP ACCOUNT</span>
+                        <i class="bi bi-arrow-right-short text-xl"></i>
+                    </button>
+                </form>
+
+                <p class="text-center text-xs text-slate-400 pt-2">
+                    New to Style Sphere? 
+                    <a href="{% url 'accounts:register' %}{% if next %}?next={{ next }}{% endif %}" class="text-brand-neon font-bold hover:underline ml-1">
+                        Register VIP Membership →
+                    </a>
+                </p>
+
             </div>
 
-            <div>
-                <label class="text-xs font-bold text-slate-400 block mb-1">Password</label>
-                <input type="password" name="password" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-brand-neon transition-all" required placeholder="••••••••">
-            </div>
+        </div>
 
-            <button type="submit" class="w-full py-3 bg-brand-neon hover:bg-cyan-300 text-black font-cta font-bold text-base rounded-full shadow-lg shadow-brand-neon/20 transition-all">
-                SIGN IN TO ACCOUNT →
-            </button>
-        </form>
-
-        <div class="border-t border-slate-800 my-6"></div>
-
-        <p class="text-center text-xs text-slate-400">
-            Don't have an account yet? 
-            <a href="{% url 'accounts:register' %}" class="text-brand-pink font-bold underline ml-1">Create VIP Account</a>
-        </p>
     </div>
 </div>
+
+<!-- Password Visibility Toggle JavaScript -->
+<script>
+    function togglePasswordVisibility(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (input && icon) {
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'bi bi-eye text-brand-neon text-base';
+            } else {
+                input.type = 'password';
+                icon.className = 'bi bi-eye-slash text-slate-400 text-base';
+            }
+        }
+    }
+</script>
 {% endblock %}

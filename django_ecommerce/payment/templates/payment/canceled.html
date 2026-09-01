@@ -1,0 +1,29 @@
+{% extends "store/base.html" %}
+
+{% block title %}Payment Canceled - Style Sphere{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto py-10 text-center">
+    <div class="glass-card rounded-3xl p-8 border border-slate-800 shadow-2xl space-y-4">
+        
+        <div class="w-16 h-16 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center text-3xl mx-auto">
+            <i class="bi bi-x-circle"></i>
+        </div>
+
+        <h1 class="text-2xl font-black text-white font-heading">PAYMENT NOT COMPLETED</h1>
+        <p class="text-xs text-slate-400">
+            Your transaction was cancelled or timed out. Your cart items are still saved in your bag.
+        </p>
+
+        <div class="pt-2 flex flex-col gap-2">
+            <a href="{% url 'store:cart_detail' %}" class="btn bg-brand-neon text-black font-cta rounded-full">
+                RETURN TO SHOPPING BAG →
+            </a>
+            <a href="{% url 'store:product_list' %}" class="text-xs text-slate-400 hover:text-white mt-2">
+                Browse More Drops
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

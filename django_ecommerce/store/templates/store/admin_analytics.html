@@ -1,0 +1,91 @@
+{% extends "store/base.html" %}
+
+{% block title %}Admin Sales & Revenue Analytics - Style Sphere{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto py-6">
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <span class="text-xs font-cta font-bold text-brand-neon uppercase tracking-wider">STORE ADMIN</span>
+            <h1 class="text-3xl font-black text-white font-heading">Sales & Revenue Analytics</h1>
+        </div>
+        <a href="{% url 'accounts:profile' %}" class="btn btn-sm bg-slate-800 text-white font-cta rounded-full">
+            ← Back to Profile
+        </a>
+    </div>
+
+    <!-- Top KPI Metric Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="glass-card rounded-2xl p-5 border border-slate-800">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider font-cta">Gross Revenue</span>
+            <div class="text-3xl font-black text-emerald-400 font-heading mt-1">₹{{ total_revenue }}</div>
+            <span class="text-[11px] text-slate-400 mt-1 block">Live across all sales</span>
+        </div>
+        <div class="glass-card rounded-2xl p-5 border border-slate-800">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider font-cta">Total Orders</span>
+            <div class="text-3xl font-black text-white font-heading mt-1">{{ total_orders }}</div>
+            <span class="text-[11px] text-slate-400 mt-1 block">Processed orders</span>
+        </div>
+        <div class="glass-card rounded-2xl p-5 border border-slate-800">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider font-cta">Paid Online</span>
+            <div class="text-3xl font-black text-brand-neon font-heading mt-1">{{ paid_orders }}</div>
+            <span class="text-[11px] text-slate-400 mt-1 block">UPI & Card captures</span>
+        </div>
+        <div class="glass-card rounded-2xl p-5 border border-slate-800">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider font-cta">Cash on Delivery</span>
+            <div class="text-3xl font-black text-amber-400 font-heading mt-1">{{ cod_orders }}</div>
+            <span class="text-[11px] text-slate-400 mt-1 block">Pending collection</span>
+        </div>
+    </div>
+
+    <!-- Analytics Breakdown Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <!-- Top Selling Sizes -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-800 space-y-4">
+            <h3 class="font-heading font-bold text-white text-base">Top Selling Sizes</h3>
+            <div class="space-y-3">
+                {% for item in top_selling_sizes %}
+                    <div class="flex items-center justify-between text-xs border-b border-slate-800 pb-2">
+                        <span class="font-bold text-white">Size {{ item.size }}</span>
+                        <span class="badge bg-slate-800 text-brand-neon font-bold">{{ item.total_sold }} units sold</span>
+                    </div>
+                {% empty %}
+                    <p class="text-xs text-slate-400">No size sales recorded yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Top Shipping Cities -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-800 space-y-4">
+            <h3 class="font-heading font-bold text-white text-base">Top Customer Cities</h3>
+            <div class="space-y-3">
+                {% for item in top_cities %}
+                    <div class="flex items-center justify-between text-xs border-b border-slate-800 pb-2">
+                        <span class="font-bold text-white">📍 {{ item.city }}</span>
+                        <span class="badge bg-slate-800 text-brand-pink font-bold">{{ item.order_count }} orders</span>
+                    </div>
+                {% empty %}
+                    <p class="text-xs text-slate-400">No city orders recorded yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Low Stock Inventory Alerts -->
+    <div class="glass-card rounded-3xl p-6 border border-slate-800">
+        <h3 class="font-heading font-bold text-white text-base mb-4">⚡ Low Stock Inventory Alerts (≤ 3 units)</h3>
+        {% if low_stock_products %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {% for p in low_stock_products %}
+                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
+                        <span class="font-bold text-white truncate max-w-xs">{{ p.name }}</span>
+                        <span class="badge bg-rose-950 text-rose-300 font-extrabold">{{ p.stock }} LEFT</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-xs text-emerald-400">All products have healthy inventory levels.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
