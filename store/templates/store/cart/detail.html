@@ -1,148 +1,192 @@
 {% extends "store/base.html" %}
 
-{% block title %}Shopping Bag - Style Sphere{% endblock %}
+{% block title %}Your Shopping Bag - Style Sphere{% endblock %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto py-4">
-    <h1 class="text-2xl sm:text-3xl font-black text-white font-heading mb-6">Shopping Bag</h1>
+<div class="mb-8">
+    <h1 class="text-2xl sm:text-3xl font-black text-white font-heading tracking-tight">Shopping Bag & Checkout</h1>
+    <p class="text-xs text-zinc-400 mt-1">Review your streetwear picks and apply VIP coupons below.</p>
+</div>
 
-    {% if cart %}
-        <!-- Free Shipping Progress Bar Meter -->
-        <div class="glass-card rounded-2xl p-4 mb-6 border border-slate-800">
-            <div class="flex justify-between items-center mb-1.5 text-xs font-bold">
-                {% if cart.get_free_shipping_needed == 0 %}
-                    <span class="text-brand-lime flex items-center gap-1.5">
-                        <i class="bi bi-check-circle-fill text-sm"></i> You have unlocked FREE Express Delivery!
-                    </span>
-                {% else %}
-                    <span class="text-slate-300 flex items-center gap-1.5">
-                        <i class="bi bi-truck text-brand-neon text-sm"></i> Add ₹{{ cart.get_free_shipping_needed }} more to unlock FREE Delivery!
-                    </span>
-                {% endif %}
-                <span class="text-slate-400">{{ cart.get_free_shipping_percent }}%</span>
-            </div>
-            <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
-                <div class="bg-gradient-to-r from-brand-neon to-brand-lime h-full transition-all duration-500 rounded-full" style="width: {{ cart.get_free_shipping_percent }}%"></div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <!-- Bag Items List -->
-            <div class="lg:col-span-8 space-y-3">
-                <div class="glass-card rounded-3xl p-4 sm:p-6 divide-y divide-slate-800 shadow-sm">
-                    {% for item in cart %}
-                        {% with product=item.product %}
-                            <div class="py-4 flex items-center justify-between gap-4 first:pt-0 last:pb-0">
-                                <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-xl bg-slate-900 p-1">
-                                <div class="flex-1">
-                                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-cta">{{ product.category.name }}</span>
-                                    <a href="{{ product.get_absolute_url }}" class="font-heading font-bold text-xs sm:text-sm text-white hover:text-brand-neon block">
-                                        {{ product.name }}
-                                    </a>
-                                    <div class="text-xs text-slate-400 mt-1">
-                                        Size: <span class="font-bold text-white bg-slate-800 px-2 py-0.5 rounded">{{ item.size }}</span> • Qty: <strong>{{ item.quantity }}</strong>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <span class="font-heading font-black text-sm sm:text-base text-brand-neon block">₹{{ item.total_price }}</span>
-                                    <form action="{% url 'store:cart_remove' item.item_key %}" method="post" class="mt-2">
-                                        {% csrf_token %}
-                                        <button type="submit" class="text-slate-400 hover:text-rose-500 text-xs font-bold" title="Remove">
-                                            <i class="bi bi-trash"></i> Remove
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        {% endwith %}
-                    {% endfor %}
+{% if cart %}
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
+        
+        <!-- Left: Cart Items Table -->
+        <div class="lg:col-span-8 space-y-4">
+            
+            <!-- Animated Free Shipping Threshold Meter -->
+            {% with total=cart.get_total_price %}
+                <div class="p-4 rounded-2xl bg-zinc-950/80 border border-zinc-800 space-y-2">
+                    <div class="flex items-center justify-between text-xs font-bold">
+                        {% if total >= 999 %}
+                            <span class="text-emerald-400 flex items-center gap-1.5">
+                                <i class="bi bi-check-circle-fill"></i> You unlocked FREE Express Air Delivery!
+                            </span>
+                            <span class="text-brand-neon">₹0 Delivery Fee</span>
+                        {% else %}
+                            <span class="text-zinc-300 flex items-center gap-1.5">
+                                <i class="bi bi-truck text-brand-neon"></i> Add <strong>₹{{ 999|stringformat:"d"|add:"-"|add:total|stringformat:"d" }}</strong> more for FREE Shipping!
+                            </span>
+                            <span class="text-zinc-400">Target: ₹999</span>
+                        {% endif %}
+                    </div>
+                    <div class="w-full bg-zinc-900 rounded-full h-2 overflow-hidden border border-zinc-800">
+                        <div class="bg-gradient-to-r from-brand-neon to-brand-pink h-full rounded-full transition-all duration-500" 
+                             style="width: {% if total >= 999 %}100%{% else %}{{ total|stringformat:'d' }}%{% endif %};">
+                        </div>
+                    </div>
                 </div>
-                <a href="{% url 'store:product_list' %}" class="inline-block text-xs font-bold text-slate-400 hover:text-brand-neon">
+            {% endwith %}
+
+            <!-- Items List -->
+            <div class="glass-card rounded-3xl p-4 sm:p-6 border border-zinc-800 divide-y divide-zinc-800/80">
+                {% for item in cart %}
+                    <div class="py-4 first:pt-0 last:pb-0 flex items-center gap-4">
+                        <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-zinc-950 border border-zinc-800 object-contain flex-shrink-0 p-1">
+                        
+                        <div class="flex-1 min-w-0">
+                            <span class="text-[10px] font-cta font-bold text-brand-neon uppercase tracking-wider block">
+                                {{ item.product.fit_type }}
+                            </span>
+                            <h3 class="text-sm font-bold text-white truncate">
+                                <a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a>
+                            </h3>
+                            <span class="text-xs text-zinc-400">Size: <strong class="text-white bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">{{ item.size }}</strong></span>
+                            <div class="text-xs font-black text-brand-neon font-heading mt-1 sm:hidden">
+                                ₹{{ item.total_price }}
+                            </div>
+                        </div>
+
+                        <!-- Quantity Selector -->
+                        <form action="{% url 'store:cart_add' item.product.id %}" method="post" class="flex items-center gap-1">
+                            {% csrf_token %}
+                            <input type="hidden" name="size" value="{{ item.size }}">
+                            <input type="hidden" name="override" value="True">
+                            <select name="quantity" onchange="this.form.submit()" class="py-1.5 px-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-xs font-bold text-white focus:outline-none focus:border-brand-neon">
+                                {% for q in "1,2,3,4,5"|make_list %}
+                                    <option value="{{ q }}" {% if item.quantity|stringformat:"s" == q %}selected{% endif %}>{{ q }}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
+
+                        <div class="hidden sm:block text-right">
+                            <span class="text-base font-black text-brand-neon font-heading block">₹{{ item.total_price }}</span>
+                            <span class="text-[11px] text-zinc-500">₹{{ item.price }} each</span>
+                        </div>
+
+                        <!-- Remove Button -->
+                        <form action="{% url 'store:cart_remove' item.product.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="size" value="{{ item.size }}">
+                            <button type="submit" class="p-2 rounded-xl bg-zinc-900 hover:bg-red-950/80 text-zinc-400 hover:text-red-400 border border-zinc-800 transition-colors" title="Remove item">
+                                <i class="bi bi-trash text-sm"></i>
+                            </button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Back to Shopping -->
+            <div class="flex justify-between items-center text-xs">
+                <a href="{% url 'store:product_list' %}" class="text-brand-neon font-bold hover:underline">
                     ← Continue Shopping
                 </a>
             </div>
+        </div>
 
-            <!-- Order Summary & Coupons -->
-            <div class="lg:col-span-4 space-y-4">
+        <!-- Right: Promo Codes & Order Summary -->
+        <div class="lg:col-span-4 space-y-4">
+            
+            <!-- 1-Click Coupon Applicator -->
+            <div class="p-5 rounded-3xl bg-zinc-950/90 border border-zinc-800 space-y-3">
+                <h3 class="text-xs font-cta font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                    <i class="bi bi-tag-fill text-brand-neon"></i> Available VIP Promo Codes
+                </h3>
                 
-                <!-- 1-Click Coupon Box -->
-                <div class="glass-card rounded-3xl p-5 border border-slate-800 space-y-3">
-                    <h4 class="text-xs font-bold text-slate-400 font-cta uppercase tracking-wider">Promo / Discount Code</h4>
-                    <form action="{% url 'store:coupon_apply' %}" method="post" id="couponForm" class="flex gap-2">
-                        {% csrf_token %}
-                        <input type="text" name="code" id="couponInput" value="{{ coupon.code|default:'' }}" placeholder="e.g. FIRST10" class="w-full px-3 py-2 text-xs bg-slate-900 border border-slate-700 rounded-xl text-white uppercase focus:outline-none focus:border-brand-neon">
-                        <button type="submit" class="btn btn-sm bg-brand-neon text-black font-cta rounded-xl border-none">
-                            APPLY
-                        </button>
-                    </form>
+                <!-- Clickable Coupon Chips -->
+                <div class="flex gap-2 flex-wrap">
+                    <button type="button" onclick="applyCouponCode('FIRST10')" class="px-2.5 py-1 rounded-xl bg-zinc-900 border border-brand-neon/40 text-brand-neon hover:bg-brand-neon hover:text-black text-xs font-mono font-bold transition-all">
+                        FIRST10 (-10%)
+                    </button>
+                    <button type="button" onclick="applyCouponCode('TEES20')" class="px-2.5 py-1 rounded-xl bg-zinc-900 border border-brand-pink/40 text-brand-pink hover:bg-brand-pink hover:text-white text-xs font-mono font-bold transition-all">
+                        TEES20 (-20%)
+                    </button>
+                    <button type="button" onclick="applyCouponCode('STAY5')" class="px-2.5 py-1 rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-300 hover:bg-zinc-800 text-xs font-mono font-bold transition-all">
+                        STAY5 (-5%)
+                    </button>
+                </div>
 
-                    <!-- Clickable Chips -->
-                    <div class="pt-2">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase block mb-1.5">Tap to Apply Offer:</span>
-                        <div class="flex flex-wrap gap-2">
-                            <button type="button" onclick="quickApplyCoupon('FIRST10')" class="px-2.5 py-1 rounded-full bg-slate-900 border border-slate-700 text-brand-neon text-[10px] font-bold hover:bg-slate-800 transition-all">
-                                🏷️ FIRST10 (10% OFF)
-                            </button>
-                            <button type="button" onclick="quickApplyCoupon('SAVE20')" class="px-2.5 py-1 rounded-full bg-slate-900 border border-slate-700 text-brand-lime text-[10px] font-bold hover:bg-slate-800 transition-all">
-                                🏷️ SAVE20 (20% OFF)
-                            </button>
-                            <button type="button" onclick="quickApplyCoupon('STAY5')" class="px-2.5 py-1 rounded-full bg-slate-900 border border-slate-700 text-brand-pink text-[10px] font-bold hover:bg-slate-800 transition-all">
-                                🏷️ STAY5 (5% OFF)
-                            </button>
-                        </div>
+                <form action="{% url 'store:coupon_apply' %}" method="post" id="couponForm" class="flex gap-2 pt-1">
+                    {% csrf_token %}
+                    <input type="text" 
+                           name="code" 
+                           id="couponInput" 
+                           placeholder="Enter promo code" 
+                           value="{% if cart.coupon %}{{ cart.coupon.code }}{% endif %}" 
+                           class="flex-1 px-4 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white uppercase font-mono focus:outline-none focus:border-brand-neon">
+                    <button type="submit" class="px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white font-cta font-bold text-xs rounded-xl transition-colors">
+                        APPLY
+                    </button>
+                </form>
+            </div>
+
+            <!-- Order Total Summary -->
+            <div class="p-6 rounded-3xl bg-zinc-950/90 border border-zinc-800 space-y-4">
+                <h3 class="text-sm font-bold text-white font-heading">Order Breakdown</h3>
+
+                <div class="space-y-2.5 text-xs text-zinc-300 divide-y divide-zinc-800/80">
+                    <div class="flex justify-between pt-1">
+                        <span>Items Subtotal</span>
+                        <span class="font-bold text-white">₹{{ cart.get_total_price }}</span>
                     </div>
 
-                    {% if coupon %}
-                        <div class="text-[11px] text-emerald-400 font-bold mt-2">
-                            <i class="bi bi-check-circle-fill"></i> "{{ coupon.code }}" applied (-{{ coupon.discount_percent }}% Off)
+                    {% if cart.coupon %}
+                        <div class="flex justify-between pt-2.5 text-emerald-400 font-bold">
+                            <span>Coupon Discount ({{ cart.coupon.code }})</span>
+                            <span>-₹{{ cart.get_discount|floatformat:2 }}</span>
                         </div>
                     {% endif %}
-                </div>
 
-                <!-- Bag Totals Card -->
-                <div class="glass-card rounded-3xl p-6 border border-slate-800 space-y-3">
-                    <h4 class="text-xs font-bold text-slate-400 font-cta uppercase tracking-wider">Order Summary</h4>
-                    <div class="space-y-2 text-xs">
-                        <div class="flex justify-between text-slate-300">
-                            <span>Subtotal</span>
-                            <span class="font-bold">₹{{ cart.get_total_price }}</span>
-                        </div>
-                        <div class="flex justify-between text-slate-300">
-                            <span>Delivery Charges</span>
-                            <span class="font-bold text-brand-lime">{% if cart.get_free_shipping_needed == 0 %}FREE{% else %}₹99{% endif %}</span>
-                        </div>
-                        {% if discount > 0 %}
-                            <div class="flex justify-between text-emerald-400 font-bold">
-                                <span>Discount ({{ discount }}% Off)</span>
-                                <span>Applied at Checkout</span>
-                            </div>
+                    <div class="flex justify-between pt-2.5">
+                        <span>Express Air Shipping</span>
+                        {% if cart.get_total_price >= 999 %}
+                            <span class="text-emerald-400 font-bold">FREE</span>
+                        {% else %}
+                            <span class="text-zinc-400">₹99</span>
                         {% endif %}
-                        <div class="border-t border-slate-800 pt-3 flex justify-between text-base font-black text-white">
-                            <span>Total Due</span>
-                            <span class="text-brand-neon font-heading text-xl">₹{{ cart.get_total_price }}</span>
-                        </div>
                     </div>
 
-                    <a href="{% url 'store:order_create' %}" class="w-full btn bg-brand-neon hover:bg-cyan-300 text-black font-cta text-base py-3 rounded-full border-none shadow-xl shadow-brand-neon/20 block text-center font-black mt-4">
-                        PROCEED TO CHECKOUT ⚡
-                    </a>
+                    <div class="flex justify-between pt-3 text-base font-black text-white">
+                        <span>Total Payable</span>
+                        <span class="text-brand-neon font-heading text-xl">
+                            ₹{{ cart.get_total_price_after_discount|floatformat:2 }}
+                        </span>
+                    </div>
                 </div>
 
+                <!-- Checkout CTA -->
+                <a href="{% url 'store:order_create' %}" class="w-full py-3.5 bg-brand-neon hover:bg-cyan-300 text-black font-cta font-black text-sm tracking-wider rounded-xl shadow-[0_0_25px_rgba(0,240,255,0.4)] transition-all flex items-center justify-center gap-2 text-center mt-4">
+                    <span>PROCEED TO SECURE CHECKOUT</span>
+                    <i class="bi bi-arrow-right text-lg"></i>
+                </a>
             </div>
+
         </div>
-    {% else %}
-        <div class="text-center py-20 glass-card rounded-3xl p-8 border border-slate-800">
-            <i class="bi bi-bag-x text-5xl text-slate-600 block mb-3"></i>
-            <h2 class="text-lg font-bold text-white mb-2">Your Shopping Bag is empty</h2>
-            <p class="text-xs text-slate-400 mb-6">Discover our limited edition oversized printed t-shirts, anime graphics, and 3D puff print drops.</p>
-            <a href="{% url 'store:product_list' %}" class="btn bg-brand-neon text-black font-cta px-8 rounded-full border-none">
-                EXPLORE DROPS →
-            </a>
-        </div>
-    {% endif %}
-</div>
+
+    </div>
+{% else %}
+    <div class="text-center py-20 bg-zinc-950/60 rounded-3xl border border-zinc-800 space-y-4 mb-16">
+        <i class="bi bi-bag-x text-5xl text-zinc-700 block"></i>
+        <h2 class="text-xl font-bold text-white">Your Shopping Bag is Empty</h2>
+        <p class="text-xs text-zinc-400 max-w-sm mx-auto">Explore our exclusive heavyweight printed graphic drop to add pieces to your cart.</p>
+        <a href="{% url 'store:product_list' %}" class="btn bg-brand-neon hover:bg-cyan-300 text-black font-bold border-none px-6">
+            Explore T-Shirt Drops →
+        </a>
+    </div>
+{% endif %}
 
 <script>
-    function quickApplyCoupon(code) {
+    function applyCouponCode(code) {
         document.getElementById('couponInput').value = code;
         document.getElementById('couponForm').submit();
     }

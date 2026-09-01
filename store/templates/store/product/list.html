@@ -1,292 +1,204 @@
 {% extends "store/base.html" %}
 
-{% block title %}
-    {% if category %}{{ category.name }} - Style Sphere Printed T-Shirts{% else %}Style Sphere // Heavyweight Printed & Graphic T-Shirts{% endif %}
-{% endblock %}
+{% block title %}Style Sphere - Exclusive Streetwear & Graphic Printed Tees{% endblock %}
 
 {% block content %}
-{% if not category and not query and not print_filter and not fit_filter %}
-    <!-- HERO SECTION DEDICATED TO PRINTED T-SHIRTS -->
-    <div class="relative min-h-[70vh] flex items-center justify-center overflow-hidden rounded-3xl mb-12 bg-gradient-to-br from-[#0A0C10] via-[#121620] to-[#1e1b4b] border border-slate-800 shadow-2xl">
-        
-        <div class="absolute -top-24 -left-24 w-80 h-80 bg-brand-neon/20 rounded-full blur-3xl pointer-events-none animate-pulseGlow"></div>
-        <div class="absolute -bottom-24 -right-24 w-80 h-80 bg-brand-pink/20 rounded-full blur-3xl pointer-events-none animate-pulseGlow" style="animation-delay: 2s;"></div>
+<!-- Live Midnight Capsule Countdown Banner -->
+<div class="mb-8 p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-red-950/60 via-zinc-950 to-cyan-950/60 border border-zinc-800 shadow-[0_0_40px_-15px_rgba(239,68,68,0.3)] flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-3 text-center sm:text-left">
+        <div class="w-10 h-10 rounded-2xl bg-red-600/20 text-red-500 flex items-center justify-center text-xl font-bold flex-shrink-0 animate-bounce">
+            ⚡
+        </div>
+        <div>
+            <div class="flex items-center gap-2 justify-center sm:justify-start">
+                <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                <span class="text-xs font-cta font-bold text-red-400 uppercase tracking-widest">LIMITED CAPSULE DROP</span>
+            </div>
+            <h3 class="text-sm sm:text-base font-black text-white font-heading">
+                Exclusive Heavyweight 240+ GSM Drops • Extra 10% Off Code <strong class="text-brand-neon bg-black px-2 py-0.5 rounded border border-zinc-800">FIRST10</strong>
+            </h3>
+        </div>
+    </div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-8 py-12 relative z-10 w-full">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+    <!-- Live Javascript Countdown Clock -->
+    <div class="flex items-center gap-2 bg-black/80 px-4 py-2 rounded-2xl border border-zinc-800 font-mono text-white text-xs sm:text-sm font-bold shadow-inner">
+        <span class="text-zinc-400">CLOSES IN:</span>
+        <span id="countdownTimer" class="text-brand-neon font-black tracking-widest">04h : 38m : 19s</span>
+    </div>
+</div>
+
+<!-- Category Story Bubbles / Interactive Filter Navigation -->
+<div class="mb-10">
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xs font-cta font-bold text-zinc-400 uppercase tracking-widest">
+            Explore T-Shirt Collections
+        </h2>
+        <span class="text-xs text-brand-neon font-bold">100% Bio-Washed French Terry</span>
+    </div>
+
+    <div class="flex gap-4 overflow-x-auto pb-4 pt-1 no-scrollbar">
+        <!-- 'All Categories' Bubble -->
+        <a href="{% url 'store:product_list' %}" class="cat-bubble group {% if not category %}active{% endif %}">
+            <div class="cat-bubble-img {% if not category %}border-brand-neon shadow-[0_0_20px_rgba(0,240,255,0.4)]{% endif %}">
+                🔥
+            </div>
+            <span class="cat-bubble-label {% if not category %}text-brand-neon font-bold{% endif %}">All Tees</span>
+        </a>
+
+        {% for c in categories %}
+            <a href="{{ c.get_absolute_url }}" class="cat-bubble group {% if category.slug == c.slug %}active{% endif %}">
+                <div class="cat-bubble-img {% if category.slug == c.slug %}border-brand-neon shadow-[0_0_20px_rgba(0,240,255,0.4)]{% endif %}">
+                    {{ c.icon|default:"👕" }}
+                </div>
+                <span class="cat-bubble-label {% if category.slug == c.slug %}text-brand-neon font-bold{% endif %}">
+                    {{ c.name|truncatechars:18 }}
+                </span>
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Product Grid Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+    <div>
+        <h1 class="text-2xl sm:text-3xl font-black text-white font-heading tracking-tight">
+            {% if category %}{{ category.name }}{% elif query %}Search Results for "{{ query }}"{% else %}Trending Graphic Printed T-Shirts{% endif %}
+        </h1>
+        <p class="text-xs text-zinc-400 mt-1">Showing {{ products.count }} premium drop-shoulder streetwear styles</p>
+    </div>
+
+    <!-- Live Filter Pills -->
+    <div class="flex items-center gap-2 flex-wrap text-xs">
+        <span class="px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 font-semibold flex items-center gap-1.5">
+            <i class="bi bi-shield-check text-emerald-400"></i> Cash on Delivery Available
+        </span>
+        <span class="px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 font-semibold flex items-center gap-1.5">
+            <i class="bi bi-truck text-brand-neon"></i> Free Express Shipping > ₹999
+        </span>
+    </div>
+</div>
+
+<!-- Main Products Grid -->
+{% if products %}
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mb-16">
+        {% for product in products %}
+            <div class="glass-card rounded-3xl overflow-hidden border border-zinc-800/80 hover:border-brand-neon/60 hover:shadow-[0_0_35px_-10px_rgba(0,240,255,0.3)] transition-all duration-500 group flex flex-col justify-between">
                 
-                <div class="lg:col-span-7 space-y-5 text-center lg:text-left">
-                    <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-900/80 border border-brand-neon/40 text-brand-neon text-xs font-cta uppercase tracking-widest backdrop-blur-md animate-fadeInUp">
-                        <span class="w-2 h-2 rounded-full bg-brand-neon animate-ping"></span>
-                        OVERSIZED GRAPHIC TEES // 240+ GSM HEAVY FRENCH TERRY
+                <!-- Card Image Area -->
+                <div class="relative aspect-square bg-zinc-950/90 p-4 flex items-center justify-center overflow-hidden">
+                    <img src="{{ product.image_url }}" 
+                         alt="{{ product.name }}" 
+                         class="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.7)] group-hover:scale-108 transition-transform duration-500">
+                    
+                    <!-- GSM Badge -->
+                    <div class="absolute top-3 left-3">
+                        <span class="badge bg-black/80 text-brand-neon border border-brand-neon/30 text-[10px] font-black px-2 py-0.5 backdrop-blur-md">
+                            {{ product.gsm }} GSM
+                        </span>
                     </div>
 
-                    <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-[1.05] animate-fadeInUp" style="animation-delay: 0.15s;">
-                        ICONIC <span class="bg-gradient-to-r from-brand-neon via-brand-purple to-brand-pink bg-clip-text text-transparent">GRAPHIC TEES.</span><br>
-                        HIGH-DENSITY <span class="bg-gradient-to-r from-brand-pink via-amber-300 to-brand-lime bg-clip-text text-transparent">PUFF PRINTS.</span>
-                    </h1>
-
-                    <p class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto lg:mx-0 leading-relaxed animate-fadeInUp" style="animation-delay: 0.3s;">
-                        Engineered with drop-shoulder boxy fits, pre-shrunk bio-wash fabric, and ultra-durable fade-resistant prints. Built for the modern streetwear subculture.
-                    </p>
-
-                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2 animate-fadeInUp" style="animation-delay: 0.45s;">
-                        <a href="#productGrid" class="btn bg-brand-neon hover:bg-cyan-300 text-black font-cta text-base px-8 rounded-full border-none shadow-lg shadow-brand-neon/30 hover:scale-105 transition-all">
-                            SHOP ALL TEES <i class="bi bi-arrow-right ml-1"></i>
-                        </a>
-                        <a href="#categories" class="btn bg-brand-pink hover:bg-rose-500 text-white font-cta text-base px-8 rounded-full border-none shadow-lg shadow-brand-pink/30 hover:scale-105 transition-all">
-                            EXPLORE THEMES 👕
-                        </a>
-                    </div>
-
-                    <div class="grid grid-cols-3 gap-4 pt-6 border-t border-slate-800/80 max-w-md mx-auto lg:mx-0 animate-fadeInUp" style="animation-delay: 0.6s;">
-                        <div>
-                            <span class="font-heading font-extrabold text-2xl text-white">240+</span>
-                            <span class="block text-xs font-medium text-slate-400">Heavy GSM Fabric</span>
-                        </div>
-                        <div>
-                            <span class="font-heading font-extrabold text-2xl text-brand-neon">100%</span>
-                            <span class="block text-xs font-medium text-slate-400">Bio-Washed Cotton</span>
-                        </div>
-                        <div>
-                            <span class="font-heading font-extrabold text-2xl text-brand-pink">50+</span>
-                            <span class="block text-xs font-medium text-slate-400">Wash Color Guarantee</span>
-                        </div>
-                    </div>
+                    <!-- Wishlist Button -->
+                    <a href="{% url 'store:wishlist_toggle' product.id %}" class="absolute top-3 right-3 w-8 h-8 rounded-xl bg-black/80 border border-zinc-700 text-zinc-300 hover:text-brand-pink flex items-center justify-center text-sm backdrop-blur-md transition-all hover:scale-110">
+                        <i class="bi bi-heart"></i>
+                    </a>
                 </div>
 
-                <div class="lg:col-span-5 relative flex items-center justify-center">
-                    <div class="relative w-full max-w-md aspect-square flex items-center justify-center">
-                        <div class="absolute inset-4 rounded-full border border-dashed border-brand-neon/30 animate-spin" style="animation-duration: 25s;"></div>
+                <!-- Card Content Info Area -->
+                <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3 bg-zinc-900/30">
+                    <div>
+                        <span class="text-[10px] font-cta font-bold text-zinc-500 uppercase tracking-widest block mb-1">
+                            {{ product.category.name }}
+                        </span>
+                        <h3 class="text-sm font-bold text-white group-hover:text-brand-neon transition-colors line-clamp-2 leading-snug">
+                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                        </h3>
+                        <p class="text-[11px] text-zinc-400 mt-1 line-clamp-1">{{ product.print_type }}</p>
+                    </div>
 
-                        <div class="relative z-20 animate-float">
-                            <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80" 
-                                 alt="Itachi Printed Graphic Tee" 
-                                 class="w-72 sm:w-88 object-contain filter drop-shadow-[0_20px_30px_rgba(0,240,255,0.35)] -rotate-6 hover:rotate-0 transition-transform duration-500 cursor-pointer">
+                    <!-- Price & Instant Buy Button -->
+                    <div class="pt-2 border-t border-zinc-800/80 flex items-center justify-between">
+                        <div>
+                            <span class="text-lg sm:text-xl font-black text-brand-neon font-heading">₹{{ product.price }}</span>
+                            <span class="text-xs text-zinc-500 line-through block -mt-1">₹{{ product.price|add:500 }}</span>
                         </div>
-
-                        <div class="absolute -bottom-2 -left-2 z-30 p-3 rounded-2xl glass-card border border-white/20 shadow-2xl flex items-center gap-3 animate-float" style="animation-delay: 1.5s;">
-                            <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=300&auto=format&fit=crop&q=80" alt="Back Graphic Preview" class="w-12 h-12 object-cover rounded-xl border border-slate-700">
-                            <div>
-                                <span class="badge badge-xs bg-brand-lime text-black font-extrabold px-2 py-0.5">FRONT & BACK</span>
-                                <h4 class="font-heading font-bold text-xs text-white">Full HD Back Art</h4>
-                                <span class="text-[10px] font-bold text-brand-neon">High Density Inks</span>
-                            </div>
-                        </div>
-
-                        <div class="absolute top-2 -right-2 z-30 px-3.5 py-1.5 rounded-full bg-brand-pink text-white font-heading font-extrabold text-xs shadow-xl animate-float" style="animation-delay: 0.8s;">
-                            🔥 DROP #01 — ₹899
-                        </div>
+                        <a href="{{ product.get_absolute_url }}" class="p-2.5 rounded-xl bg-zinc-800 group-hover:bg-brand-neon group-hover:text-black text-white font-bold text-xs transition-all flex items-center gap-1">
+                            <span>VIEW</span>
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
 
             </div>
-        </div>
+        {% endfor %}
     </div>
-
-    <!-- Printed T-Shirt Category Bubbles -->
-    <div class="mb-10" id="categories">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xs font-black uppercase tracking-widest text-slate-400 font-cta">T-Shirt Collections by Theme</h2>
-            <span class="text-xs font-semibold text-slate-400">Swipe to view</span>
-        </div>
-        <div class="cat-bubble-container">
-            <a href="{% url 'store:product_list' %}" class="cat-bubble group">
-                <div class="cat-bubble-img ring-all text-xl">
-                    🔥
-                </div>
-                <span class="cat-bubble-text group-hover:text-brand-neon">All Drops</span>
-            </a>
-            {% for c in categories %}
-                <a href="{{ c.get_absolute_url }}" class="cat-bubble group">
-                    <div class="cat-bubble-img {% cycle 'ring-tshirts' 'ring-hoodies' 'ring-sneakers' 'ring-sunglasses' 'ring-bottoms' 'ring-acc' %} text-xl">
-                        {{ c.icon|default:'👕' }}
-                    </div>
-                    <span class="cat-bubble-text group-hover:text-brand-neon">{{ c.name }}</span>
-                </a>
-            {% endfor %}
-        </div>
-    </div>
-
-    <!-- T-Shirt Fandom & Print Theme Highlights -->
-    <div class="mb-10">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <a href="{% url 'store:product_list' %}?q=Anime" class="fandom-badge-box badge-anime block text-center">
-                <i class="bi bi-fire text-2xl block mb-1"></i>
-                <span>Anime & Manga Tees</span>
-            </a>
-            <a href="{% url 'store:product_list' %}?q=Marvel" class="fandom-badge-box badge-marvel block text-center">
-                <i class="bi bi-shield-shaded text-2xl block mb-1"></i>
-                <span>Marvel & Comic Drops</span>
-            </a>
-            <a href="{% url 'store:product_list' %}?print_type=Puff" class="fandom-badge-box badge-gaming block text-center">
-                <i class="bi bi-layers-fill text-2xl block mb-1"></i>
-                <span>3D Puff Print Tees</span>
-            </a>
-            <a href="{% url 'store:product_list' %}?q=Vintage" class="fandom-badge-box badge-originals block text-center">
-                <i class="bi bi-gem text-2xl block mb-1"></i>
-                <span>Acid Wash & Retro</span>
-            </a>
-        </div>
+{% else %}
+    <div class="text-center py-16 bg-zinc-950/60 rounded-3xl border border-zinc-800 space-y-3 mb-16">
+        <i class="bi bi-search text-4xl text-zinc-600 block"></i>
+        <h3 class="text-base font-bold text-white">No products found matching your filter</h3>
+        <p class="text-xs text-zinc-400">Try searching for other graphics like "Anime", "Cyberpunk", or "Vintage".</p>
+        <a href="{% url 'store:product_list' %}" class="btn btn-sm btn-outline btn-accent mt-2">View All T-Shirts</a>
     </div>
 {% endif %}
 
-<!-- Product Catalog Grid Layout -->
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6" id="productGrid">
-    
-    <!-- Sidebar Filters -->
-    <aside class="md:col-span-1">
-        <div class="glass-card rounded-2xl p-5 shadow-sm space-y-6">
-            <div>
-                <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 font-cta mb-3">T-Shirt Categories</h3>
-                <div class="space-y-1">
-                    <a href="{% url 'store:product_list' %}" 
-                       class="block px-3 py-2 rounded-xl text-xs font-bold transition-all {% if not category %}bg-brand-neon text-black{% else %}text-slate-300 hover:bg-slate-800{% endif %}">
-                        All Printed Tees
-                    </a>
-                    {% for c in categories %}
-                        <a href="{{ c.get_absolute_url }}" 
-                           class="block px-3 py-2 rounded-xl text-xs font-bold transition-all {% if category.slug == c.slug %}bg-brand-neon text-black{% else %}text-slate-300 hover:bg-slate-800{% endif %}">
-                            {{ c.name }}
-                        </a>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <!-- Print & Fit Type Filters -->
-            <div class="pt-4 border-t border-slate-800 space-y-4">
-                <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 font-cta">Print & Fit Specs</h3>
-                
-                <form method="get" action="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'store:product_list' %}{% endif %}" class="space-y-4">
-                    {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
-
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Print Technique</label>
-                        <select name="print_type" class="w-full px-3 py-2 text-xs bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-brand-neon">
-                            <option value="">All Print Types</option>
-                            <option value="Puff" {% if print_filter == 'Puff' %}selected{% endif %}>3D Puff Print</option>
-                            <option value="DTG" {% if print_filter == 'DTG' %}selected{% endif %}>Ultra-HD DTG</option>
-                            <option value="Screen" {% if print_filter == 'Screen' %}selected{% endif %}>Vintage Screen Print</option>
-                            <option value="Holographic" {% if print_filter == 'Holographic' %}selected{% endif %}>Reflective Holographic</option>
-                            <option value="Foil" {% if print_filter == 'Foil' %}selected{% endif %}>Metallic Foil Print</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Fit Profile</label>
-                        <select name="fit_type" class="w-full px-3 py-2 text-xs bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-brand-neon">
-                            <option value="">All Fits</option>
-                            <option value="Drop Shoulder" {% if fit_filter == 'Drop Shoulder' %}selected{% endif %}>Oversized Drop Shoulder</option>
-                            <option value="Boxy" {% if fit_filter == 'Boxy' %}selected{% endif %}>Boxy Streetwear Fit</option>
-                            <option value="Relaxed" {% if fit_filter == 'Relaxed' %}selected{% endif %}>Relaxed Fit</option>
-                        </select>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-400 uppercase">Min (₹)</label>
-                            <input type="number" name="min_price" value="{{ min_price|default:'' }}" placeholder="699" 
-                                   class="w-full px-3 py-1.5 text-xs bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-brand-neon">
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-400 uppercase">Max (₹)</label>
-                            <input type="number" name="max_price" value="{{ max_price|default:'' }}" placeholder="1499" 
-                                   class="w-full px-3 py-1.5 text-xs bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-brand-neon">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Sort By</label>
-                        <select name="sort" class="w-full px-3 py-2 text-xs bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-brand-neon">
-                            <option value="">Featured Drops</option>
-                            <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
-                            <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
-                            <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest Drops First</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="w-full py-2 bg-brand-neon hover:bg-cyan-300 text-black text-xs font-cta font-bold rounded-xl shadow transition-all">
-                        APPLY FILTERS
-                    </button>
-                    <a href="{% url 'store:product_list' %}" class="block text-center text-xs font-bold text-slate-400 hover:text-white">
-                        Reset Filters
-                    </a>
-                </form>
-            </div>
-        </div>
-    </aside>
-
-    <!-- Main Printed T-Shirts Grid -->
-    <section class="md:col-span-3">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-base font-extrabold text-white">
-                {% if category %}{{ category.name }}{% elif query %}Search: "{{ query }}"{% else %}All Printed T-Shirts & Graphic Drops{% endif %}
-            </h2>
-            <span class="text-xs font-semibold text-slate-400">{{ products|length }} Tees available</span>
-        </div>
-
-        <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
-            {% for product in products %}
-                <div class="glass-card rounded-2xl p-3 sm:p-4 flex flex-col justify-between group hover:-translate-y-1.5 transition-all duration-300 border border-slate-800/80">
-                    
-                    <!-- Badges & Wishlist -->
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="badge bg-slate-900 text-brand-neon border border-slate-700 font-extrabold text-[10px] px-2 py-0.5">
-                            {{ product.gsm }} GSM • {{ product.category.name|upper }}
-                        </span>
-                        <a href="{% url 'store:wishlist_toggle' product.id %}" class="w-7 h-7 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-brand-pink transition-colors" title="Save to Wishlist">
-                            {% if product.id in user_wishlist_ids %}
-                                <i class="bi bi-heart-fill text-brand-pink text-xs"></i>
-                            {% else %}
-                                <i class="bi bi-heart text-xs"></i>
-                            {% endif %}
-                        </a>
-                    </div>
-
-                    <!-- Product Image Thumbnail -->
-                    <a href="{{ product.get_absolute_url }}" class="relative w-full aspect-square flex items-center justify-center p-2 rounded-xl bg-slate-950/80 overflow-hidden">
-                        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-full object-contain filter drop-shadow-md group-hover:scale-108 transition-all duration-300">
-                        <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/80 text-[9px] font-bold text-slate-300">
-                            4 Views Available
-                        </span>
-                    </a>
-
-                    <!-- Product Details -->
-                    <div class="pt-3 space-y-1 flex-1 flex flex-col justify-end">
-                        <div class="flex items-center justify-between text-xs">
-                            <div class="flex items-center gap-1 text-amber-400 font-bold">
-                                <i class="bi bi-star-fill text-[11px]"></i>
-                                <span>{{ product.get_average_rating }}</span>
-                            </div>
-                            <span class="text-[10px] font-semibold text-purple-300 bg-purple-950/60 px-1.5 py-0.5 rounded">
-                                {{ product.print_type }}
-                            </span>
-                        </div>
-
-                        <a href="{{ product.get_absolute_url }}" class="font-heading font-bold text-xs sm:text-sm text-white line-clamp-1 hover:text-brand-neon block">
-                            {{ product.name }}
-                        </a>
-
-                        {% if product.stock <= 3 and product.stock > 0 %}
-                            <span class="text-[10px] font-extrabold text-brand-pink block">⚡ Only {{ product.stock }} left in stock!</span>
-                        {% endif %}
-
-                        <div class="flex items-center justify-between pt-2 border-t border-slate-800 mt-2">
-                            <span class="font-heading font-black text-sm sm:text-base text-white">₹{{ product.price }}</span>
-                            <a href="{{ product.get_absolute_url }}" class="btn btn-xs bg-brand-neon hover:bg-cyan-300 text-black font-cta rounded-full border-none px-3">
-                                VIEW DROP
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            {% empty %}
-                <div class="col-span-full text-center py-16 glass-card rounded-2xl">
-                    <i class="bi bi-search text-3xl text-slate-500 mb-2 block"></i>
-                    <p class="text-sm font-bold text-white">No printed t-shirts found matching your filter criteria.</p>
-                    <a href="{% url 'store:product_list' %}" class="btn btn-sm bg-brand-neon text-black mt-4 rounded-full font-cta font-bold">View All Tees</a>
-                </div>
-            {% endfor %}
-        </div>
-    </section>
+<!-- Live Social Proof Notification Popups -->
+<div id="liveSocialProofToast" class="fixed bottom-6 left-6 z-50 bg-zinc-950/90 backdrop-blur-xl border border-zinc-800 rounded-2xl p-3.5 shadow-2xl flex items-center gap-3 transform translate-y-32 transition-all duration-500 pointer-events-none max-w-xs">
+    <div class="w-10 h-10 rounded-xl bg-brand-neon/10 text-brand-neon flex items-center justify-center text-lg font-bold flex-shrink-0">
+        🛍️
+    </div>
+    <div class="text-xs">
+        <p class="text-white font-bold" id="socialProofMsg">Someone in Mumbai just bought</p>
+        <p class="text-[11px] text-zinc-400" id="socialProofItem">Naruto: Itachi Graphic Tee (2m ago)</p>
+    </div>
 </div>
+
+<script>
+    // 1. Live Countdown Timer Ticker
+    function startCountdown() {
+        const timerEl = document.getElementById('countdownTimer');
+        let totalSeconds = 4 * 3600 + 38 * 60 + 19;
+        setInterval(() => {
+            if (totalSeconds <= 0) totalSeconds = 24 * 3600;
+            totalSeconds--;
+            const hrs = Math.floor(totalSeconds / 3600);
+            const mins = Math.floor((totalSeconds % 3600) / 60);
+            const secs = totalSeconds % 60;
+            if (timerEl) {
+                timerEl.innerText = `${String(hrs).padStart(2, '0')}h : ${String(mins).padStart(2, '0')}m : ${String(secs).padStart(2, '0')}s`;
+            }
+        }, 1000);
+    }
+    startCountdown();
+
+    // 2. Real-time Social Proof Sales Toasts
+    const buyers = [
+        { city: 'Delhi', item: 'Cyberpunk Tokyo 2099 Oversized Tee', time: '1m ago' },
+        { city: 'Bengaluru', item: 'Naruto Itachi Mangekyo Tee', time: '3m ago' },
+        { city: 'Chandigarh', item: 'Spider-Man Symbiote Graphic Tee', time: '5m ago' },
+        { city: 'Mumbai', item: 'Acid Wash Vintage Mineral Tee', time: '7m ago' },
+        { city: 'Pune', item: 'Jujutsu Kaisen Gojo Domain Tee', time: '9m ago' },
+    ];
+
+    let buyerIdx = 0;
+    function showNextToast() {
+        const toast = document.getElementById('liveSocialProofToast');
+        const msg = document.getElementById('socialProofMsg');
+        const item = document.getElementById('socialProofItem');
+        if (!toast) return;
+
+        const b = buyers[buyerIdx % buyers.length];
+        buyerIdx++;
+        msg.innerText = `Someone in ${b.city} ordered:`;
+        item.innerText = `${b.item} (${b.time})`;
+
+        toast.classList.remove('translate-y-32');
+        setTimeout(() => {
+            toast.classList.add('translate-y-32');
+        }, 4500);
+    }
+
+    setTimeout(() => {
+        showNextToast();
+        setInterval(showNextToast, 12000);
+    }, 4000);
+</script>
 {% endblock %}
