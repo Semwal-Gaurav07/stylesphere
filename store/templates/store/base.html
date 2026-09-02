@@ -4,17 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>{% block title %}Style Sphere - Premium Printed & Graphic T-Shirts Studio{% endblock %}</title>
+    <title>{% block title %}STYLE SPHERE — Luxury Streetwear & Heavyweight Atelier{% endblock %}</title>
 
-    <meta name="description" content="Shop limited edition 240+ GSM oversized printed graphic tees, anime streetwear, 3D puff print t-shirts, and vintage acid wash drops at Style Sphere. Fast dispatch & COD across India.">
-    <meta property="og:title" content="Style Sphere - Premium Printed T-Shirts Studio">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80">
+    <meta name="description" content="Style Sphere Atelier. Luxury heavyweight 240+ GSM French Terry cotton streetwear, bespoke graphic editions, and understated oversized tailoring. Handcrafted in limited series.">
+    <meta property="og:title" content="Style Sphere — Luxury Streetwear Atelier">
+    <meta property="og:description" content="Elevated graphic tees, 240+ GSM French Terry cotton, and timeless drop-shoulder silhouettes.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=1200&auto=format&fit=crop&q=85">
     <link rel="icon" type="image/png" href="{% static 'images/stylesphere_icon.png' %}">
 
+    <!-- Luxury Typography: Cormorant Garamond / Cinzel & Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@500;600;700&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Icons & Styling -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
@@ -25,279 +28,207 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        heading: ['Poppins', 'sans-serif'],
-                        cta: ['Oswald', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            neon: '#00F0FF',
-                            pink: '#FF0055',
-                            lime: '#CCFF00',
-                            purple: '#7928CA',
-                            dark: '#0A0C10',
-                            card: '#121620'
-                        }
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Cormorant Garamond', 'serif'],
+                        luxury: ['Cinzel', 'serif'],
+                        heading: ['Cinzel', 'serif'],
+                        cta: ['Plus Jakarta Sans', 'sans-serif'],
                     },
                     keyframes: {
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(24px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        },
-                        floatSlow: {
-                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
-                            '50%': { transform: 'translateY(-10px) rotate(1.5deg)' },
-                        },
                         pulseGlow: {
                             '0%, 100%': { opacity: '0.35', transform: 'scale(1)' },
                             '50%': { opacity: '0.75', transform: 'scale(1.08)' },
                         }
                     },
                     animation: {
-                        fadeInUp: 'fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                        float: 'floatSlow 4.5s ease-in-out infinite',
                         pulseGlow: 'pulseGlow 6s ease-in-out infinite',
+                    },
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Cormorant Garamond', 'serif'],
+                        luxury: ['Cinzel', 'serif'],
+                    },
+                    colors: {
+                        luxury: {
+                            black: '#09090b',
+                            card: '#111114',
+                            elevated: '#18181b',
+                            gold: '#d4af37',
+                            goldLight: '#f5e8c7',
+                            goldMuted: '#99824c',
+                            platinum: '#f4f4f5',
+                            border: 'rgba(255, 255, 255, 0.08)',
+                        },
+                        brand: {
+                            neon: '#d4af37',
+                            pink: '#ef4444',
+                        }
                     }
                 }
             }
         }
     </script>
 
-    <script>
-        (function() {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            if (savedTheme === 'dark') {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        })();
-    </script>
-
     <style>
-        body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Poppins', sans-serif; }
-        .font-cta { font-family: 'Oswald', sans-serif; letter-spacing: 0.05em; text-transform: uppercase; }
-        
-        .glass-nav {
-            background: rgba(10, 12, 16, 0.88);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        [data-theme="light"] .glass-nav {
-            background: rgba(255, 255, 255, 0.92);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-        }
-        .glass-card {
-            background: rgba(18, 22, 32, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        [data-theme="light"] .glass-card {
-            background: #ffffff;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-        }
-        .glass-card:hover {
-            border-color: rgba(0, 240, 255, 0.5);
-            box-shadow: 0 10px 30px -10px rgba(0, 240, 255, 0.25);
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #09090b;
+            color: #f4f4f5;
+            letter-spacing: -0.01em;
+            overflow-x: hidden;
         }
 
-        .cat-bubble-container {
-            display: flex;
-            gap: 16px;
-            overflow-x: auto;
-            padding: 10px 4px 16px 4px;
-            scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
-        }
-        .cat-bubble-container::-webkit-scrollbar { display: none; }
-        .cat-bubble {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: inherit;
-            min-width: 80px;
-            text-align: center;
-        }
-        .cat-bubble-img {
-            width: 68px;
-            height: 68px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            padding: 2px;
-        }
-        .cat-bubble:hover .cat-bubble-img { transform: scale(1.1) rotate(2deg); }
-        .cat-bubble-text {
-            font-size: 0.72rem;
-            font-weight: 800;
-            margin-top: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.2px;
+        .font-luxury { font-family: 'Cinzel', serif; letter-spacing: 0.08em; }
+        .font-serif-luxury { font-family: 'Cormorant Garamond', serif; }
+
+        /* Minimalist Luxury Glass Navbar */
+        .luxury-nav {
+            background: rgba(9, 9, 11, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
         }
 
-        .ring-all { background: linear-gradient(135deg, #00F0FF, #7928CA); color: #000; }
-        .ring-tshirts { background: linear-gradient(135deg, #FF0055, #FFB199); color: #fff; }
-        .ring-hoodies { background: linear-gradient(135deg, #7928CA, #FF0055); color: #fff; }
-        .ring-sneakers { background: linear-gradient(135deg, #00F0FF, #0070F3); color: #000; }
-        .ring-sunglasses { background: linear-gradient(135deg, #CCFF00, #00F0FF); color: #000; }
-        .ring-bottoms { background: linear-gradient(135deg, #10B981, #CCFF00); color: #000; }
-        .ring-acc { background: linear-gradient(135deg, #F59E0B, #FF0055); color: #fff; }
-
-        .fandom-badge-box {
-            border-radius: 16px;
-            color: #ffffff;
-            text-align: center;
-            padding: 22px 14px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 0.85rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            transition: transform 0.25s ease;
+        /* Clean Luxury Card */
+        .luxury-card {
+            background: #111114;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .fandom-badge-box:hover { transform: translateY(-4px); }
-        .badge-anime { background: linear-gradient(135deg, #e11d48, #fb7185); }
-        .badge-marvel { background: linear-gradient(135deg, #2563eb, #60a5fa); }
-        .badge-gaming { background: linear-gradient(135deg, #059669, #34d399); }
-        .badge-originals { background: linear-gradient(135deg, #7c3aed, #c084fc); }
+        .luxury-card:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.7);
+        }
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        /* Subtle Gold Shimmer Accent */
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #f5e8c7 0%, #d4af37 50%, #aa8429 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom Subtle Scrollbar */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #09090b; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
     </style>
 </head>
-<body class="bg-[#0A0C10] dark:bg-[#0A0C10] text-slate-100 antialiased min-h-screen flex flex-col justify-between selection:bg-brand-neon selection:text-black pb-16 md:pb-0">
+<body class="bg-luxury-black text-luxury-platinum antialiased min-h-screen flex flex-col justify-between selection:bg-luxury-gold selection:text-black pb-16 md:pb-0">
 
-    <div class="bg-gradient-to-r from-brand-purple via-brand-pink to-brand-neon text-white text-xs py-1.5 px-4 text-center font-bold tracking-wide">
-        ⚡ EXCLUSIVE T-SHIRT DROP: USE CODE <span class="bg-black text-brand-neon px-2 py-0.5 rounded-full font-extrabold mx-1">FIRST10</span> FOR 10% OFF + FREE SHIPPING ON ALL GRAPHIC TEES 👕🔥
+    <!-- Minimalist Luxury Top Notification Strip -->
+    <div class="bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 text-zinc-300 text-[11px] py-2 px-4 text-center border-b border-white/5 font-medium tracking-wider uppercase">
+        <span class="inline-block w-1.5 h-1.5 rounded-full bg-luxury-gold mr-2 animate-pulse"></span>
+        Complimentary Insured Shipping Across India on Orders Above ₹999 • Atelier Code <strong class="text-luxury-gold font-bold">FIRST10</strong>
     </div>
 
-    <!-- Header Navigation -->
-    <header class="sticky top-0 z-40 glass-nav transition-all duration-300">
+    <!-- Luxury Header Navigation -->
+    <header class="sticky top-0 z-40 luxury-nav transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 
-                <!-- Brand Logo & Tagline -->
+                <!-- Left: Luxury Brand Monogram & Name -->
                 <div class="flex items-center gap-3">
-                    <a href="{% url 'store:product_list' %}" class="flex items-center gap-2 group">
-                        <img src="{% static 'images/stylesphere_logo_white.png' %}" alt="Style Sphere Printed T-Shirts" class="h-9 block">
+                    <a href="{% url 'store:product_list' %}" class="flex flex-col group">
+                        <span class="text-xl sm:text-2xl font-luxury font-black tracking-[0.18em] text-white group-hover:text-luxury-gold transition-colors">
+                            STYLE SPHERE
+                        </span>
+                        <span class="text-[9px] font-mono tracking-[0.3em] text-zinc-500 uppercase -mt-1">
+                            ATELIER DE COUTURE
+                        </span>
                     </a>
-                    <span class="hidden xl:inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-brand-neon/10 text-brand-neon border border-brand-neon/30">
-                        T-SHIRTS STUDIO
-                    </span>
                 </div>
 
-                <!-- Desktop Search Bar -->
-                <div class="hidden md:flex items-center flex-1 max-w-md mx-6">
-                    <form action="{% url 'store:product_list' %}" method="get" class="w-full relative">
-                        <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search Anime tees, 3D puff prints, vintage acid wash..." 
-                               class="w-full bg-slate-900/90 border border-slate-700/60 rounded-full py-2.5 pl-10 pr-4 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-brand-neon focus:ring-1 focus:ring-brand-neon transition-all">
-                        <button type="submit" class="absolute left-3.5 top-2.5 text-slate-400 hover:text-brand-neon">
-                            <i class="bi bi-search text-xs"></i>
-                        </button>
-                    </form>
-                </div>
+                <!-- Center: Clean Desktop Navigation -->
+                <nav class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-[0.15em] text-zinc-400">
+                    <a href="{% url 'store:product_list' %}" class="hover:text-white transition-colors {% if not category and not query %}text-white font-bold border-b border-luxury-gold pb-1{% endif %}">
+                        All Pieces
+                    </a>
+                    {% for c in categories|slice:":4" %}
+                        <a href="{{ c.get_absolute_url }}" class="hover:text-white transition-colors {% if category.slug == c.slug %}text-white font-bold border-b border-luxury-gold pb-1{% endif %}">
+                            {{ c.name }}
+                        </a>
+                    {% endfor %}
+                    <a href="#atelierTrust" class="hover:text-white transition-colors">
+                        Heritage
+                    </a>
+                </nav>
 
-                <!-- Navigation Icons -->
-                <div class="flex items-center gap-3">
-                    <a href="{% url 'store:wishlist_detail' %}" class="btn btn-ghost btn-circle btn-sm text-slate-300 hover:text-brand-pink relative" title="My Wishlist">
-                        <i class="bi bi-heart text-lg"></i>
+                <!-- Right: Search Bar & Utility Icons -->
+                <div class="flex items-center gap-4">
+                    
+                    <!-- Search Input (Minimalist desktop) -->
+                    <div class="hidden lg:block relative w-52">
+                        <form action="{% url 'store:product_list' %}" method="get">
+                            <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search collection..." 
+                                   class="w-full bg-zinc-900/80 border border-zinc-800 rounded-full py-1.5 pl-8 pr-3 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-luxury-gold transition-all">
+                            <i class="bi bi-search absolute left-2.5 top-2 text-zinc-500 text-xs"></i>
+                        </form>
+                    </div>
+
+                    <!-- Wishlist -->
+                    <a href="{% url 'store:wishlist_detail' %}" class="relative p-2 text-zinc-400 hover:text-white transition-colors" title="Saved Collection">
+                        <i class="bi bi-heart text-base"></i>
                         {% if user.is_authenticated and user.wishlist.count > 0 %}
-                            <span class="badge badge-xs bg-brand-pink border-none text-white absolute -top-1 -right-1 font-bold">
-                                {{ user.wishlist.count }}
-                            </span>
+                            <span class="absolute 1 right-1 w-2 h-2 rounded-full bg-luxury-gold"></span>
                         {% endif %}
                     </a>
 
-                    <a href="{% url 'store:cart_detail' %}" class="btn btn-ghost btn-circle btn-sm text-slate-300 hover:text-brand-neon relative" title="Tee Cart">
-                        <i class="bi bi-bag text-lg"></i>
+                    <!-- Shopping Bag -->
+                    <a href="{% url 'store:cart_detail' %}" class="relative p-2 text-zinc-400 hover:text-white transition-colors" title="Shopping Bag">
+                        <i class="bi bi-bag text-base"></i>
                         {% with total_items=cart|length %}
-                            {% if total_items > 0 %}{% endif %}
                             {% if total_items > 0 %}
-                                <span class="badge badge-xs bg-brand-neon border-none text-black font-extrabold absolute -top-1 -right-1">
+                                <span class="absolute 1 right-1 w-4 h-4 rounded-full bg-luxury-gold text-black text-[9px] font-black flex items-center justify-center">
                                     {{ total_items }}
                                 </span>
                             {% endif %}
                         {% endwith %}
                     </a>
 
+                    <!-- User Account Dropdown -->
                     <div class="dropdown dropdown-end">
-                        <label tabindex="0" class="btn btn-ghost btn-circle btn-sm avatar border border-slate-700 hover:border-brand-neon">
-                            <div class="w-8 rounded-full bg-slate-800 flex items-center justify-center">
-                                <i class="bi bi-person text-lg text-brand-neon"></i>
-                            </div>
+                        <label tabindex="0" class="cursor-pointer p-2 text-zinc-400 hover:text-white transition-colors flex items-center gap-1.5">
+                            <i class="bi bi-person text-lg"></i>
                         </label>
-                        <ul tabindex="0" class="dropdown-content z-50 menu p-2 shadow-2xl bg-brand-card border border-slate-800 rounded-2xl w-56 mt-3">
+                        <ul tabindex="0" class="dropdown-content z-50 menu p-2.5 shadow-2xl bg-zinc-950 border border-zinc-800 rounded-2xl w-56 mt-3 text-xs divide-y divide-zinc-900">
                             {% if user.is_authenticated %}
-                                <li class="menu-title px-4 py-2 text-slate-400 border-b border-slate-800">
-                                    <span class="text-xs font-bold text-brand-neon">MEMBER: {{ user.username }}</span>
+                                <li class="px-3 py-2 text-zinc-500 font-mono text-[10px] uppercase tracking-wider">
+                                    CLIENT: <strong class="text-luxury-gold font-bold">{{ user.username }}</strong>
                                 </li>
-                                <li><a href="{% url 'accounts:profile' %}"><i class="bi bi-truck text-brand-neon"></i> My Orders & Tracking</a></li>
-                                <li><a href="{% url 'store:wishlist_detail' %}"><i class="bi bi-heart text-brand-pink"></i> My Wishlist</a></li>
+                                <li><a href="{% url 'accounts:profile' %}" class="py-2.5 text-zinc-300 hover:text-white"><i class="bi bi-box-seam text-luxury-gold"></i> Order History & Tracking</a></li>
+                                <li><a href="{% url 'store:wishlist_detail' %}" class="py-2.5 text-zinc-300 hover:text-white"><i class="bi bi-heart text-luxury-gold"></i> Saved Pieces</a></li>
                                 {% if user.is_staff %}
-                                    <li><a href="{% url 'store:admin_analytics' %}"><i class="bi bi-graph-up-arrow text-emerald-400"></i> Sales Analytics</a></li>
+                                    <li><a href="{% url 'store:admin_analytics' %}" class="py-2.5 text-zinc-300 hover:text-white"><i class="bi bi-graph-up-arrow text-emerald-400"></i> Executive Analytics</a></li>
                                 {% endif %}
-                                <li><a href="{% url 'api:product-list' %}"><i class="bi bi-code-slash text-brand-lime"></i> REST API</a></li>
-                                <li><hr class="border-slate-800 my-1"></li>
-                                <li><a href="{% url 'accounts:logout' %}" class="text-rose-400"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                                <li><a href="{% url 'accounts:logout' %}" class="py-2.5 text-rose-400 hover:text-rose-300"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
                             {% else %}
-                                <li><a href="{% url 'accounts:login' %}"><i class="bi bi-box-arrow-in-right text-brand-neon"></i> Login</a></li>
-                                <li><a href="{% url 'accounts:register' %}"><i class="bi bi-person-plus text-brand-pink"></i> Sign Up</a></li>
+                                <li><a href="{% url 'accounts:login' %}" class="py-2.5 text-zinc-300 hover:text-white font-bold"><i class="bi bi-box-arrow-in-right text-luxury-gold"></i> Member Sign In</a></li>
+                                <li><a href="{% url 'accounts:register' %}" class="py-2.5 text-zinc-300 hover:text-white font-bold"><i class="bi bi-person-plus text-luxury-gold"></i> Create Atelier Account</a></li>
                             {% endif %}
                         </ul>
                     </div>
 
-                    <button onclick="toggleTheme()" class="btn btn-ghost btn-circle btn-sm text-slate-300 hover:text-amber-400" title="Toggle Theme">
-                        <i id="themeToggleIcon" class="bi bi-moon-stars text-lg"></i>
-                    </button>
                 </div>
             </div>
 
             <!-- Mobile Search Bar -->
-            <div class="md:hidden pb-3">
-                <form action="{% url 'store:product_list' %}" method="get" class="w-full relative">
-                    <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search printed t-shirts, puff prints..." 
-                           class="w-full bg-slate-900 border border-slate-700 rounded-full py-2 pl-10 pr-4 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-brand-neon">
-                    <button type="submit" class="absolute left-3.5 top-2 text-slate-400">
-                        <i class="bi bi-search text-xs"></i>
-                    </button>
+            <div class="lg:hidden pb-3">
+                <form action="{% url 'store:product_list' %}" method="get" class="relative">
+                    <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search collection by title, artwork, or fit..." 
+                           class="w-full bg-zinc-900 border border-zinc-800 rounded-full py-2 pl-9 pr-4 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-luxury-gold">
+                    <i class="bi bi-search absolute left-3 top-2.5 text-zinc-500 text-xs"></i>
                 </form>
             </div>
         </div>
     </header>
 
-    <!-- Desktop Category Header Subnav -->
-    <nav class="hidden md:block bg-brand-card/60 border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-center gap-2 py-2 overflow-x-auto">
-                <a href="{% url 'store:product_list' %}" 
-                   class="px-4 py-1.5 rounded-full text-xs font-cta font-bold transition-all {% if not category %}bg-brand-neon text-black{% else %}text-slate-400 hover:text-white{% endif %}">
-                    ALL PRINTED TEES
-                </a>
-                {% for c in categories %}
-                    <a href="{{ c.get_absolute_url }}" 
-                       class="px-4 py-1.5 rounded-full text-xs font-cta font-bold transition-all whitespace-nowrap {% if category.slug == c.slug %}bg-brand-neon text-black{% else %}text-slate-400 hover:text-white{% endif %}">
-                        {{ c.name|upper }}
-                    </a>
-                {% endfor %}
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content Body -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {% if messages %}
             <div class="mb-6 space-y-2">
                 {% for message in messages %}
-                    <div class="p-3.5 rounded-2xl text-xs font-bold flex items-center justify-between {% if message.tags == 'success' %}bg-emerald-950/60 text-emerald-300 border border-emerald-800{% elif message.tags == 'error' %}bg-rose-950/60 text-rose-300 border border-rose-800{% else %}bg-indigo-950/60 text-indigo-300 border border-indigo-800{% endif %}">
+                    <div class="p-3.5 rounded-xl text-xs font-semibold flex items-center justify-between {% if message.tags == 'success' %}bg-emerald-950/70 text-emerald-300 border border-emerald-800/80{% elif message.tags == 'error' %}bg-rose-950/70 text-rose-300 border border-rose-800/80{% else %}bg-zinc-900 text-zinc-300 border border-zinc-700{% endif %}">
                         <span>{{ message }}</span>
                     </div>
                 {% endfor %}
@@ -307,142 +238,148 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- WhatsApp Support Floating Action Button -->
-    <a href="https://wa.me/919781855165?text=Hello%20Style%20Sphere,%20I%20have%20an%20inquiry%20about%20a%20printed%20t-shirt" 
-       target="_blank" 
-       class="fixed bottom-20 md:bottom-6 right-5 z-40 w-12 h-12 p-3 bg-emerald-500 hover:bg-emerald-400 text-white rounded-full shadow-lg hover:shadow-emerald-500/30 flex items-center justify-center text-2xl transition-all transform hover:scale-110" 
-       title="Chat with T-Shirt Support on WhatsApp">
-        <i class="bi bi-whatsapp"></i>
-    </a>
+    <!-- Heritage & Trust Assurance Strip -->
+    <section id="atelierTrust" class="border-t border-zinc-900 bg-zinc-950/80 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center sm:text-left">
+                
+                <div class="space-y-2">
+                    <div class="text-luxury-gold text-xl mb-1">
+                        <i class="bi bi-award"></i>
+                    </div>
+                    <h4 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Authenticity Guaranteed</h4>
+                    <p class="text-[11px] text-zinc-500 leading-relaxed">
+                        100% Certified 240+ GSM Combed French Terry Cotton. Bio-washed for a heavy, luxurious drape.
+                    </p>
+                </div>
 
-    <!-- Mobile Bottom Navigation Bar -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0A0C10]/95 backdrop-blur-lg border-t border-slate-800 flex justify-around items-center h-15 py-1">
-        <a href="{% url 'store:product_list' %}" class="flex flex-col items-center text-xs font-bold {% if request.path == '/' %}text-brand-neon{% else %}text-slate-400{% endif %}">
-            <i class="bi bi-house-door text-lg mb-0.5"></i>
-            <span>Home</span>
+                <div class="space-y-2">
+                    <div class="text-luxury-gold text-xl mb-1">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h4 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Encrypted Transactions</h4>
+                    <p class="text-[11px] text-zinc-500 leading-relaxed">
+                        Protected end-to-end payments with UPI, Major Credit Cards, NetBanking, and Doorstep Cash on Delivery (COD).
+                    </p>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="text-luxury-gold text-xl mb-1">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                    <h4 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Insured Express Transit</h4>
+                    <p class="text-[11px] text-zinc-500 leading-relaxed">
+                        Each garment is inspected and dispatched in tamper-evident luxury packaging within 24 business hours.
+                    </p>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="text-luxury-gold text-xl mb-1">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </div>
+                    <h4 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Complimentary Exchanges</h4>
+                    <p class="text-[11px] text-zinc-500 leading-relaxed">
+                        30-day hassle-free doorstep size exchange and refund guarantee if the tailoring does not match your standard.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Luxury Footer -->
+    <footer class="bg-black text-zinc-500 border-t border-zinc-900 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
+                
+                <!-- Brand Statement -->
+                <div class="md:col-span-5 space-y-4">
+                    <h3 class="text-lg font-luxury font-bold tracking-[0.2em] text-white">STYLE SPHERE</h3>
+                    <p class="text-xs text-zinc-400 leading-relaxed max-w-sm">
+                        Curating the heaviest French Terry cotton t-shirts, artisan graphic prints, and dropped-shoulder silhouettes. Designed with restraint, tailored for endurance.
+                    </p>
+                    <div class="text-[11px] text-zinc-500 font-mono">
+                        HEADQUARTERS // ATELIER STUDIO, PANCHKULA, HARYANA, INDIA
+                    </div>
+                </div>
+
+                <!-- Collections -->
+                <div class="md:col-span-3 space-y-3">
+                    <h4 class="text-xs font-luxury font-bold text-white uppercase tracking-widest">Collections</h4>
+                    <ul class="space-y-2 text-xs text-zinc-400">
+                        <li><a href="{% url 'store:product_list' %}?q=Anime" class="hover:text-luxury-gold transition-colors">Anime & Manga Graphic Tees</a></li>
+                        <li><a href="{% url 'store:product_list' %}?q=Cyberpunk" class="hover:text-luxury-gold transition-colors">Cyberpunk & Futuristic Editions</a></li>
+                        <li><a href="{% url 'store:product_list' %}?q=Vintage" class="hover:text-luxury-gold transition-colors">Vintage Acid Wash Heavyweight</a></li>
+                        <li><a href="{% url 'store:product_list' %}?q=Minimalist" class="hover:text-luxury-gold transition-colors">Minimalist Typography Series</a></li>
+                    </ul>
+                </div>
+
+                <!-- Concierge / Client Services -->
+                <div class="md:col-span-4 space-y-3">
+                    <h4 class="text-xs font-luxury font-bold text-white uppercase tracking-widest">Atelier Concierge</h4>
+                    <p class="text-xs text-zinc-400 leading-relaxed">
+                        For bespoke sizing inquiries, custom corporate orders, or order status support:
+                    </p>
+                    <div class="pt-2 flex flex-col gap-2 text-xs">
+                        <a href="https://wa.me/919781855165?text=Hello%20Style%20Sphere%20Atelier,%20I%20have%20an%20inquiry" target="_blank" class="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-semibold">
+                            <i class="bi bi-whatsapp"></i> WhatsApp Concierge (+91 9781855165)
+                        </a>
+                        <a href="{% url 'accounts:profile' %}" class="inline-flex items-center gap-2 text-zinc-400 hover:text-white">
+                            <i class="bi bi-box-seam"></i> Track Air Waybill (AWB) Order Status
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Copyright & Legal -->
+            <div class="pt-8 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between text-[11px] text-zinc-500 gap-4">
+                <span>&copy; {% now "Y" %} STYLE SPHERE ATELIER INC. ALL RIGHTS RESERVED.</span>
+                <div class="flex items-center gap-6">
+                    <span class="hover:text-zinc-400">PRIVACY POLICY</span>
+                    <span class="hover:text-zinc-400">TERMS OF SERVICE</span>
+                    <span class="hover:text-zinc-400">SHIPPING & EXCHANGES</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Minimalist Mobile Bottom Nav Bar -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-zinc-900 flex justify-around items-center h-16">
+        <a href="{% url 'store:product_list' %}" class="flex flex-col items-center text-[10px] font-semibold tracking-wider uppercase {% if request.path == '/' %}text-luxury-gold font-bold{% else %}text-zinc-400{% endif %}">
+            <i class="bi bi-house text-base mb-0.5"></i>
+            <span>Atelier</span>
         </a>
-        <a href="#productGrid" class="flex flex-col items-center text-xs font-bold text-slate-400 hover:text-brand-neon">
-            <i class="bi bi-grid text-lg mb-0.5"></i>
-            <span>All Tees</span>
-        </a>
-        <a href="{% url 'store:wishlist_detail' %}" class="relative flex flex-col items-center text-xs font-bold {% if 'wishlist' in request.path %}text-brand-pink{% else %}text-slate-400{% endif %}">
-            <i class="bi bi-heart text-lg mb-0.5"></i>
-            <span>Wishlist</span>
+        <a href="{% url 'store:wishlist_detail' %}" class="relative flex flex-col items-center text-[10px] font-semibold tracking-wider uppercase {% if 'wishlist' in request.path %}text-luxury-gold font-bold{% else %}text-zinc-400{% endif %}">
+            <i class="bi bi-heart text-base mb-0.5"></i>
+            <span>Saved</span>
             {% if user.is_authenticated and user.wishlist.count > 0 %}
-                <span class="absolute -top-1 right-2 bg-brand-pink text-white text-[9px] font-black w-3.5 h-3.5 rounded-full flex items-center justify-center">
-                    {{ user.wishlist.count }}
-                </span>
+                <span class="absolute -top-1 right-2 w-1.5 h-1.5 rounded-full bg-luxury-gold"></span>
             {% endif %}
         </a>
-        <a href="{% url 'store:cart_detail' %}" class="relative flex flex-col items-center text-xs font-bold {% if 'cart' in request.path %}text-brand-neon{% else %}text-slate-400{% endif %}">
-            <i class="bi bi-bag text-lg mb-0.5"></i>
+        <a href="{% url 'store:cart_detail' %}" class="relative flex flex-col items-center text-[10px] font-semibold tracking-wider uppercase {% if 'cart' in request.path %}text-luxury-gold font-bold{% else %}text-zinc-400{% endif %}">
+            <i class="bi bi-bag text-base mb-0.5"></i>
             <span>Bag</span>
             {% with total_items=cart|length %}
                 {% if total_items > 0 %}
-                    <span class="absolute -top-1 right-1 bg-brand-neon text-black text-[9px] font-black w-3.5 h-3.5 rounded-full flex items-center justify-center">
+                    <span class="absolute -top-1 right-2 w-3.5 h-3.5 rounded-full bg-luxury-gold text-black text-[9px] font-black flex items-center justify-center">
                         {{ total_items }}
                     </span>
                 {% endif %}
             {% endwith %}
         </a>
         {% if user.is_authenticated %}
-            <a href="{% url 'accounts:profile' %}" class="flex flex-col items-center text-xs font-bold {% if 'profile' in request.path %}text-brand-neon{% else %}text-slate-400{% endif %}">
-                <i class="bi bi-person text-lg mb-0.5"></i>
-                <span>Profile</span>
+            <a href="{% url 'accounts:profile' %}" class="flex flex-col items-center text-[10px] font-semibold tracking-wider uppercase {% if 'profile' in request.path %}text-luxury-gold font-bold{% else %}text-zinc-400{% endif %}">
+                <i class="bi bi-person text-base mb-0.5"></i>
+                <span>Account</span>
             </a>
         {% else %}
-            <a href="{% url 'accounts:login' %}" class="flex flex-col items-center text-xs font-bold text-slate-400 hover:text-brand-neon">
-                <i class="bi bi-person text-lg mb-0.5"></i>
+            <a href="{% url 'accounts:login' %}" class="flex flex-col items-center text-[10px] font-semibold tracking-wider uppercase text-zinc-400 hover:text-white">
+                <i class="bi bi-person text-base mb-0.5"></i>
                 <span>Sign In</span>
             </a>
         {% endif %}
     </nav>
 
-    <!-- Exit-Intent Discount Recovery Modal -->
-    <dialog id="exitIntentModal" class="modal modal-bottom sm:modal-middle">
-        <div class="modal-box bg-brand-card border border-brand-neon/40 rounded-3xl p-6 sm:p-8 text-center max-w-md">
-            <div class="w-14 h-14 rounded-2xl bg-brand-pink/20 text-brand-pink flex items-center justify-center text-3xl mx-auto mb-3">
-                <i class="bi bi-gift-fill"></i>
-            </div>
-            <h3 class="font-heading font-black text-2xl text-white">DON'T LEAVE YOUR TEE BEHIND!</h3>
-            <p class="text-xs text-slate-300 mt-2">Take an extra <strong>5% OFF</strong> your printed t-shirt order with this recovery code:</p>
-            <div class="p-3 bg-slate-900 border border-dashed border-brand-neon rounded-2xl my-4">
-                <span class="text-xl font-black text-brand-neon tracking-widest font-cta">STAY5</span>
-            </div>
-            <div class="flex gap-2">
-                <a href="{% url 'store:cart_detail' %}" class="btn flex-1 bg-brand-neon text-black font-cta font-black rounded-full border-none">
-                    CLAIM 5% OFF IN BAG
-                </a>
-                <form method="dialog">
-                    <button class="btn btn-ghost text-slate-400 rounded-full">No Thanks</button>
-                </form>
-            </div>
-        </div>
-    </dialog>
-
-    <!-- Footer -->
-    <footer class="bg-black text-slate-400 border-t border-slate-900 py-12 mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-                <div>
-                    <h4 class="text-white font-heading font-bold text-sm mb-4">T-Shirt Collections</h4>
-                    <ul class="space-y-2 text-xs">
-                        <li><a href="{% url 'store:product_list' %}?q=Anime" class="hover:text-brand-neon">Anime Graphic Tees</a></li>
-                        <li><a href="{% url 'store:product_list' %}?print_type=Puff" class="hover:text-brand-neon">3D Puff Print Tees</a></li>
-                        <li><a href="{% url 'store:product_list' %}?q=Vintage" class="hover:text-brand-neon">Acid Wash & Vintage Drops</a></li>
-                        <li><a href="{% url 'store:product_list' %}?q=Cyberpunk" class="hover:text-brand-neon">Cyberpunk & Futuristic</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-white font-heading font-bold text-sm mb-4">Customer Care</h4>
-                    <ul class="space-y-2 text-xs">
-                        <li><a href="{% url 'accounts:profile' %}" class="hover:text-brand-neon">Track AWB Order Status</a></li>
-                        <li><a href="{% url 'store:wishlist_detail' %}" class="hover:text-brand-neon">My Saved Tees</a></li>
-                        <li><a href="https://wa.me/919781855165" target="_blank" class="hover:text-brand-neon">WhatsApp Support (+91 9781855165)</a></li>
-                    </ul>
-                </div>
-                <div class="col-span-2 md:text-right">
-                    <h4 class="text-white font-heading font-bold text-sm mb-2">Style Sphere // Printed T-Shirts Studio</h4>
-                    <p class="text-xs text-slate-400 max-w-md md:ml-auto mb-3">
-                        Curating the heaviest 240+ GSM French Terry cotton t-shirts, high-density puff prints, anime subculture drops, and boxy oversized streetwear fits.
-                    </p>
-                    <div class="text-xs font-semibold text-slate-500">
-                        ⚡ 100% Encrypted Payments • UPI • Credit/Debit Cards • NetBanking • Cash on Delivery (COD)
-                    </div>
-                </div>
-            </div>
-            <div class="border-t border-slate-900 pt-6 text-center text-xs text-slate-500">
-                &copy; {% now "Y" %} Style Sphere Inc. Exclusively Printed T-Shirts. All rights reserved.
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme') || 'dark';
-            const next = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            if (next === 'dark') {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-            localStorage.setItem('theme', next);
-            const icon = document.getElementById('themeToggleIcon');
-            if (icon) {
-                icon.className = next === 'dark' ? 'bi bi-moon-stars text-lg text-slate-300' : 'bi bi-sun text-lg text-amber-500';
-            }
-        }
-
-        // Exit-Intent Modal Trigger
-        let exitShown = false;
-        document.addEventListener('mouseleave', function(e) {
-            if (e.clientY <= 0 && !exitShown) {
-                exitShown = true;
-                const modal = document.getElementById('exitIntentModal');
-                if (modal) modal.showModal();
-            }
-        });
-    </script>
 </body>
 </html>

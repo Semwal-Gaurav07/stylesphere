@@ -1,129 +1,117 @@
 {% extends "store/base.html" %}
 
-{% block title %}Style Sphere - Exclusive Streetwear & Graphic Printed Tees{% endblock %}
+{% block title %}Style Sphere Atelier — Exclusive Heavyweight Printed T-Shirts{% endblock %}
 
 {% block content %}
-<!-- Live Midnight Capsule Countdown Banner -->
-<div class="mb-8 p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-red-950/60 via-zinc-950 to-cyan-950/60 border border-zinc-800 shadow-[0_0_40px_-15px_rgba(239,68,68,0.3)] flex flex-col sm:flex-row items-center justify-between gap-4">
-    <div class="flex items-center gap-3 text-center sm:text-left">
-        <div class="w-10 h-10 rounded-2xl bg-red-600/20 text-red-500 flex items-center justify-center text-xl font-bold flex-shrink-0 animate-bounce">
-            ⚡
-        </div>
-        <div>
-            <div class="flex items-center gap-2 justify-center sm:justify-start">
-                <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
-                <span class="text-xs font-cta font-bold text-red-400 uppercase tracking-widest">LIMITED CAPSULE DROP</span>
-            </div>
-            <h3 class="text-sm sm:text-base font-black text-white font-heading">
-                Exclusive Heavyweight 240+ GSM Drops • Extra 10% Off Code <strong class="text-brand-neon bg-black px-2 py-0.5 rounded border border-zinc-800">FIRST10</strong>
-            </h3>
-        </div>
-    </div>
+<!-- Editorial Luxury Hero Banner -->
+<div class="relative w-full rounded-3xl overflow-hidden bg-gradient-to-br from-zinc-950 via-zinc-900 to-black border border-white/5 mb-14 p-8 sm:p-14 lg:p-20 shadow-2xl">
+    <!-- Ambient Radial Gold & Platinum Glow -->
+    <div class="absolute top-0 right-0 w-96 h-96 bg-luxury-gold/5 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 left-10 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
 
-    <!-- Live Javascript Countdown Clock -->
-    <div class="flex items-center gap-2 bg-black/80 px-4 py-2 rounded-2xl border border-zinc-800 font-mono text-white text-xs sm:text-sm font-bold shadow-inner">
-        <span class="text-zinc-400">CLOSES IN:</span>
-        <span id="countdownTimer" class="text-brand-neon font-black tracking-widest">04h : 38m : 19s</span>
+    <div class="relative z-10 max-w-2xl space-y-5">
+        <div class="inline-flex items-center gap-2.5 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] font-mono uppercase tracking-[0.25em] text-luxury-gold">
+            <span>SERIES 2026 // LIMITED EDITIONS</span>
+        </div>
+
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-luxury font-black text-white leading-tight tracking-tight">
+            TIMELESS FORM. <br>
+            <span class="gold-gradient-text">ELEVATED TAILORING.</span>
+        </h1>
+
+        <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed font-light">
+            Engineered exclusively in 240+ GSM bio-washed French Terry cotton. Designed with dropped shoulders, bespoke artisan prints, and structural permanence.
+        </p>
+
+        <div class="flex items-center gap-4 pt-3 flex-wrap">
+            <a href="#collectionGrid" class="px-7 py-3.5 rounded-full bg-white hover:bg-zinc-200 text-black font-semibold text-xs uppercase tracking-[0.15em] transition-all duration-300">
+                Explore Collection
+            </a>
+            <a href="#atelierTrust" class="px-7 py-3.5 rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-semibold text-xs uppercase tracking-[0.15em] border border-zinc-800 transition-all duration-300">
+                Fabric Standards
+            </a>
+        </div>
     </div>
 </div>
 
-<!-- Category Story Bubbles / Interactive Filter Navigation -->
-<div class="mb-10">
-    <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xs font-cta font-bold text-zinc-400 uppercase tracking-widest">
-            Explore T-Shirt Collections
-        </h2>
-        <span class="text-xs text-brand-neon font-bold">100% Bio-Washed French Terry</span>
+<!-- Minimalist Collection Filter Navigation -->
+<div class="mb-10" id="collectionGrid">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between border-b border-zinc-800/80 pb-4 mb-6 gap-3">
+        <div>
+            <span class="text-[10px] font-mono tracking-[0.25em] text-zinc-500 uppercase block">CURATED SERIES</span>
+            <h2 class="text-2xl font-luxury font-bold text-white tracking-wide mt-1">
+                {% if category %}{{ category.name }}{% elif query %}Search Results: "{{ query }}"{% else %}The Atelier Catalog{% endif %}
+            </h2>
+        </div>
+        <span class="text-xs text-zinc-500 font-mono">
+            Showing {{ products.count }} Archival Editions
+        </span>
     </div>
 
-    <div class="flex gap-4 overflow-x-auto pb-4 pt-1 no-scrollbar">
-        <!-- 'All Categories' Bubble -->
-        <a href="{% url 'store:product_list' %}" class="cat-bubble group {% if not category %}active{% endif %}">
-            <div class="cat-bubble-img {% if not category %}border-brand-neon shadow-[0_0_20px_rgba(0,240,255,0.4)]{% endif %}">
-                🔥
-            </div>
-            <span class="cat-bubble-label {% if not category %}text-brand-neon font-bold{% endif %}">All Tees</span>
+    <!-- Category Tabs -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
+        <a href="{% url 'store:product_list' %}" 
+           class="px-5 py-2 rounded-full text-xs font-medium uppercase tracking-wider transition-all whitespace-nowrap {% if not category %}bg-zinc-800 text-white font-bold border border-zinc-700{% else %}bg-zinc-950 text-zinc-400 hover:text-white border border-zinc-800/80{% endif %}">
+            All Pieces
         </a>
 
         {% for c in categories %}
-            <a href="{{ c.get_absolute_url }}" class="cat-bubble group {% if category.slug == c.slug %}active{% endif %}">
-                <div class="cat-bubble-img {% if category.slug == c.slug %}border-brand-neon shadow-[0_0_20px_rgba(0,240,255,0.4)]{% endif %}">
-                    {{ c.icon|default:"👕" }}
-                </div>
-                <span class="cat-bubble-label {% if category.slug == c.slug %}text-brand-neon font-bold{% endif %}">
-                    {{ c.name|truncatechars:18 }}
-                </span>
+            <a href="{{ c.get_absolute_url }}" 
+               class="px-5 py-2 rounded-full text-xs font-medium uppercase tracking-wider transition-all whitespace-nowrap {% if category.slug == c.slug %}bg-zinc-800 text-white font-bold border border-zinc-700{% else %}bg-zinc-950 text-zinc-400 hover:text-white border border-zinc-800/80{% endif %}">
+                {{ c.name }}
             </a>
         {% endfor %}
     </div>
 </div>
 
-<!-- Product Grid Header -->
-<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-    <div>
-        <h1 class="text-2xl sm:text-3xl font-black text-white font-heading tracking-tight">
-            {% if category %}{{ category.name }}{% elif query %}Search Results for "{{ query }}"{% else %}Trending Graphic Printed T-Shirts{% endif %}
-        </h1>
-        <p class="text-xs text-zinc-400 mt-1">Showing {{ products.count }} premium drop-shoulder streetwear styles</p>
-    </div>
-
-    <!-- Live Filter Pills -->
-    <div class="flex items-center gap-2 flex-wrap text-xs">
-        <span class="px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 font-semibold flex items-center gap-1.5">
-            <i class="bi bi-shield-check text-emerald-400"></i> Cash on Delivery Available
-        </span>
-        <span class="px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 font-semibold flex items-center gap-1.5">
-            <i class="bi bi-truck text-brand-neon"></i> Free Express Shipping > ₹999
-        </span>
-    </div>
-</div>
-
-<!-- Main Products Grid -->
+<!-- Luxury Products Showcase Grid -->
 {% if products %}
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mb-16">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 mb-20">
         {% for product in products %}
-            <div class="glass-card rounded-3xl overflow-hidden border border-zinc-800/80 hover:border-brand-neon/60 hover:shadow-[0_0_35px_-10px_rgba(0,240,255,0.3)] transition-all duration-500 group flex flex-col justify-between">
+            <div class="luxury-card rounded-2xl overflow-hidden flex flex-col justify-between group">
                 
-                <!-- Card Image Area -->
-                <div class="relative aspect-square bg-zinc-950/90 p-4 flex items-center justify-center overflow-hidden">
+                <!-- Product Studio Gallery Container -->
+                <div class="relative aspect-square bg-[#0b0b0d] p-6 flex items-center justify-center overflow-hidden">
                     <img src="{{ product.image_url }}" 
                          alt="{{ product.name }}" 
-                         class="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.7)] group-hover:scale-108 transition-transform duration-500">
+                         class="w-full h-full object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.8)] group-hover:scale-105 transition-transform duration-700">
                     
-                    <!-- GSM Badge -->
+                    <!-- Clean Fabric Tag Badge -->
                     <div class="absolute top-3 left-3">
-                        <span class="badge bg-black/80 text-brand-neon border border-brand-neon/30 text-[10px] font-black px-2 py-0.5 backdrop-blur-md">
+                        <span class="px-2.5 py-1 rounded-md bg-black/80 border border-white/10 text-[9px] font-mono tracking-wider text-zinc-300 backdrop-blur-md">
                             {{ product.gsm }} GSM
                         </span>
                     </div>
 
-                    <!-- Wishlist Button -->
-                    <a href="{% url 'store:wishlist_toggle' product.id %}" class="absolute top-3 right-3 w-8 h-8 rounded-xl bg-black/80 border border-zinc-700 text-zinc-300 hover:text-brand-pink flex items-center justify-center text-sm backdrop-blur-md transition-all hover:scale-110">
+                    <!-- Minimalist Wishlist Button -->
+                    <a href="{% url 'store:wishlist_toggle' product.id %}" 
+                       class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/80 border border-zinc-800 text-zinc-400 hover:text-luxury-gold flex items-center justify-center text-sm backdrop-blur-md transition-colors"
+                       title="Save Piece">
                         <i class="bi bi-heart"></i>
                     </a>
                 </div>
 
-                <!-- Card Content Info Area -->
-                <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3 bg-zinc-900/30">
+                <!-- Product Specifications & Details -->
+                <div class="p-5 flex-1 flex flex-col justify-between space-y-3 bg-[#111114]">
                     <div>
-                        <span class="text-[10px] font-cta font-bold text-zinc-500 uppercase tracking-widest block mb-1">
+                        <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-[0.2em] block mb-1">
                             {{ product.category.name }}
                         </span>
-                        <h3 class="text-sm font-bold text-white group-hover:text-brand-neon transition-colors line-clamp-2 leading-snug">
+                        <h3 class="text-xs sm:text-sm font-semibold text-white group-hover:text-luxury-gold transition-colors line-clamp-2 leading-snug">
                             <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
                         </h3>
-                        <p class="text-[11px] text-zinc-400 mt-1 line-clamp-1">{{ product.print_type }}</p>
+                        <p class="text-[11px] text-zinc-400 mt-1 line-clamp-1 font-light">{{ product.print_type }}</p>
                     </div>
 
-                    <!-- Price & Instant Buy Button -->
-                    <div class="pt-2 border-t border-zinc-800/80 flex items-center justify-between">
+                    <!-- Price & View Link -->
+                    <div class="pt-3 border-t border-zinc-800/60 flex items-center justify-between">
                         <div>
-                            <span class="text-lg sm:text-xl font-black text-brand-neon font-heading">₹{{ product.price }}</span>
-                            <span class="text-xs text-zinc-500 line-through block -mt-1">₹{{ product.price|add:500 }}</span>
+                            <span class="text-base sm:text-lg font-bold text-white font-sans">₹{{ product.price }}</span>
+                            <span class="text-[11px] text-zinc-500 line-through block -mt-1 font-mono">₹{{ product.price|add:500 }}</span>
                         </div>
-                        <a href="{{ product.get_absolute_url }}" class="p-2.5 rounded-xl bg-zinc-800 group-hover:bg-brand-neon group-hover:text-black text-white font-bold text-xs transition-all flex items-center gap-1">
-                            <span>VIEW</span>
-                            <i class="bi bi-arrow-right"></i>
+                        <a href="{{ product.get_absolute_url }}" class="text-xs font-semibold uppercase tracking-wider text-zinc-400 group-hover:text-white flex items-center gap-1.5 transition-colors">
+                            <span>View</span>
+                            <i class="bi bi-arrow-right text-xs"></i>
                         </a>
                     </div>
                 </div>
@@ -132,73 +120,14 @@
         {% endfor %}
     </div>
 {% else %}
-    <div class="text-center py-16 bg-zinc-950/60 rounded-3xl border border-zinc-800 space-y-3 mb-16">
-        <i class="bi bi-search text-4xl text-zinc-600 block"></i>
-        <h3 class="text-base font-bold text-white">No products found matching your filter</h3>
-        <p class="text-xs text-zinc-400">Try searching for other graphics like "Anime", "Cyberpunk", or "Vintage".</p>
-        <a href="{% url 'store:product_list' %}" class="btn btn-sm btn-outline btn-accent mt-2">View All T-Shirts</a>
+    <div class="text-center py-20 bg-zinc-950 rounded-2xl border border-zinc-800/80 space-y-4 mb-20">
+        <i class="bi bi-search text-3xl text-zinc-600 block"></i>
+        <h3 class="text-sm font-luxury font-bold text-white uppercase tracking-wider">No matching editions found</h3>
+        <p class="text-xs text-zinc-400 max-w-sm mx-auto">Explore all curated categories or search by artwork or silhouette.</p>
+        <a href="{% url 'store:product_list' %}" class="inline-block px-6 py-2.5 rounded-full bg-white text-black font-semibold text-xs uppercase tracking-wider">
+            View All Pieces
+        </a>
     </div>
 {% endif %}
 
-<!-- Live Social Proof Notification Popups -->
-<div id="liveSocialProofToast" class="fixed bottom-6 left-6 z-50 bg-zinc-950/90 backdrop-blur-xl border border-zinc-800 rounded-2xl p-3.5 shadow-2xl flex items-center gap-3 transform translate-y-32 transition-all duration-500 pointer-events-none max-w-xs">
-    <div class="w-10 h-10 rounded-xl bg-brand-neon/10 text-brand-neon flex items-center justify-center text-lg font-bold flex-shrink-0">
-        🛍️
-    </div>
-    <div class="text-xs">
-        <p class="text-white font-bold" id="socialProofMsg">Someone in Mumbai just bought</p>
-        <p class="text-[11px] text-zinc-400" id="socialProofItem">Naruto: Itachi Graphic Tee (2m ago)</p>
-    </div>
-</div>
-
-<script>
-    // 1. Live Countdown Timer Ticker
-    function startCountdown() {
-        const timerEl = document.getElementById('countdownTimer');
-        let totalSeconds = 4 * 3600 + 38 * 60 + 19;
-        setInterval(() => {
-            if (totalSeconds <= 0) totalSeconds = 24 * 3600;
-            totalSeconds--;
-            const hrs = Math.floor(totalSeconds / 3600);
-            const mins = Math.floor((totalSeconds % 3600) / 60);
-            const secs = totalSeconds % 60;
-            if (timerEl) {
-                timerEl.innerText = `${String(hrs).padStart(2, '0')}h : ${String(mins).padStart(2, '0')}m : ${String(secs).padStart(2, '0')}s`;
-            }
-        }, 1000);
-    }
-    startCountdown();
-
-    // 2. Real-time Social Proof Sales Toasts
-    const buyers = [
-        { city: 'Delhi', item: 'Cyberpunk Tokyo 2099 Oversized Tee', time: '1m ago' },
-        { city: 'Bengaluru', item: 'Naruto Itachi Mangekyo Tee', time: '3m ago' },
-        { city: 'Chandigarh', item: 'Spider-Man Symbiote Graphic Tee', time: '5m ago' },
-        { city: 'Mumbai', item: 'Acid Wash Vintage Mineral Tee', time: '7m ago' },
-        { city: 'Pune', item: 'Jujutsu Kaisen Gojo Domain Tee', time: '9m ago' },
-    ];
-
-    let buyerIdx = 0;
-    function showNextToast() {
-        const toast = document.getElementById('liveSocialProofToast');
-        const msg = document.getElementById('socialProofMsg');
-        const item = document.getElementById('socialProofItem');
-        if (!toast) return;
-
-        const b = buyers[buyerIdx % buyers.length];
-        buyerIdx++;
-        msg.innerText = `Someone in ${b.city} ordered:`;
-        item.innerText = `${b.item} (${b.time})`;
-
-        toast.classList.remove('translate-y-32');
-        setTimeout(() => {
-            toast.classList.add('translate-y-32');
-        }, 4500);
-    }
-
-    setTimeout(() => {
-        showNextToast();
-        setInterval(showNextToast, 12000);
-    }, 4000);
-</script>
 {% endblock %}
