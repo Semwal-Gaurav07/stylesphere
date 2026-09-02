@@ -68,39 +68,63 @@
 {% if products %}
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 mb-20">
         {% for product in products %}
-            <div class="luxury-card rounded-2xl overflow-hidden flex flex-col justify-between group">
+            <div class="luxury-card rounded-2xl overflow-hidden flex flex-col justify-between group border border-white/5 hover:border-luxury-gold/50 transition-all duration-500 bg-[#111114]">
                 
-                <!-- Product Studio Gallery Container -->
-                <div class="relative aspect-square bg-[#0b0b0d] p-6 flex items-center justify-center overflow-hidden">
-                    <img src="{{ product.image_url }}" 
-                         alt="{{ product.name }}" 
-                         class="w-full h-full object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.8)] group-hover:scale-105 transition-transform duration-700">
+                <!-- Product Studio Image (Fully Clickable / Tappable to View Details) -->
+                <div class="relative aspect-square bg-[#0b0b0d] p-5 flex items-center justify-center overflow-hidden">
+                    <a href="{{ product.get_absolute_url }}" class="w-full h-full flex items-center justify-center" title="Tap to view {{ product.name }} details">
+                        <img src="{{ product.image_url }}" 
+                             alt="{{ product.name }}" 
+                             class="w-full h-full object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.8)] group-hover:scale-108 transition-transform duration-700">
+                    </a>
                     
                     <!-- Clean Fabric Tag Badge -->
-                    <div class="absolute top-3 left-3">
-                        <span class="px-2.5 py-1 rounded-md bg-black/80 border border-white/10 text-[9px] font-mono tracking-wider text-zinc-300 backdrop-blur-md">
+                    <div class="absolute top-3 left-3 pointer-events-none">
+                        <span class="px-2.5 py-0.5 rounded bg-black/85 border border-white/10 text-[9px] font-mono tracking-wider text-zinc-300 backdrop-blur-md">
                             {{ product.gsm }} GSM
                         </span>
                     </div>
 
                     <!-- Minimalist Wishlist Button -->
                     <a href="{% url 'store:wishlist_toggle' product.id %}" 
-                       class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/80 border border-zinc-800 text-zinc-400 hover:text-luxury-gold flex items-center justify-center text-sm backdrop-blur-md transition-colors"
+                       class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/80 border border-zinc-800 text-zinc-400 hover:text-luxury-gold flex items-center justify-center text-sm backdrop-blur-md transition-colors z-10"
                        title="Save Piece">
                         <i class="bi bi-heart"></i>
                     </a>
+
+                    <!-- Hover/Tap Quick Details Overlay Indicator -->
+                    <a href="{{ product.get_absolute_url }}" class="absolute bottom-3 inset-x-3 py-2 rounded-xl bg-black/80 backdrop-blur-md border border-white/10 text-center text-[10px] font-semibold tracking-wider text-zinc-200 uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden sm:block">
+                        Tap to View Details →
+                    </a>
                 </div>
 
-                <!-- Product Specifications & Details -->
-                <div class="p-5 flex-1 flex flex-col justify-between space-y-3 bg-[#111114]">
+                <!-- Product Specifications, Sizing & Details -->
+                <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
                     <div>
                         <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-[0.2em] block mb-1">
                             {{ product.category.name }}
                         </span>
+                        
                         <h3 class="text-xs sm:text-sm font-semibold text-white group-hover:text-luxury-gold transition-colors line-clamp-2 leading-snug">
                             <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
                         </h3>
+                        
                         <p class="text-[11px] text-zinc-400 mt-1 line-clamp-1 font-light">{{ product.print_type }}</p>
+                    </div>
+
+                    <!-- Available Sizes Display (S, M, L, XL, XXL) -->
+                    <div class="pt-1">
+                        <div class="text-[9px] font-mono text-zinc-500 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                            <span>AVAILABLE SIZES:</span>
+                            <span class="text-[9px] text-luxury-gold font-mono">Drop Shoulder</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <a href="{{ product.get_absolute_url }}" class="px-2 py-0.5 rounded border border-zinc-800/90 bg-zinc-950 text-zinc-300 font-mono text-[10px] hover:border-luxury-gold hover:text-white transition-colors">S</a>
+                            <a href="{{ product.get_absolute_url }}" class="px-2 py-0.5 rounded border border-zinc-800/90 bg-zinc-950 text-zinc-300 font-mono text-[10px] hover:border-luxury-gold hover:text-white transition-colors">M</a>
+                            <a href="{{ product.get_absolute_url }}" class="px-2 py-0.5 rounded border border-zinc-800/90 bg-zinc-950 text-zinc-300 font-mono text-[10px] hover:border-luxury-gold hover:text-white transition-colors">L</a>
+                            <a href="{{ product.get_absolute_url }}" class="px-2 py-0.5 rounded border border-zinc-800/90 bg-zinc-950 text-zinc-300 font-mono text-[10px] hover:border-luxury-gold hover:text-white transition-colors">XL</a>
+                            <a href="{{ product.get_absolute_url }}" class="px-2 py-0.5 rounded border border-zinc-800/90 bg-zinc-950 text-zinc-300 font-mono text-[10px] hover:border-luxury-gold hover:text-white transition-colors">XXL</a>
+                        </div>
                     </div>
 
                     <!-- Price & View Link -->
@@ -109,9 +133,9 @@
                             <span class="text-base sm:text-lg font-bold text-white font-sans">₹{{ product.price }}</span>
                             <span class="text-[11px] text-zinc-500 line-through block -mt-1 font-mono">₹{{ product.price|add:500 }}</span>
                         </div>
-                        <a href="{{ product.get_absolute_url }}" class="text-xs font-semibold uppercase tracking-wider text-zinc-400 group-hover:text-white flex items-center gap-1.5 transition-colors">
-                            <span>View</span>
-                            <i class="bi bi-arrow-right text-xs"></i>
+                        <a href="{{ product.get_absolute_url }}" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs font-semibold uppercase tracking-wider text-zinc-300 group-hover:text-black group-hover:bg-white group-hover:border-white flex items-center gap-1.5 transition-all">
+                            <span>Details</span>
+                            <i class="bi bi-arrow-right text-[10px]"></i>
                         </a>
                     </div>
                 </div>
