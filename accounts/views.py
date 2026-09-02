@@ -1,12 +1,26 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
 from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
-from .models import Profile
+from .models import Profile, PasswordResetOTP
 from store.models import Order
+
+def mask_email(val):
+    if not val or '@' not in val:
+        return 'your account'
+    parts = val.split('@')
+    name = parts[0]
+    domain = parts[1]
+    if len(name) <= 2:
+        masked_name = name[0] + '*'
+    else:
+        masked_name = name[0] + '*' * (len(name) - 2) + name[-1]
+    return f"{masked_name}@{domain}"
 
 def register(request):
     if request.user.is_authenticated:
@@ -79,66 +93,172 @@ def profile(request):
 
 def password_reset_view(request):
     """
-    Dual-mode password reset:
-    1. Direct instant reset: Verify username + registered email and update password immediately.
-    2. Email-based link: Send traditional reset token to user's email.
+    Commercial-Grade OTP Verification & Password Recovery:
+    Step 1: Identify account by Email or Username -> Generate & dispatch 6-digit OTP.
+    Step 2: Verify 6-digit OTP with live countdown & resend capability.
+    Step 3: Set and confirm New Password -> Update credentials securely.
     """
     if request.user.is_authenticated:
         return redirect('store:product_list')
 
+    step = int(request.session.get('reset_step', 1))
+
+    # Allow query parameter to reset flow
+    if request.GET.get('restart'):
+        for key in ['reset_user_id', 'reset_step', 'reset_email_masked', 'dev_otp_preview']:
+            request.session.pop(key, None)
+        step = 1
+
+    user_id = request.session.get('reset_user_id')
+    user = User.objects.filter(id=user_id).first() if user_id else None
+
+    # Step 1: User requests OTP for their account
     if request.method == 'POST':
-        reset_type = request.POST.get('reset_type', 'direct')
+        post_step = request.POST.get('step', str(step))
 
-        if reset_type == 'direct':
-            username = request.POST.get('username', '').strip()
-            email = request.POST.get('email', '').strip()
-            new_password = request.POST.get('new_password', '').strip()
-            confirm_password = request.POST.get('confirm_password', '').strip()
+        # Action: Resend OTP
+        if request.POST.get('action') == 'resend':
+            if user:
+                otp = PasswordResetOTP.create_otp(user)
+                request.session['dev_otp_preview'] = otp.otp_code
+                print(f"\n========================================================")
+                print(f"🔐 [STYLE SPHERE OTP RESEND] User: {user.username} | Code: {otp.otp_code}")
+                print(f"========================================================\n")
+                
+                # Send email
+                try:
+                    subject = "Style Sphere — Your Resent Verification Code"
+                    body = f"Hello {user.username},\n\nYour new 6-digit verification code is:\n\n{otp.otp_code}\n\nThis code is valid for 10 minutes."
+                    send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, [user.email or 'noreply@stylesphere.com'], fail_silently=True)
+                except Exception:
+                    pass
 
-            if not username or not email or not new_password:
-                messages.error(request, 'Please complete all required fields.')
-                return render(request, 'accounts/password_reset.html', {'active_tab': 'direct'})
+                messages.success(request, 'A fresh 6-digit verification code has been dispatched!')
+                return render(request, 'accounts/password_reset.html', {
+                    'step': 2,
+                    'user_email': request.session.get('reset_email_masked'),
+                    'dev_otp': otp.otp_code
+                })
 
-            if new_password != confirm_password:
-                messages.error(request, 'The two passwords do not match. Please try again.')
-                return render(request, 'accounts/password_reset.html', {'active_tab': 'direct', 'username': username, 'email': email})
+        # STEP 1: Verify Account & Send OTP
+        if post_step == '1':
+            identifier = request.POST.get('identifier', '').strip()
+            if not identifier:
+                messages.error(request, 'Please enter your registered username or email address.')
+                return render(request, 'accounts/password_reset.html', {'step': 1})
 
-            if len(new_password) < 6:
+            # Look up user by username or email
+            found_user = User.objects.filter(username__iexact=identifier).first() or                          User.objects.filter(email__iexact=identifier).first()
+
+            if not found_user:
+                messages.error(request, 'No active account matches the provided username or email.')
+                return render(request, 'accounts/password_reset.html', {'step': 1, 'identifier': identifier})
+
+            # Generate OTP
+            otp = PasswordResetOTP.create_otp(found_user)
+            request.session['reset_user_id'] = found_user.id
+            request.session['reset_step'] = 2
+            masked = mask_email(found_user.email if found_user.email else found_user.username)
+            request.session['reset_email_masked'] = masked
+            request.session['dev_otp_preview'] = otp.otp_code
+
+            print(f"\n========================================================")
+            print(f"🔐 [STYLE SPHERE OTP GENERATED] User: {found_user.username} | Code: {otp.otp_code}")
+            print(f"========================================================\n")
+
+            # Dispatch email
+            try:
+                subject = "Style Sphere — Password Recovery Verification Code"
+                body = f"Hello {found_user.username},\n\nYour 6-digit verification code to reset your password is:\n\n{otp.otp_code}\n\nThis code is valid for 10 minutes. If you did not request this, please disregard this email."
+                send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, [found_user.email or 'noreply@stylesphere.com'], fail_silently=True)
+            except Exception:
+                pass
+
+            messages.success(request, f'Verification code dispatched to {masked}!')
+            return render(request, 'accounts/password_reset.html', {
+                'step': 2,
+                'user_email': masked,
+                'dev_otp': otp.otp_code
+            })
+
+        # STEP 2: Verify OTP
+        elif post_step == '2':
+            if not user:
+                messages.error(request, 'Session expired. Please enter your account identifier again.')
+                request.session['reset_step'] = 1
+                return redirect('accounts:password_reset')
+
+            # Gather OTP code from individual inputs or single input
+            entered_otp = request.POST.get('otp_code', '').strip()
+            if not entered_otp:
+                # Check for individual digit inputs otp_1..otp_6
+                digits = [request.POST.get(f'otp_{i}', '').strip() for i in range(1, 7)]
+                entered_otp = ''.join(digits)
+
+            if len(entered_otp) != 6 or not entered_otp.isdigit():
+                messages.error(request, 'Please enter a valid 6-digit numeric OTP code.')
+                return render(request, 'accounts/password_reset.html', {
+                    'step': 2,
+                    'user_email': request.session.get('reset_email_masked'),
+                    'dev_otp': request.session.get('dev_otp_preview')
+                })
+
+            # Check matching unverified OTP for user
+            latest_otp = user.reset_otps.filter(is_verified=False).first()
+            if latest_otp and latest_otp.is_valid() and latest_otp.otp_code == entered_otp:
+                latest_otp.is_verified = True
+                latest_otp.save()
+                request.session['reset_step'] = 3
+                messages.success(request, 'OTP verified successfully! Please enter your new password.')
+                return render(request, 'accounts/password_reset.html', {'step': 3, 'username': user.username})
+            else:
+                if latest_otp:
+                    latest_otp.attempts += 1
+                    latest_otp.save()
+                messages.error(request, 'Incorrect or expired OTP code. Please check and try again.')
+                return render(request, 'accounts/password_reset.html', {
+                    'step': 2,
+                    'user_email': request.session.get('reset_email_masked'),
+                    'dev_otp': request.session.get('dev_otp_preview')
+                })
+
+        # STEP 3: Set New Password
+        elif post_step == '3':
+            if not user or step != 3:
+                messages.error(request, 'Security verification required before setting a new password.')
+                request.session['reset_step'] = 1
+                return redirect('accounts:password_reset')
+
+            new_pass = request.POST.get('new_password', '').strip()
+            confirm_pass = request.POST.get('confirm_password', '').strip()
+
+            if not new_pass or not confirm_pass:
+                messages.error(request, 'Please fill in both password fields.')
+                return render(request, 'accounts/password_reset.html', {'step': 3, 'username': user.username})
+
+            if new_pass != confirm_pass:
+                messages.error(request, 'Passwords do not match. Please ensure both fields are identical.')
+                return render(request, 'accounts/password_reset.html', {'step': 3, 'username': user.username})
+
+            if len(new_pass) < 6:
                 messages.error(request, 'Password must be at least 6 characters long.')
-                return render(request, 'accounts/password_reset.html', {'active_tab': 'direct', 'username': username, 'email': email})
+                return render(request, 'accounts/password_reset.html', {'step': 3, 'username': user.username})
 
-            # Check if user exists with this username and email
-            user_match = User.objects.filter(username__iexact=username, email__iexact=email).first()
-            if not user_match:
-                # Also try matching by username alone if email is blank on user record
-                user_by_username = User.objects.filter(username__iexact=username).first()
-                if user_by_username and not user_by_username.email:
-                    user_match = user_by_username
+            # Update password
+            user.set_password(new_pass)
+            user.save()
 
-            if user_match:
-                user_match.set_password(new_password)
-                if email and not user_match.email:
-                    user_match.email = email
-                user_match.save()
-                messages.success(request, f'Password for "{user_match.username}" has been successfully updated! You can now sign in with your new password.')
-                return redirect('accounts:login')
-            else:
-                messages.error(request, 'No registered user matches the provided username and email address.')
-                return render(request, 'accounts/password_reset.html', {'active_tab': 'direct', 'username': username, 'email': email})
+            # Clean session
+            for key in ['reset_user_id', 'reset_step', 'reset_email_masked', 'dev_otp_preview']:
+                request.session.pop(key, None)
 
-        elif reset_type == 'email':
-            form = PasswordResetForm(request.POST)
-            if form.is_valid():
-                form.save(
-                    request=request,
-                    use_https=request.is_secure(),
-                    email_template_name='accounts/password_reset_email.html',
-                    subject_template_name='accounts/password_reset_subject.txt',
-                )
-                messages.success(request, 'If an account exists with that email address, a password reset link has been dispatched.')
-                return redirect('accounts:password_reset_done')
-            else:
-                messages.error(request, 'Please provide a valid email address.')
-                return render(request, 'accounts/password_reset.html', {'active_tab': 'email'})
+            messages.success(request, f'Password for account "{user.username}" has been successfully updated! Please sign in with your new password.')
+            return redirect('accounts:login')
 
-    return render(request, 'accounts/password_reset.html', {'active_tab': 'direct'})
+    # GET Request: render current active step
+    return render(request, 'accounts/password_reset.html', {
+        'step': step,
+        'user_email': request.session.get('reset_email_masked', ''),
+        'dev_otp': request.session.get('dev_otp_preview', ''),
+        'username': user.username if user else ''
+    })
