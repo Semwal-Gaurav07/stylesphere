@@ -122,106 +122,251 @@
         Complimentary Insured Shipping Across India on Orders Above ₹999 • Atelier Code <strong class="text-luxury-gold font-bold">FIRST10</strong>
     </div>
 
-    <!-- Luxury Header Navigation -->
+        <!-- Header Navigation (Simple, Intuitive & Luxury) -->
     <header class="sticky top-0 z-40 luxury-nav transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
+            <div class="flex items-center justify-between h-16 sm:h-20">
                 
-                <!-- Left: Luxury Brand Monogram & Name -->
-                <div class="flex items-center gap-3">
+                <!-- Mobile Left: Hamburger Menu Button -->
+                <div class="flex items-center md:hidden">
+                    <button type="button" onclick="toggleMobileMenu()" class="p-2 text-zinc-300 hover:text-white transition-colors focus:outline-none" aria-label="Open Navigation Menu">
+                        <i id="hamburgerIcon" class="bi bi-list text-2xl"></i>
+                    </button>
+                </div>
+
+                <!-- Brand Logo (Left on Desktop, Center on Mobile) -->
+                <div class="flex items-center">
                     <a href="{% url 'store:product_list' %}" class="flex flex-col group">
-                        <span class="text-xl sm:text-2xl font-luxury font-black tracking-[0.18em] text-white group-hover:text-luxury-gold transition-colors">
+                        <span class="text-lg sm:text-2xl font-luxury font-black tracking-[0.18em] text-white group-hover:text-luxury-gold transition-colors">
                             STYLE SPHERE
                         </span>
-                        <span class="text-[9px] font-mono tracking-[0.3em] text-zinc-500 uppercase -mt-1">
+                        <span class="text-[8px] sm:text-[9px] font-mono tracking-[0.3em] text-zinc-500 uppercase -mt-1 hidden sm:block">
                             ATELIER DE COUTURE
                         </span>
                     </a>
                 </div>
 
-                <!-- Center: Clean Desktop Navigation -->
+                <!-- Desktop Center: Simple, Clear Navigation Links -->
                 <nav class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-[0.15em] text-zinc-400">
-                    <a href="{% url 'store:product_list' %}" class="hover:text-white transition-colors {% if not category and not query %}text-white font-bold border-b border-luxury-gold pb-1{% endif %}">
-                        All Pieces
+                    <a href="{% url 'store:product_list' %}" class="hover:text-white transition-colors {% if not category and not query %}text-white font-bold border-b border-luxury-gold pb-0.5{% endif %}">
+                        Shop All
                     </a>
-                    {% for c in categories|slice:":4" %}
-                        <a href="{{ c.get_absolute_url }}" class="hover:text-white transition-colors {% if category.slug == c.slug %}text-white font-bold border-b border-luxury-gold pb-1{% endif %}">
-                            {{ c.name }}
-                        </a>
-                    {% endfor %}
+
+                    <!-- Collections Dropdown -->
+                    <div class="dropdown dropdown-hover">
+                        <label tabindex="0" class="cursor-pointer hover:text-white transition-colors flex items-center gap-1 {% if category %}text-white font-bold border-b border-luxury-gold pb-0.5{% endif %}">
+                            <span>Collections</span>
+                            <i class="bi bi-chevron-down text-[10px] text-zinc-500"></i>
+                        </label>
+                        <ul tabindex="0" class="dropdown-content z-50 menu p-3 shadow-2xl bg-zinc-950 border border-zinc-800 rounded-2xl w-60 text-xs divide-y divide-zinc-900 mt-2">
+                            <li class="px-3 py-1.5 text-zinc-500 font-mono text-[10px] uppercase tracking-wider">
+                                Curated Series
+                            </li>
+                            {% for c in categories %}
+                                <li>
+                                    <a href="{{ c.get_absolute_url }}" class="py-2.5 text-zinc-300 hover:text-white hover:bg-zinc-900 rounded-xl transition-colors flex items-center justify-between">
+                                        <span>{{ c.name }}</span>
+                                        <span class="text-[10px] text-zinc-500 font-mono">→</span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <a href="{% if user.is_authenticated %}{% url 'accounts:profile' %}{% else %}{% url 'accounts:login' %}{% endif %}" class="hover:text-white transition-colors flex items-center gap-1.5">
+                        <i class="bi bi-box-seam text-zinc-500 text-xs"></i>
+                        <span>Track Order</span>
+                    </a>
+
                     <a href="#atelierTrust" class="hover:text-white transition-colors">
                         Heritage
                     </a>
                 </nav>
 
-                <!-- Right: Search Bar & Utility Icons -->
-                <div class="flex items-center gap-4">
+                <!-- Right: Utility Actions (Search, Wishlist, Bag, Account) -->
+                <div class="flex items-center gap-2 sm:gap-4">
                     
-                    <!-- Search Input (Minimalist desktop) -->
-                    <div class="hidden lg:block relative w-52">
-                        <form action="{% url 'store:product_list' %}" method="get">
-                            <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search collection..." 
-                                   class="w-full bg-zinc-900/80 border border-zinc-800 rounded-full py-1.5 pl-8 pr-3 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-luxury-gold transition-all">
-                            <i class="bi bi-search absolute left-2.5 top-2 text-zinc-500 text-xs"></i>
-                        </form>
-                    </div>
+                    <!-- Search Toggle Button -->
+                    <button type="button" onclick="toggleSearchBar()" class="p-2 text-zinc-400 hover:text-white transition-colors" title="Search Pieces">
+                        <i class="bi bi-search text-base"></i>
+                    </button>
 
-                    <!-- Wishlist -->
-                    <a href="{% url 'store:wishlist_detail' %}" class="relative p-2 text-zinc-400 hover:text-white transition-colors" title="Saved Collection">
+                    <!-- Wishlist (Desktop) -->
+                    <a href="{% url 'store:wishlist_detail' %}" class="hidden sm:flex relative p-2 text-zinc-400 hover:text-white transition-colors" title="Saved Collection">
                         <i class="bi bi-heart text-base"></i>
                         {% if user.is_authenticated and user.wishlist.count > 0 %}
-                            <span class="absolute 1 right-1 w-2 h-2 rounded-full bg-luxury-gold"></span>
+                            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-luxury-gold"></span>
                         {% endif %}
                     </a>
 
                     <!-- Shopping Bag -->
-                    <a href="{% url 'store:cart_detail' %}" class="relative p-2 text-zinc-400 hover:text-white transition-colors" title="Shopping Bag">
+                    <a href="{% url 'store:cart_detail' %}" class="relative p-2 text-zinc-400 hover:text-white transition-colors flex items-center gap-1" title="Shopping Bag">
                         <i class="bi bi-bag text-base"></i>
                         {% with total_items=cart|length %}
                             {% if total_items > 0 %}
-                                <span class="absolute 1 right-1 w-4 h-4 rounded-full bg-luxury-gold text-black text-[9px] font-black flex items-center justify-center">
+                                <span class="bg-luxury-gold text-black text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center -ml-1">
                                     {{ total_items }}
                                 </span>
                             {% endif %}
                         {% endwith %}
                     </a>
 
-                    <!-- User Account Dropdown -->
-                    <div class="dropdown dropdown-end">
-                        <label tabindex="0" class="cursor-pointer p-2 text-zinc-400 hover:text-white transition-colors flex items-center gap-1.5">
-                            <i class="bi bi-person text-lg"></i>
-                        </label>
-                        <ul tabindex="0" class="dropdown-content z-50 menu p-2.5 shadow-2xl bg-zinc-950 border border-zinc-800 rounded-2xl w-56 mt-3 text-xs divide-y divide-zinc-900">
-                            {% if user.is_authenticated %}
-                                <li class="px-3 py-2 text-zinc-500 font-mono text-[10px] uppercase tracking-wider">
-                                    CLIENT: <strong class="text-luxury-gold font-bold">{{ user.username }}</strong>
-                                </li>
-                                <li><a href="{% url 'accounts:profile' %}" class="py-2.5 text-zinc-300 hover:text-white"><i class="bi bi-box-seam text-luxury-gold"></i> Order History & Tracking</a></li>
-                                <li><a href="{% url 'store:wishlist_detail' %}" class="py-2.5 text-zinc-300 hover:text-white"><i class="bi bi-heart text-luxury-gold"></i> Saved Pieces</a></li>
-                                {% if user.is_staff %}
-                                    <li><a href="{% url 'store:admin_analytics' %}" class="py-2.5 text-zinc-300 hover:text-white"><i class="bi bi-graph-up-arrow text-emerald-400"></i> Executive Analytics</a></li>
-                                {% endif %}
-                                <li><a href="{% url 'accounts:logout' %}" class="py-2.5 text-rose-400 hover:text-rose-300"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
-                            {% else %}
-                                <li><a href="{% url 'accounts:login' %}" class="py-2.5 text-zinc-300 hover:text-white font-bold"><i class="bi bi-box-arrow-in-right text-luxury-gold"></i> Member Sign In</a></li>
-                                <li><a href="{% url 'accounts:register' %}" class="py-2.5 text-zinc-300 hover:text-white font-bold"><i class="bi bi-person-plus text-luxury-gold"></i> Create Atelier Account</a></li>
-                            {% endif %}
-                        </ul>
+                    <!-- Account / Sign In CTA -->
+                    <div class="hidden sm:block">
+                        {% if user.is_authenticated %}
+                            <div class="dropdown dropdown-end">
+                                <label tabindex="0" class="cursor-pointer py-1.5 px-3.5 rounded-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-xs font-medium text-white flex items-center gap-2 transition-all">
+                                    <i class="bi bi-person-check text-luxury-gold"></i>
+                                    <span class="truncate max-w-[100px]">{{ user.first_name|default:user.username }}</span>
+                                    <i class="bi bi-chevron-down text-[10px] text-zinc-500"></i>
+                                </label>
+                                <ul tabindex="0" class="dropdown-content z-50 menu p-2.5 shadow-2xl bg-zinc-950 border border-zinc-800 rounded-2xl w-56 mt-2 text-xs divide-y divide-zinc-900">
+                                    <li class="px-3 py-1.5 text-zinc-500 font-mono text-[10px] uppercase">
+                                        Signed In: <strong class="text-luxury-gold">{{ user.username }}</strong>
+                                    </li>
+                                    <li><a href="{% url 'accounts:profile' %}" class="py-2.5 text-zinc-300 hover:text-white"><i class="bi bi-box-seam text-luxury-gold"></i> My Orders & Tracking</a></li>
+                                    <li><a href="{% url 'store:wishlist_detail' %}" class="py-2.5 text-zinc-300 hover:text-white"><i class="bi bi-heart text-luxury-gold"></i> Saved Pieces</a></li>
+                                    {% if user.is_staff %}
+                                        <li><a href="{% url 'store:admin_analytics' %}" class="py-2.5 text-zinc-300 hover:text-white"><i class="bi bi-graph-up-arrow text-emerald-400"></i> Executive Analytics</a></li>
+                                    {% endif %}
+                                    <li><a href="{% url 'accounts:logout' %}" class="py-2.5 text-rose-400 hover:text-rose-300"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
+                                </ul>
+                            </div>
+                        {% else %}
+                            <a href="{% url 'accounts:login' %}" class="py-1.5 px-4 rounded-full bg-white hover:bg-zinc-200 text-black text-xs font-semibold uppercase tracking-wider transition-all">
+                                Sign In
+                            </a>
+                        {% endif %}
                     </div>
 
                 </div>
             </div>
 
-            <!-- Mobile Search Bar -->
-            <div class="lg:hidden pb-3">
-                <form action="{% url 'store:product_list' %}" method="get" class="relative">
-                    <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search collection by title, artwork, or fit..." 
-                           class="w-full bg-zinc-900 border border-zinc-800 rounded-full py-2 pl-9 pr-4 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-luxury-gold">
-                    <i class="bi bi-search absolute left-3 top-2.5 text-zinc-500 text-xs"></i>
+            <!-- Expandable Search Bar (Slides down smoothly) -->
+            <div id="navSearchBar" class="hidden pb-4 pt-1 transition-all duration-300">
+                <form action="{% url 'store:product_list' %}" method="get" class="relative max-w-2xl mx-auto flex items-center">
+                    <input type="text" 
+                           name="q" 
+                           id="navSearchInput"
+                           value="{{ query|default:'' }}" 
+                           placeholder="Search pieces by title, fabric, or series (e.g. Anime, 240 GSM, Oversized)..." 
+                           class="w-full bg-zinc-950 border border-zinc-700 rounded-full py-2.5 pl-11 pr-10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-luxury-gold shadow-2xl">
+                    <i class="bi bi-search absolute left-4 text-zinc-400 text-xs"></i>
+                    <button type="button" onclick="toggleSearchBar()" class="absolute right-3.5 text-zinc-500 hover:text-white" title="Close Search">
+                        <i class="bi bi-x-lg text-xs"></i>
+                    </button>
                 </form>
             </div>
+
         </div>
     </header>
+
+    <!-- Slide-Out Mobile Navigation Drawer -->
+    <div id="mobileDrawerBackdrop" onclick="toggleMobileMenu()" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm transition-opacity duration-300 md:hidden"></div>
+
+    <aside id="mobileNavDrawer" class="fixed top-0 left-0 bottom-0 w-72 z-50 bg-zinc-950 border-r border-zinc-800 p-6 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden shadow-2xl overflow-y-auto">
+        <div class="space-y-6">
+            <!-- Drawer Header -->
+            <div class="flex items-center justify-between border-b border-zinc-900 pb-4">
+                <div>
+                    <span class="text-base font-luxury font-black text-white tracking-[0.15em] block">STYLE SPHERE</span>
+                    <span class="text-[8px] font-mono text-zinc-500 uppercase tracking-widest">ATELIER MENU</span>
+                </div>
+                <button type="button" onclick="toggleMobileMenu()" class="p-1.5 text-zinc-400 hover:text-white">
+                    <i class="bi bi-x-lg text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Drawer Search Bar -->
+            <form action="{% url 'store:product_list' %}" method="get" class="relative">
+                <input type="text" name="q" placeholder="Search collection..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-2 pl-9 pr-3 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-luxury-gold">
+                <i class="bi bi-search absolute left-3 top-2.5 text-zinc-500 text-xs"></i>
+            </form>
+
+            <!-- Primary Navigation Links -->
+            <div class="space-y-1">
+                <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block px-3 mb-1">Navigation</span>
+                <a href="{% url 'store:product_list' %}" onclick="toggleMobileMenu()" class="flex items-center justify-between px-3 py-2.5 text-xs font-semibold text-zinc-300 hover:text-white rounded-xl hover:bg-zinc-900">
+                    <span>Shop All Pieces</span>
+                    <span class="text-[10px] text-zinc-500 font-mono">→</span>
+                </a>
+                <a href="{% url 'store:wishlist_detail' %}" onclick="toggleMobileMenu()" class="flex items-center justify-between px-3 py-2.5 text-xs font-semibold text-zinc-300 hover:text-white rounded-xl hover:bg-zinc-900">
+                    <span>Saved Pieces</span>
+                    <span class="text-[10px] text-luxury-gold font-mono">{% if user.is_authenticated and user.wishlist.count > 0 %}{{ user.wishlist.count }}{% else %}0{% endif %}</span>
+                </a>
+                <a href="{% if user.is_authenticated %}{% url 'accounts:profile' %}{% else %}{% url 'accounts:login' %}{% endif %}" onclick="toggleMobileMenu()" class="flex items-center justify-between px-3 py-2.5 text-xs font-semibold text-zinc-300 hover:text-white rounded-xl hover:bg-zinc-900">
+                    <span>Track Order Status</span>
+                    <span class="text-[10px] text-zinc-500 font-mono">AWB</span>
+                </a>
+            </div>
+
+            <!-- Collections Links -->
+            <div class="space-y-1">
+                <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block px-3 mb-1">Curated Collections</span>
+                {% for c in categories %}
+                    <a href="{{ c.get_absolute_url }}" onclick="toggleMobileMenu()" class="flex items-center justify-between px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-xl hover:bg-zinc-900">
+                        <span>{{ c.name }}</span>
+                        <span class="text-[9px] text-zinc-600 font-mono">Series</span>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Drawer Footer (Account State & Concierge) -->
+        <div class="border-t border-zinc-900 pt-5 space-y-4">
+            {% if user.is_authenticated %}
+                <div class="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-1">
+                    <span class="text-[10px] font-mono text-zinc-500 uppercase block">Signed in as:</span>
+                    <span class="text-xs font-bold text-white block truncate">{{ user.username }}</span>
+                    <div class="pt-2 flex justify-between items-center text-[11px]">
+                        <a href="{% url 'accounts:profile' %}" class="text-luxury-gold font-semibold">My Orders →</a>
+                        <a href="{% url 'accounts:logout' %}" class="text-rose-400">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="{% url 'accounts:login' %}" class="py-2.5 text-center rounded-xl bg-white text-black text-xs font-bold uppercase tracking-wider">
+                        Sign In
+                    </a>
+                    <a href="{% url 'accounts:register' %}" class="py-2.5 text-center rounded-xl bg-zinc-900 border border-zinc-800 text-white text-xs font-bold uppercase tracking-wider">
+                        Sign Up
+                    </a>
+                </div>
+            {% endif %}
+
+            <a href="https://wa.me/919781855165?text=Hello%20Style%20Sphere%20Atelier,%20I%20have%20an%20inquiry" target="_blank" class="flex items-center gap-2 text-xs text-emerald-400 font-medium">
+                <i class="bi bi-whatsapp"></i> WhatsApp Concierge
+            </a>
+        </div>
+    </aside>
+
+    <script>
+        function toggleMobileMenu() {
+            const drawer = document.getElementById('mobileNavDrawer');
+            const backdrop = document.getElementById('mobileDrawerBackdrop');
+            if (drawer && backdrop) {
+                const isOpen = !drawer.classList.contains('-translate-x-full');
+                if (isOpen) {
+                    drawer.classList.add('-translate-x-full');
+                    backdrop.classList.add('hidden');
+                } else {
+                    drawer.classList.remove('-translate-x-full');
+                    backdrop.classList.remove('hidden');
+                }
+            }
+        }
+
+        function toggleSearchBar() {
+            const bar = document.getElementById('navSearchBar');
+            const input = document.getElementById('navSearchInput');
+            if (bar) {
+                bar.classList.toggle('hidden');
+                if (!bar.classList.contains('hidden') && input) {
+                    input.focus();
+                }
+            }
+        }
+    </script>
 
     <!-- Main Content Area -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
