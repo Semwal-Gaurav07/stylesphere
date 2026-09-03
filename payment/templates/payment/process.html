@@ -1,118 +1,130 @@
 {% extends "store/base.html" %}
 
-{% block title %}Choose Payment Method - Style Sphere{% endblock %}
+{% block title %}Payment Selection — Style Sphere Atelier{% endblock %}
 
 {% block content %}
-<div class="max-w-xl mx-auto py-6">
-    <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-2xl space-y-6">
+<div class="max-w-2xl mx-auto py-6">
+    <div class="luxury-card rounded-2xl p-7 sm:p-10 border border-zinc-800/80 space-y-7 bg-[#111113]">
         
         <!-- Header -->
-        <div class="text-center space-y-2">
-            <span class="badge bg-slate-900 text-brand-neon font-extrabold text-xs px-3 py-1">ORDER #{{ order.id }}</span>
-            <h1 class="text-2xl font-black text-white font-heading">CHOOSE PAYMENT METHOD</h1>
+        <div class="text-center space-y-2 border-b border-zinc-800/80 pb-6">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400">
+                <span>ORDER #{{ order.id }} • INSURED DISPATCH</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-luxury font-bold text-white tracking-wide">
+                Select Payment Method
+            </h1>
+            <p class="text-xs text-zinc-400 font-light max-w-md mx-auto">
+                Encrypted end-to-end 256-bit SSL transaction. Choose your preferred checkout method.
+            </p>
             
-            <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex justify-between items-center my-3">
-                <span class="text-xs text-slate-400 font-bold uppercase">Total Payable:</span>
-                <span class="text-2xl font-black text-brand-neon font-heading">₹{{ order.get_total_cost }}</span>
+            <div class="p-4 rounded-xl bg-zinc-950 border border-zinc-800/90 flex justify-between items-center my-2 max-w-md mx-auto">
+                <span class="text-xs text-zinc-400 uppercase tracking-wider font-mono">Total Amount Payable:</span>
+                <span class="text-2xl font-bold text-white font-sans">₹{{ order.get_total_cost }}</span>
             </div>
         </div>
 
-        <!-- 3 Payment Options -->
+        <!-- 3 Luxury Payment Methods -->
         <div class="space-y-4">
             
-            <!-- Option 1: UPI & Deep Links -->
-            <div class="collapse collapse-arrow bg-slate-900/90 border border-slate-800 rounded-2xl">
+            <!-- Option 1: Instant UPI / QR Code -->
+            <div class="collapse collapse-arrow bg-zinc-950 border border-zinc-800 rounded-xl">
                 <input type="radio" name="payment_accordion" checked="checked" /> 
-                <div class="collapse-title text-sm font-bold text-white flex items-center gap-2">
-                    <i class="bi bi-phone text-brand-neon text-lg"></i> UPI / Google Pay / PhonePe / QR Code
+                <div class="collapse-title text-xs sm:text-sm font-semibold text-white flex items-center gap-3">
+                    <i class="bi bi-qr-code text-zinc-400 text-base"></i>
+                    <span>Instant UPI & QR Code (GPay, PhonePe, Paytm, BHIM)</span>
                 </div>
-                <div class="collapse-content space-y-4 pt-2">
-                    <p class="text-xs text-slate-400">Pay directly from your phone with 1-tap:</p>
+                <div class="collapse-content space-y-4 pt-1 text-xs">
+                    <p class="text-zinc-400 font-light">Scan QR or tap your preferred UPI application to complete payment:</p>
                     
-                    <div class="grid grid-cols-2 gap-2">
-                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
-                            <i class="bi bi-google text-brand-neon"></i> Google Pay
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphereAtelier&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="p-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 text-center text-xs font-medium flex items-center justify-center gap-1.5 transition-colors">
+                            <i class="bi bi-google"></i> GPay
                         </a>
-                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
-                            <span class="text-purple-400 font-bold">PhonePe</span>
+                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphereAtelier&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="p-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 text-center text-xs font-medium flex items-center justify-center gap-1.5 transition-colors">
+                            <i class="bi bi-wallet2"></i> PhonePe
                         </a>
-                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
-                            <span class="text-cyan-400 font-bold">Paytm</span>
+                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphereAtelier&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="p-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 text-center text-xs font-medium flex items-center justify-center gap-1.5 transition-colors">
+                            <i class="bi bi-lightning-charge"></i> Paytm
                         </a>
-                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="btn btn-sm bg-slate-800 hover:bg-slate-700 text-white font-cta rounded-xl border border-slate-700">
-                            <i class="bi bi-qr-code text-brand-lime"></i> Any UPI
+                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphereAtelier&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="p-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 text-center text-xs font-medium flex items-center justify-center gap-1.5 transition-colors">
+                            <i class="bi bi-phone"></i> Any App
                         </a>
                     </div>
 
-                    <!-- Dynamic QR Code -->
-                    <div class="text-center p-4 bg-white rounded-2xl max-w-xs mx-auto">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9781855165@upi&pn=StyleSphere&am={{ order.get_total_cost }}&cu=INR" alt="UPI QR" class="mx-auto rounded-lg mb-2">
-                        <span class="text-[11px] text-slate-800 font-bold block">UPI ID: 9781855165@upi</span>
+                    <!-- Dynamic UPI QR Display -->
+                    <div class="text-center p-4 bg-white rounded-xl max-w-[200px] mx-auto border border-zinc-200">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9781855165@upi&pn=StyleSphereAtelier&am={{ order.get_total_cost }}&cu=INR" alt="UPI Payment QR" class="w-full h-auto mx-auto rounded">
+                        <span class="text-[10px] text-zinc-800 font-mono font-bold block mt-2">VPA: 9781855165@upi</span>
                     </div>
 
                     <form method="post" action="{% url 'payment:process' %}">
                         {% csrf_token %}
                         <input type="hidden" name="payment_type" value="upi">
-                        <input type="hidden" name="upi_id" value="Google Pay / UPI App">
-                        <button type="submit" class="w-full btn bg-emerald-500 hover:bg-emerald-400 text-black font-cta text-sm py-2.5 rounded-full border-none">
-                            ✅ I HAVE COMPLETED UPI PAYMENT
+                        <input type="hidden" name="upi_id" value="UPI / QR App Payment">
+                        <button type="submit" class="w-full py-3 rounded-xl bg-white hover:bg-zinc-200 text-black font-semibold text-xs uppercase tracking-wider transition-colors mt-2">
+                            ✓ I Have Transferred via UPI
                         </button>
                     </form>
                 </div>
             </div>
 
             <!-- Option 2: Credit / Debit Card -->
-            <div class="collapse collapse-arrow bg-slate-900/90 border border-slate-800 rounded-2xl">
+            <div class="collapse collapse-arrow bg-zinc-950 border border-zinc-800 rounded-xl">
                 <input type="radio" name="payment_accordion" /> 
-                <div class="collapse-title text-sm font-bold text-white flex items-center gap-2">
-                    <i class="bi bi-credit-card-2-front text-brand-pink text-lg"></i> Credit / Debit Card (256-bit SSL)
+                <div class="collapse-title text-xs sm:text-sm font-semibold text-white flex items-center gap-3">
+                    <i class="bi bi-credit-card text-zinc-400 text-base"></i>
+                    <span>Credit / Debit Card (Visa, Mastercard, RuPay, Amex)</span>
                 </div>
-                <div class="collapse-content pt-2">
+                <div class="collapse-content pt-2 text-xs space-y-3">
                     <form method="post" action="{% url 'payment:process' %}" class="space-y-3">
                         {% csrf_token %}
                         <input type="hidden" name="payment_type" value="card">
 
                         <div>
-                            <label class="text-[11px] font-bold text-slate-400 block mb-1">Name on Card</label>
-                            <input type="text" name="card_name" required placeholder="Cardholder Name" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white">
+                            <label class="text-[10px] font-mono text-zinc-400 uppercase block mb-1">Cardholder Name</label>
+                            <input type="text" name="card_name" required placeholder="Full Name as shown on card" class="w-full px-3.5 py-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-500">
                         </div>
 
                         <div>
-                            <label class="text-[11px] font-bold text-slate-400 block mb-1">Card Number</label>
-                            <input type="text" name="card_number" id="cardNumInput" required placeholder="1234 5678 9012 3456" maxlength="19" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white">
+                            <label class="text-[10px] font-mono text-zinc-400 uppercase block mb-1">Card Number</label>
+                            <input type="text" name="card_number" id="cardNumInput" required placeholder="4532 0123 4567 8910" maxlength="19" class="w-full px-3.5 py-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder-zinc-600 font-mono focus:outline-none focus:border-zinc-500">
                         </div>
 
-                        <div class="grid grid-cols-2 gap-2">
+                        <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="text-[11px] font-bold text-slate-400 block mb-1">Expiry</label>
-                                <input type="text" name="card_expiry" id="expiryInput" required placeholder="MM/YY" maxlength="5" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white">
+                                <label class="text-[10px] font-mono text-zinc-400 uppercase block mb-1">Expiry Date</label>
+                                <input type="text" name="card_expiry" id="expiryInput" required placeholder="MM/YY" maxlength="5" class="w-full px-3.5 py-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder-zinc-600 font-mono focus:outline-none focus:border-zinc-500">
                             </div>
                             <div>
-                                <label class="text-[11px] font-bold text-slate-400 block mb-1">CVV</label>
-                                <input type="password" name="card_cvv" required placeholder="123" maxlength="4" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white">
+                                <label class="text-[10px] font-mono text-zinc-400 uppercase block mb-1">CVV / CVC</label>
+                                <input type="password" name="card_cvv" required placeholder="•••" maxlength="4" class="w-full px-3.5 py-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder-zinc-600 font-mono focus:outline-none focus:border-zinc-500">
                             </div>
                         </div>
 
-                        <button type="submit" class="w-full btn bg-brand-neon hover:bg-cyan-300 text-black font-cta text-sm py-2.5 rounded-full border-none mt-2">
-                            🔒 PAY ₹{{ order.get_total_cost }} SECURELY
+                        <button type="submit" class="w-full py-3 rounded-xl bg-white hover:bg-zinc-200 text-black font-semibold text-xs uppercase tracking-wider transition-colors mt-2">
+                            Pay ₹{{ order.get_total_cost }} via Secure Card
                         </button>
                     </form>
                 </div>
             </div>
 
-            <!-- Option 3: Cash on Delivery -->
-            <div class="collapse collapse-arrow bg-slate-900/90 border border-slate-800 rounded-2xl">
+            <!-- Option 3: Cash on Delivery (COD) -->
+            <div class="collapse collapse-arrow bg-zinc-950 border border-zinc-800 rounded-xl">
                 <input type="radio" name="payment_accordion" /> 
-                <div class="collapse-title text-sm font-bold text-white flex items-center gap-2">
-                    <i class="bi bi-cash-coin text-amber-400 text-lg"></i> Cash on Delivery (COD)
+                <div class="collapse-title text-xs sm:text-sm font-semibold text-white flex items-center gap-3">
+                    <i class="bi bi-cash-stack text-zinc-400 text-base"></i>
+                    <span>Cash on Delivery (Doorstep COD Available)</span>
                 </div>
-                <div class="collapse-content pt-2 text-center space-y-3">
-                    <p class="text-xs text-slate-400">Pay in cash to the courier when your order arrives at your doorstep.</p>
+                <div class="collapse-content pt-2 text-xs space-y-3">
+                    <p class="text-zinc-400 font-light leading-relaxed">
+                        Pay cash directly to the courier partner upon receipt of your tamper-evident atelier package.
+                    </p>
                     <form method="post" action="{% url 'payment:process' %}">
                         {% csrf_token %}
                         <input type="hidden" name="payment_type" value="cod">
-                        <button type="submit" class="w-full btn bg-amber-400 hover:bg-amber-300 text-black font-cta text-sm py-2.5 rounded-full border-none">
-                            💵 CONFIRM CASH ON DELIVERY
+                        <button type="submit" class="w-full py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white font-semibold text-xs uppercase tracking-wider transition-colors">
+                            Confirm Order with Cash on Delivery (COD)
                         </button>
                     </form>
                 </div>
@@ -120,8 +132,11 @@
 
         </div>
 
-        <div class="text-center pt-2">
-            <a href="{% url 'payment:canceled' %}" class="text-xs text-rose-400 hover:underline">Cancel & Return to Bag</a>
+        <!-- Cancellation Link -->
+        <div class="text-center pt-2 border-t border-zinc-800/80">
+            <a href="{% url 'payment:canceled' %}" class="text-xs text-zinc-500 hover:text-zinc-300 transition-colors uppercase font-mono tracking-wider">
+                ← Cancel & Return to Shopping Bag
+            </a>
         </div>
 
     </div>

@@ -68,7 +68,7 @@
                         </div>
 
                         <!-- Remove Button -->
-                        <form action="{% url 'store:cart_remove' item.product.id %}" method="post">
+                        <form action="{% url 'store:cart_remove' item.item_key|default:item.product.id %}" method="post">
                             {% csrf_token %}
                             <input type="hidden" name="size" value="{{ item.size }}">
                             <button type="submit" class="p-2 rounded-lg text-zinc-500 hover:text-rose-400 transition-colors" title="Remove Piece">

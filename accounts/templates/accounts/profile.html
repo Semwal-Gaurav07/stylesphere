@@ -1,158 +1,178 @@
 {% extends "store/base.html" %}
 
-{% block title %}My Profile & Order History - Style Sphere{% endblock %}
+{% block title %}Client Atelier Account — Style Sphere{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto py-4">
-    <div class="flex items-center justify-between mb-6">
+<div class="max-w-6xl mx-auto py-6">
+    
+    <!-- Top Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-800/80 pb-5 mb-8 gap-4">
         <div>
-            <span class="text-xs font-cta font-bold text-brand-neon uppercase tracking-wider">VIP DASHBOARD</span>
-            <h1 class="text-2xl sm:text-3xl font-black text-white font-heading">Account & Orders</h1>
+            <span class="text-[9px] font-mono tracking-[0.25em] text-zinc-500 uppercase block">CLIENT DASHBOARD</span>
+            <h1 class="text-2xl sm:text-3xl font-luxury font-bold text-white tracking-wide mt-1">
+                Account & Order History
+            </h1>
         </div>
-        <div class="flex gap-2">
+        <div class="flex items-center gap-3 flex-wrap">
             {% if user.is_staff %}
-                <a href="{% url 'store:admin_analytics' %}" class="btn btn-sm bg-brand-neon text-black font-cta rounded-full">
-                    📊 Analytics Dashboard
+                <a href="{% url 'store:admin_analytics' %}" class="px-4 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-semibold text-zinc-300 uppercase tracking-wider transition-colors flex items-center gap-1.5">
+                    <i class="bi bi-graph-up-arrow text-emerald-400"></i> Executive Analytics
                 </a>
             {% endif %}
-            <a href="{% url 'accounts:logout' %}" class="btn btn-sm btn-outline border-rose-800 text-rose-400 hover:bg-rose-950/60 rounded-full">
-                <i class="bi bi-box-arrow-right"></i> Logout
+            <a href="{% url 'accounts:logout' %}" class="px-4 py-2 rounded-lg bg-zinc-950 hover:bg-rose-950/40 border border-zinc-800 text-xs font-semibold text-rose-400 uppercase tracking-wider transition-colors flex items-center gap-1.5">
+                <i class="bi bi-box-arrow-right"></i> Sign Out
             </a>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        <!-- Left: Profile Details & Shipping Address Form -->
-        <div class="lg:col-span-4">
-            <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-sm space-y-4">
-                <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
-                    <div class="w-12 h-12 rounded-2xl bg-brand-neon/10 text-brand-neon flex items-center justify-center text-2xl">
-                        <i class="bi bi-person-circle"></i>
+        <!-- Left: Client Profile & Shipping Address Editor -->
+        <div class="lg:col-span-4 space-y-6">
+            <div class="luxury-card rounded-2xl p-6 sm:p-7 border border-zinc-800/80 space-y-5 bg-[#111113]">
+                <div class="flex items-center gap-3.5 border-b border-zinc-800/80 pb-4">
+                    <div class="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 flex items-center justify-center text-xl flex-shrink-0">
+                        <i class="bi bi-person"></i>
                     </div>
-                    <div>
-                        <h3 class="font-heading font-bold text-white text-base">{{ user.username }}</h3>
-                        <span class="text-xs text-slate-400">{{ user.email }}</span>
+                    <div class="min-w-0">
+                        <h3 class="font-semibold text-white text-sm truncate">{{ user.username }}</h3>
+                        <span class="text-xs text-zinc-500 truncate block font-mono">{{ user.email|default:"No email set" }}</span>
                     </div>
                 </div>
 
-                <h4 class="text-xs font-bold text-slate-400 font-cta uppercase tracking-wider">Saved Shipping Details</h4>
+                <div class="space-y-1">
+                    <span class="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block">Saved Shipping Details</span>
+                    <p class="text-[11px] text-zinc-500 font-light">Default dispatch destination for 1-click orders.</p>
+                </div>
 
-                <form method="post" class="space-y-3">
+                <form method="post" class="space-y-3.5">
                     {% csrf_token %}
-                    <div class="grid grid-cols-2 gap-2">
+                    <div class="grid grid-cols-2 gap-2.5">
                         <div>
-                            <label class="text-[11px] font-bold text-slate-400 block mb-1">First Name</label>
+                            <label class="text-[10px] font-mono uppercase text-zinc-400 block mb-1">First Name</label>
                             {{ u_form.first_name }}
                         </div>
                         <div>
-                            <label class="text-[11px] font-bold text-slate-400 block mb-1">Last Name</label>
+                            <label class="text-[10px] font-mono uppercase text-zinc-400 block mb-1">Last Name</label>
                             {{ u_form.last_name }}
                         </div>
                     </div>
 
                     <div>
-                        <label class="text-[11px] font-bold text-slate-400 block mb-1">Email</label>
+                        <label class="text-[10px] font-mono uppercase text-zinc-400 block mb-1">Email</label>
                         {{ u_form.email }}
                     </div>
 
                     <div>
-                        <label class="text-[11px] font-bold text-slate-400 block mb-1">Phone Number</label>
+                        <label class="text-[10px] font-mono uppercase text-zinc-400 block mb-1">Phone Number</label>
                         {{ p_form.phone_number }}
                     </div>
 
                     <div>
-                        <label class="text-[11px] font-bold text-slate-400 block mb-1">Shipping Street Address</label>
+                        <label class="text-[10px] font-mono uppercase text-zinc-400 block mb-1">Shipping Residence / Address</label>
                         {{ p_form.address }}
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2">
+                    <div class="grid grid-cols-2 gap-2.5">
                         <div>
-                            <label class="text-[11px] font-bold text-slate-400 block mb-1">City</label>
+                            <label class="text-[10px] font-mono uppercase text-zinc-400 block mb-1">City / Town</label>
                             {{ p_form.city }}
                         </div>
                         <div>
-                            <label class="text-[11px] font-bold text-slate-400 block mb-1">Pincode</label>
+                            <label class="text-[10px] font-mono uppercase text-zinc-400 block mb-1">Postal Code (PIN)</label>
                             {{ p_form.postal_code }}
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full py-2.5 bg-brand-neon hover:bg-cyan-300 text-black font-cta font-bold text-xs rounded-xl shadow transition-all mt-2">
-                        SAVE PROFILE DETAILS
+                    <button type="submit" class="w-full py-3 bg-white hover:bg-zinc-200 text-black font-semibold text-xs uppercase tracking-wider rounded-xl transition-colors mt-2">
+                        Update Shipping Profile
                     </button>
                 </form>
             </div>
         </div>
 
         <!-- Right: Order History & Tracking -->
-        <div class="lg:col-span-8 space-y-4">
-            <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-sm">
-                <h3 class="text-lg font-black text-white font-heading mb-4">Order History & Live Tracking</h3>
+        <div class="lg:col-span-8 space-y-6">
+            <div class="luxury-card rounded-2xl p-6 sm:p-7 border border-zinc-800/80 bg-[#111113]">
+                <div class="flex items-center justify-between border-b border-zinc-800/80 pb-4 mb-6">
+                    <div>
+                        <h3 class="text-base font-luxury font-bold text-white tracking-wide">Archived Orders & Transit</h3>
+                        <p class="text-xs text-zinc-500 font-light mt-0.5">Real-time status of your bespoke garment orders.</p>
+                    </div>
+                    <span class="text-xs text-zinc-400 font-mono">
+                        Total Orders: {{ orders.count }}
+                    </span>
+                </div>
 
                 {% if orders %}
-                    <div class="space-y-4">
+                    <div class="space-y-5">
                         {% for order in orders %}
-                            <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
-                                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                            <div class="p-5 sm:p-6 rounded-xl bg-zinc-950 border border-zinc-800/80 space-y-4">
+                                
+                                <!-- Order Top Header -->
+                                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-900 pb-3">
                                     <div>
-                                        <span class="text-xs font-black text-brand-neon">ORDER #{{ order.id }}</span>
-                                        <span class="text-xs text-slate-400 ml-2">({{ order.created|date:"M d, Y • h:i A" }})</span>
+                                        <span class="text-xs font-mono font-bold text-white">ORDER #{{ order.id }}</span>
+                                        <span class="text-[11px] text-zinc-500 ml-2 font-mono">Placed on {{ order.created|date:"M d, Y" }}</span>
                                         {% if order.awb_code %}
-                                            <span class="badge bg-slate-800 text-slate-300 text-[10px] ml-2">AWB: {{ order.awb_code }}</span>
+                                            <span class="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-400 ml-2">AWB: {{ order.awb_code }}</span>
                                         {% endif %}
                                     </div>
                                     <div class="flex items-center gap-3">
-                                        <span class="font-heading font-black text-lg text-emerald-400">₹{{ order.get_total_cost }}</span>
-                                        <a href="{% url 'store:order_invoice' order.id %}" target="_blank" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 rounded-lg">
-                                            📄 Invoice
+                                        <span class="font-sans font-bold text-base text-white">₹{{ order.get_total_cost }}</span>
+                                        <a href="{% url 'store:order_invoice' order.id %}" target="_blank" class="px-3 py-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[11px] font-medium text-zinc-300 rounded-lg transition-colors flex items-center gap-1.5">
+                                            <i class="bi bi-file-earmark-text"></i> Invoice
                                         </a>
                                     </div>
                                 </div>
 
-                                <div class="text-xs text-slate-300 flex flex-wrap items-center gap-3">
-                                    <span><strong>Payment:</strong> {{ order.payment_method }}</span>
+                                <!-- Payment & Status Summary -->
+                                <div class="flex flex-wrap items-center gap-3 text-xs text-zinc-400">
+                                    <span>Method: <strong class="text-zinc-200">{{ order.payment_method }}</strong></span>
+                                    <span>•</span>
                                     {% if order.paid %}
-                                        <span class="badge bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-bold">PAID</span>
+                                        <span class="px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-800/80 text-[10px] font-mono font-bold">PAID</span>
                                     {% else %}
-                                        <span class="badge bg-amber-950 text-amber-400 border border-amber-800 text-[10px] font-bold">CASH ON DELIVERY</span>
+                                        <span class="px-2 py-0.5 rounded bg-zinc-900 text-zinc-300 border border-zinc-800 text-[10px] font-mono">CASH ON DELIVERY</span>
                                     {% endif %}
                                     {% if order.discount %}
-                                        <span class="badge bg-indigo-950 text-indigo-400 border border-indigo-800 text-[10px] font-bold">{{ order.discount }}% OFF APPLIED</span>
+                                        <span class="px-2 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-zinc-800 text-[10px] font-mono">{{ order.discount }}% PRIVILEGE APPLIED</span>
                                     {% endif %}
                                 </div>
 
-                                <!-- Step-by-Step Order Timeline Tracker -->
-                                <div class="pt-2">
-                                    <span class="text-[11px] font-bold text-slate-400 font-cta uppercase block mb-2">Delivery Status:</span>
-                                    <div class="grid grid-cols-4 text-center relative py-2">
-                                        <div>
-                                            <i class="bi bi-bag-check-fill text-lg {% if order.status in 'Placed,Processing,Shipped,Delivered' %}text-brand-neon{% else %}text-slate-600{% endif %}"></i>
-                                            <div class="text-[11px] font-bold mt-1 text-white">Placed</div>
+                                <!-- Step-by-Step 4-Stage Delivery Tracker -->
+                                <div class="pt-2 border-t border-zinc-900">
+                                    <span class="text-[10px] font-mono uppercase tracking-wider text-zinc-500 block mb-2.5">Transit Milestone:</span>
+                                    <div class="grid grid-cols-4 gap-2 text-center text-[10px] font-mono">
+                                        <div class="p-2 rounded-lg bg-zinc-900 text-white font-semibold border border-zinc-700">
+                                            1. Order Placed
                                         </div>
-                                        <div>
-                                            <i class="bi bi-gear-fill text-lg {% if order.status in 'Processing,Shipped,Delivered' %}text-brand-neon{% else %}text-slate-600{% endif %}"></i>
-                                            <div class="text-[11px] font-bold mt-1 text-white">Processing</div>
+                                        <div class="p-2 rounded-lg bg-zinc-900 text-white font-semibold border border-zinc-700">
+                                            2. Atelier QC
                                         </div>
-                                        <div>
-                                            <i class="bi bi-truck text-lg {% if order.status in 'Shipped,Delivered' %}text-brand-neon{% else %}text-slate-600{% endif %}"></i>
-                                            <div class="text-[11px] font-bold mt-1 text-white">Shipped</div>
+                                        <div class="p-2 rounded-lg bg-zinc-950 text-zinc-500 border border-zinc-900">
+                                            3. Air Transit
                                         </div>
-                                        <div>
-                                            <i class="bi bi-house-door-fill text-lg {% if order.status == 'Delivered' %}text-emerald-400{% else %}text-slate-600{% endif %}"></i>
-                                            <div class="text-[11px] font-bold mt-1 text-white">Delivered</div>
+                                        <div class="p-2 rounded-lg bg-zinc-950 text-zinc-500 border border-zinc-900">
+                                            4. Delivered
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         {% endfor %}
                     </div>
                 {% else %}
-                    <div class="text-center py-12 text-slate-500">
-                        <i class="bi bi-box-seam text-4xl block mb-2 text-slate-600"></i>
-                        <p class="text-sm font-bold text-white">You haven't placed any orders yet.</p>
-                        <a href="{% url 'store:product_list' %}" class="btn btn-sm bg-brand-neon text-black font-cta rounded-full mt-3">START SHOPPING</a>
+                    <div class="text-center py-16 text-zinc-500 space-y-3">
+                        <i class="bi bi-box-seam text-3xl block text-zinc-600"></i>
+                        <h4 class="text-sm font-luxury font-bold text-white uppercase tracking-wider">No Orders Placed Yet</h4>
+                        <p class="text-xs text-zinc-400 font-light">Explore our curated collections of 240+ GSM French Terry printed editions.</p>
+                        <a href="{% url 'store:product_list' %}" class="inline-block mt-2 px-6 py-2.5 rounded-full bg-white text-black font-semibold text-xs uppercase tracking-wider transition-colors">
+                            Explore Catalog →
+                        </a>
                     </div>
                 {% endif %}
+
             </div>
         </div>
 
@@ -161,7 +181,7 @@
 
 <script>
     document.querySelectorAll('input:not([type="submit"]):not([type="hidden"])').forEach(input => {
-        input.className = "w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-brand-neon transition-all";
+        input.className = "w-full px-3.5 py-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500 transition-colors";
     });
 </script>
 {% endblock %}

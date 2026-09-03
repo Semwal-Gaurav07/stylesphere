@@ -33,6 +33,15 @@ class Cart:
         if item_key in self.cart:
             del self.cart[item_key]
             self.save()
+        else:
+            # Fallback: match by product id prefix (e.g. '1' matches '1_L' or '1_M')
+            removed = False
+            for k in list(self.cart.keys()):
+                if k == item_key or k.startswith(f"{item_key}_"):
+                    del self.cart[k]
+                    removed = True
+            if removed:
+                self.save()
 
     def __iter__(self):
         cart = self.cart.copy()

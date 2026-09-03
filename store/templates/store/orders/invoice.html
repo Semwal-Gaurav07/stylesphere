@@ -2,111 +2,165 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Tax Invoice - Order #{{ order.id }} - Style Sphere</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Tax Invoice — Order #{{ order.id }} — Style Sphere Atelier</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; padding: 30px; }
-        .invoice-card { background: #fff; max-width: 800px; margin: 0 auto; border-radius: 12px; padding: 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            background: #f4f4f5;
+            color: #09090b;
+            padding: 40px 20px;
+            margin: 0;
+        }
+        .invoice-card {
+            background: #ffffff;
+            max-width: 820px;
+            margin: 0 auto;
+            border-radius: 12px;
+            padding: 48px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid #e4e4e7;
+        }
+        .font-luxury { font-family: 'Cinzel', serif; letter-spacing: 0.08em; }
+        .font-mono { font-family: monospace; }
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+        }
+        .table-custom th {
+            text-align: left;
+            padding: 12px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: #f4f4f5;
+            border-bottom: 2px solid #18181b;
+        }
+        .table-custom td {
+            padding: 14px 12px;
+            font-size: 12px;
+            border-bottom: 1px solid #e4e4e7;
+        }
         @media print {
             body { background: #fff; padding: 0; }
-            .invoice-card { box-shadow: none; padding: 0; }
-            .no-print { display: none; }
+            .invoice-card { box-shadow: none; border: none; padding: 0; }
+            .no-print { display: none !important; }
         }
     </style>
 </head>
 <body>
     <div class="invoice-card">
-        <!-- Action Buttons -->
-        <div class="d-flex justify-content-between align-items-center mb-4 no-print">
-            <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary btn-sm">← Back to Profile</a>
-            <button onclick="window.print()" class="btn btn-primary btn-sm">🖨️ Print / Save as PDF</button>
+        
+        <!-- Header Actions -->
+        <div class="no-print" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid #e4e4e7;">
+            <a href="javascript:history.back()" style="color: #71717a; text-decoration: none; font-size: 12px; font-weight: 600;">← Return</a>
+            <button onclick="window.print()" style="background: #09090b; color: #ffffff; border: none; padding: 8px 18px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                Print / Save PDF
+            </button>
         </div>
 
-        <!-- Header -->
-        <div class="d-flex justify-content-between align-items-start border-bottom pb-4 mb-4">
+        <!-- Atelier Brand Header -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 24px; border-bottom: 1px solid #18181b;">
             <div>
-                <h3 class="fw-bold mb-1">🛒 Style Sphere</h3>
-                <p class="text-muted small mb-0">Official Streetwear & Merch<br>Sonipat, Haryana, India<br>GSTIN: 06AAAAA0000A1Z5</p>
+                <h1 class="font-luxury" style="margin: 0 0 6px 0; font-size: 24px; font-weight: 700;">STYLE SPHERE</h1>
+                <div style="font-size: 10px; letter-spacing: 0.15em; color: #71717a; text-transform: uppercase; margin-bottom: 8px;">Atelier de Couture</div>
+                <div style="font-size: 11px; color: #52525b; line-height: 1.5;">
+                    Industrial Area Phase 2, Panchkula, Haryana 134113<br>
+                    GSTIN: 06AAAAA0000A1Z5 • Support: concierge@stylesphere.in
+                </div>
             </div>
-            <div class="text-end">
-                <h4 class="fw-bold text-primary mb-1">TAX INVOICE</h4>
-                <div class="small"><strong>Invoice No:</strong> SS-{{ order.id }}</div>
-                <div class="small"><strong>Date:</strong> {{ order.created|date:"d M Y, h:i A" }}</div>
+            <div style="text-align: right;">
+                <div style="font-size: 18px; font-weight: 700; color: #09090b; margin-bottom: 4px;">TAX INVOICE</div>
+                <div style="font-size: 12px; color: #52525b;" class="font-mono">Invoice No: SS-INV-{{ order.id }}</div>
+                <div style="font-size: 12px; color: #52525b;">Date: {{ order.created|date:"d M Y" }}</div>
                 {% if order.awb_code %}
-                    <div class="small"><strong>AWB No:</strong> {{ order.awb_code }}</div>
+                    <div style="font-size: 12px; color: #09090b; font-weight: 600;" class="font-mono">AWB: {{ order.awb_code }}</div>
                 {% endif %}
             </div>
         </div>
 
-        <!-- Billing Info -->
-        <div class="row mb-4">
-            <div class="col-6">
-                <h6 class="fw-bold text-uppercase small text-muted">Billed & Shipped To:</h6>
-                <div class="fw-bold">{{ order.first_name }} {{ order.last_name }}</div>
-                <div class="small text-muted">{{ order.address }}<br>{{ order.city }} - {{ order.postal_code }}<br>Email: {{ order.email }}</div>
+        <!-- Bill To & Dispatch Details -->
+        <div style="display: flex; justify-content: space-between; margin-top: 24px; font-size: 12px;">
+            <div>
+                <strong style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #71717a; display: block; margin-bottom: 6px;">Billed & Shipped To:</strong>
+                <div style="font-weight: 600; color: #09090b;">{{ order.first_name }} {{ order.last_name }}</div>
+                <div style="color: #52525b; margin-top: 3px;">{{ order.address }}</div>
+                <div style="color: #52525b;">{{ order.city }}, PIN: {{ order.postal_code }}</div>
+                <div style="color: #52525b; margin-top: 3px;">Email: {{ order.email }}</div>
             </div>
-            <div class="col-6 text-end">
-                <h6 class="fw-bold text-uppercase small text-muted">Payment & Shipping:</h6>
-                <div class="small"><strong>Payment Mode:</strong> {{ order.payment_method }}</div>
-                <div class="small"><strong>Payment Status:</strong> {% if order.paid %}Paid{% else %}Pending COD Collection{% endif %}</div>
-                <div class="small"><strong>Order Status:</strong> {{ order.status }}</div>
+            <div style="text-align: right;">
+                <strong style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #71717a; display: block; margin-bottom: 6px;">Payment Information:</strong>
+                <div style="font-weight: 600; color: #09090b;">{{ order.payment_method }}</div>
+                <div style="color: #52525b; margin-top: 3px;">Status: {% if order.paid %}<span style="color: #16a34a; font-weight: 600;">PAID (Verified)</span>{% else %}CASH ON DELIVERY (Pending Collection){% endif %}</div>
             </div>
         </div>
 
-        <!-- Items Table -->
-        <table class="table table-bordered align-middle mb-4">
-            <thead class="table-light">
+        <!-- Garments Itemized Table -->
+        <table class="table-custom">
+            <thead>
                 <tr>
-                    <th>Item Description</th>
-                    <th class="text-center">Size</th>
-                    <th class="text-center">Qty</th>
-                    <th class="text-end">Unit Price</th>
-                    <th class="text-end">Total</th>
+                    <th>Piece Description</th>
+                    <th style="text-align: center;">Size</th>
+                    <th style="text-align: center;">Qty</th>
+                    <th style="text-align: right;">Rate</th>
+                    <th style="text-align: right;">Amount</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in order.items.all %}
                     <tr>
                         <td>
-                            <strong>{{ item.product.name }}</strong>
+                            <strong style="color: #09090b;">{{ item.product.name }}</strong>
+                            <div style="font-size: 10px; color: #71717a;">{{ item.product.gsm }} GSM Combed French Terry Cotton • {{ item.product.print_type }}</div>
                         </td>
-                        <td class="text-center">{{ item.size }}</td>
-                        <td class="text-center">{{ item.quantity }}</td>
-                        <td class="text-end">₹{{ item.price }}</td>
-                        <td class="text-end fw-bold">₹{{ item.get_cost }}</td>
+                        <td style="text-align: center;" class="font-mono"><strong>{{ item.size }}</strong></td>
+                        <td style="text-align: center;" class="font-mono">{{ item.quantity }}</td>
+                        <td style="text-align: right;" class="font-mono">₹{{ item.price }}</td>
+                        <td style="text-align: right;" class="font-mono"><strong>₹{{ item.get_cost }}</strong></td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
 
-        <!-- Totals -->
-        <div class="row justify-content-end mb-4">
-            <div class="col-6">
-                <div class="d-flex justify-content-between py-1 small">
-                    <span>Subtotal:</span>
-                    <span>₹{{ order.get_subtotal_cost }}</span>
+        <!-- Totals & Tax Breakdown -->
+        <div style="margin-top: 24px; display: flex; justify-content: flex-end;">
+            <div style="width: 280px; font-size: 12px; line-height: 2;">
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #71717a;">Subtotal:</span>
+                    <span class="font-mono">₹{{ order.get_total_cost }}</span>
                 </div>
-                {% if order.discount > 0 %}
-                    <div class="d-flex justify-content-between py-1 small text-success">
-                        <span>Discount ({{ order.discount }}% Off):</span>
-                        <span>-{{ order.discount }}%</span>
+                {% if order.discount %}
+                    <div style="display: flex; justify-content: space-between; color: #d97706;">
+                        <span>Privilege Discount:</span>
+                        <span class="font-mono">-{{ order.discount }}%</span>
                     </div>
                 {% endif %}
-                <div class="d-flex justify-content-between py-1 small">
-                    <span>Shipping Charges:</span>
-                    <span class="text-success">FREE</span>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #71717a;">Insured Transit:</span>
+                    <span style="color: #16a34a; font-weight: 600;">COMPLIMENTARY</span>
                 </div>
-                <hr class="my-2">
-                <div class="d-flex justify-content-between fs-5 fw-bold text-success">
-                    <span>Grand Total:</span>
-                    <span>₹{{ order.get_total_cost }}</span>
+                <div style="display: flex; justify-content: space-between; border-top: 2px solid #09090b; padding-top: 8px; margin-top: 6px; font-size: 15px; font-weight: 700;">
+                    <span>Total Cost:</span>
+                    <span class="font-mono">₹{{ order.get_total_cost }}</span>
                 </div>
+                <div style="font-size: 10px; color: #71717a; text-align: right;">Includes 12% Integrated GST</div>
             </div>
         </div>
 
-        <div class="border-top pt-3 text-center small text-muted">
-            Thank you for shopping with Style Sphere! For order queries, contact support at +91 9781855165.
+        <!-- Footer Sign-off -->
+        <div style="margin-top: 48px; padding-top: 24px; border-top: 1px solid #e4e4e7; font-size: 11px; color: #71717a; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                This is a computer-generated tax invoice issued by Style Sphere Atelier Inc.<br>
+                Thank you for your patronage.
+            </div>
+            <div style="text-align: right;" class="font-luxury">
+                STYLE SPHERE ATELIER
+            </div>
         </div>
+
     </div>
 </body>
 </html>
