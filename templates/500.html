@@ -1,0 +1,23 @@
+{% extends "store/base.html" %}
+
+{% block title %}Atelier Maintenance (500) — Style Sphere Atelier{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto py-20 text-center space-y-6">
+    <div class="luxury-card rounded-2xl p-10 border border-zinc-800/80 space-y-5 bg-[#111113]">
+        <span class="text-5xl font-luxury font-bold text-zinc-600 block">500</span>
+        <div class="space-y-2">
+            <h1 class="text-xl font-luxury font-bold text-white tracking-wide">Atelier System Busy</h1>
+            <p class="text-xs text-zinc-400 font-light leading-relaxed">
+                Our server encountered a temporary technical delay. Our engineers have been alerted. Please refresh the page or return shortly.
+            </p>
+        </div>
+
+        <div class="pt-4 flex flex-col gap-3">
+            <a href="{% url 'store:product_list' %}" class="w-full py-3.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-semibold text-xs uppercase tracking-wider transition-colors">
+                Return to Homepage
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

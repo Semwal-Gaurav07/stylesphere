@@ -479,10 +479,11 @@
             <!-- Bottom Copyright & Legal -->
             <div class="pt-8 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between text-[11px] text-zinc-500 gap-4">
                 <span>&copy; {% now "Y" %} STYLE SPHERE ATELIER INC. ALL RIGHTS RESERVED.</span>
-                <div class="flex items-center gap-6">
-                    <span class="hover:text-zinc-400">PRIVACY POLICY</span>
-                    <span class="hover:text-zinc-400">TERMS OF SERVICE</span>
-                    <span class="hover:text-zinc-400">SHIPPING & EXCHANGES</span>
+                <div class="flex items-center gap-5 flex-wrap font-mono text-[10px]">
+                    <a href="{% url 'store:shipping_policy' %}" class="hover:text-zinc-300 transition-colors">SHIPPING POLICY</a>
+                    <a href="{% url 'store:returns_policy' %}" class="hover:text-zinc-300 transition-colors">30-DAY EXCHANGES</a>
+                    <a href="{% url 'store:privacy_policy' %}" class="hover:text-zinc-300 transition-colors">PRIVACY POLICY</a>
+                    <a href="{% url 'store:terms_of_service' %}" class="hover:text-zinc-300 transition-colors">TERMS OF SERVICE</a>
                 </div>
             </div>
         </div>

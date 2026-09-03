@@ -299,3 +299,15 @@ def admin_analytics(request):
         'top_selling_sizes': top_selling_sizes,
         'top_cities': top_cities,
     })
+
+def shipping_policy(request):
+    return render(request, 'store/policies/shipping.html')
+
+def returns_policy(request):
+    return render(request, 'store/policies/returns.html')
+
+def privacy_policy(request):
+    return render(request, 'store/policies/privacy.html')
+
+def terms_of_service(request):
+    return render(request, 'store/policies/terms.html')

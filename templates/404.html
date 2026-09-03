@@ -1,0 +1,26 @@
+{% extends "store/base.html" %}
+
+{% block title %}Piece Not Found (404) — Style Sphere Atelier{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto py-20 text-center space-y-6">
+    <div class="luxury-card rounded-2xl p-10 border border-zinc-800/80 space-y-5 bg-[#111113]">
+        <span class="text-5xl font-luxury font-bold text-zinc-600 block">404</span>
+        <div class="space-y-2">
+            <h1 class="text-xl font-luxury font-bold text-white tracking-wide">Archival Piece Not Found</h1>
+            <p class="text-xs text-zinc-400 font-light leading-relaxed">
+                The requested URL or silhouette cannot be located. It may have been retired to our private archives or renamed.
+            </p>
+        </div>
+
+        <div class="pt-4 flex flex-col gap-3">
+            <a href="{% url 'store:product_list' %}" class="w-full py-3.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-semibold text-xs uppercase tracking-wider transition-colors">
+                Return to Atelier Catalog
+            </a>
+            <a href="https://wa.me/919781855165" target="_blank" class="w-full py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 font-semibold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2">
+                <i class="bi bi-whatsapp"></i> Inquire with Concierge
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

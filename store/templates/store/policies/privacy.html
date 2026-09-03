@@ -1,0 +1,55 @@
+{% extends "store/base.html" %}
+
+{% block title %}Privacy Policy & Data Encryption — Style Sphere Atelier{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-8 space-y-8">
+    
+    <div class="border-b border-zinc-800/80 pb-5">
+        <span class="text-[9px] font-mono tracking-[0.25em] text-zinc-500 uppercase block">SECURITY & COMPLIANCE</span>
+        <h1 class="text-3xl font-luxury font-bold text-white tracking-wide mt-1">
+            Privacy Policy
+        </h1>
+        <p class="text-xs text-zinc-400 font-light mt-1">
+            Last Updated: September 2026 • Encrypted Architecture
+        </p>
+    </div>
+
+    <div class="luxury-card rounded-2xl p-7 sm:p-10 border border-zinc-800/80 space-y-6 text-xs text-zinc-300 leading-relaxed bg-[#111113]">
+        
+        <section class="space-y-2">
+            <h2 class="text-sm font-luxury font-bold text-white uppercase tracking-wider">1. Commitment to Privacy</h2>
+            <p>
+                Style Sphere Atelier Inc. operates with strict confidentiality. We do not sell, rent, trade, or monetize your personal information to third parties or marketing networks under any circumstances.
+            </p>
+        </section>
+
+        <section class="space-y-2">
+            <h2 class="text-sm font-luxury font-bold text-white uppercase tracking-wider">2. Information Collected</h2>
+            <p>
+                We only collect data strictly necessary to fulfill your streetwear orders and communicate order status:
+            </p>
+            <ul class="list-disc list-inside space-y-1 pl-2 text-zinc-400">
+                <li>Contact Details (Full name, email address, phone number).</li>
+                <li>Shipping Destination (Street address, city, state, and PIN code).</li>
+                <li>Account Credentials (Protected via PBKDF2 with SHA-256 cryptographic one-way hashing).</li>
+            </ul>
+        </section>
+
+        <section class="space-y-2">
+            <h2 class="text-sm font-luxury font-bold text-white uppercase tracking-wider">3. Payment Security & PCI-DSS Compliance</h2>
+            <p>
+                We do not store your complete credit/debit card numbers or UPI PINs on our servers. All financial transactions are encrypted through <strong>256-bit SSL encryption</strong> and processed directly by RBI-authorized payment aggregators (Razorpay).
+            </p>
+        </section>
+
+        <section class="space-y-2">
+            <h2 class="text-sm font-luxury font-bold text-white uppercase tracking-wider">4. User Rights & Account Erasure</h2>
+            <p>
+                You retain complete ownership of your data. You can view, update, or permanently delete your account history at any time by contacting <strong>privacy@stylesphere.in</strong>.
+            </p>
+        </section>
+
+    </div>
+</div>
+{% endblock %}
