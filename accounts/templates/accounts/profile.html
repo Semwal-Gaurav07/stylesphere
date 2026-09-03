@@ -1,6 +1,81 @@
 {% extends "store/base.html" %}
 
-{% block title %}Client Atelier Account — Style Sphere{% endblock %}
+{% block title %}Client Atelier Account — Style Sphere
+<!-- Interactive Air Waybill (AWB) Courier Tracking Modal -->
+<dialog id="awbTrackingModal" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box bg-[#111113] border border-zinc-800 rounded-2xl p-7 max-w-lg text-left space-y-5">
+        <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+            <div>
+                <span class="text-[9px] font-mono tracking-[0.2em] text-zinc-500 uppercase block">LOGISTICS SATELLITE RADAR</span>
+                <h3 class="font-luxury font-bold text-white text-base mt-0.5" id="modalAwbTitle">Shipment Tracking</h3>
+            </div>
+            <form method="dialog"><button class="btn btn-sm btn-circle btn-ghost text-zinc-400">✕</button></form>
+        </div>
+
+        <div class="p-4 rounded-xl bg-zinc-950 border border-zinc-800/80 space-y-2 text-xs">
+            <div class="flex justify-between">
+                <span class="text-zinc-500 font-mono">Air Waybill (AWB):</span>
+                <strong class="text-white font-mono" id="modalAwbNum">SS-EXP-240182</strong>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-zinc-500 font-mono">Courier Network:</span>
+                <span class="text-zinc-300 font-medium">Delhivery Air Express • Priority Priority Air</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-zinc-500 font-mono">Current Status:</span>
+                <span class="text-emerald-400 font-mono font-bold" id="modalAwbStatus">Prepped & In Transit</span>
+            </div>
+        </div>
+
+        <!-- Live Checkpoints Stepper -->
+        <div class="space-y-4 pt-1">
+            <span class="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block">Milestone Chronology:</span>
+            
+            <div class="space-y-3 relative pl-6 border-l border-zinc-800 text-xs">
+                <div class="relative">
+                    <span class="absolute -left-[31px] top-0.5 w-3 h-3 rounded-full bg-emerald-400"></span>
+                    <strong class="text-white block font-medium">Order Placed & Confirmed</strong>
+                    <span class="text-[11px] text-zinc-500">Order verification complete. Quality assurance packaging sealed.</span>
+                </div>
+                <div class="relative">
+                    <span class="absolute -left-[31px] top-0.5 w-3 h-3 rounded-full bg-emerald-400"></span>
+                    <strong class="text-white block font-medium">Atelier Quality Inspection Passed</strong>
+                    <span class="text-[11px] text-zinc-500">240+ GSM textile grammage and pigment integrity certified at Panchkula Atelier.</span>
+                </div>
+                <div class="relative">
+                    <span class="absolute -left-[31px] top-0.5 w-3 h-3 rounded-full bg-zinc-700"></span>
+                    <strong class="text-zinc-300 block font-medium">Handed to Express Air Logistics Hub</strong>
+                    <span class="text-[11px] text-zinc-500">Scheduled for priority dispatch via regional cargo connection.</span>
+                </div>
+                <div class="relative">
+                    <span class="absolute -left-[31px] top-0.5 w-3 h-3 rounded-full bg-zinc-800"></span>
+                    <strong class="text-zinc-500 block font-medium">Out for Doorstep Delivery</strong>
+                    <span class="text-[11px] text-zinc-600">Contactless verification with client upon arrival.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs">
+            <span class="text-[10px] text-zinc-500 font-light">Tamper-evident luxury packaging</span>
+            <form method="dialog">
+                <button class="px-5 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-xs text-white font-medium">
+                    Close Tracker
+                </button>
+            </form>
+        </div>
+    </div>
+</dialog>
+
+<script>
+    function openAwbTracker(awb, orderId, date, status) {
+        document.getElementById('modalAwbTitle').innerText = 'Shipment for Order #' + orderId;
+        document.getElementById('modalAwbNum').innerText = awb;
+        document.getElementById('modalAwbStatus').innerText = status + ' • On Schedule';
+        document.getElementById('awbTrackingModal').showModal();
+    }
+</script>
+
+{% endblock %}
 
 {% block content %}
 <div class="max-w-6xl mx-auto py-6">
@@ -115,7 +190,9 @@
                                         <span class="text-xs font-mono font-bold text-white">ORDER #{{ order.id }}</span>
                                         <span class="text-[11px] text-zinc-500 ml-2 font-mono">Placed on {{ order.created|date:"M d, Y" }}</span>
                                         {% if order.awb_code %}
-                                            <span class="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-400 ml-2">AWB: {{ order.awb_code }}</span>
+                                            <button type="button" onclick="openAwbTracker('{{ order.awb_code }}', '{{ order.id }}', '{{ order.created|date:"d M Y" }}', '{{ order.status }}')" class="px-2.5 py-0.5 rounded bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-[10px] font-mono text-zinc-300 ml-2 transition-colors">
+                                                <i class="bi bi-box-seam"></i> AWB: {{ order.awb_code }} (Track)
+                                            </button>
                                         {% endif %}
                                     </div>
                                     <div class="flex items-center gap-3">
@@ -184,4 +261,79 @@
         input.className = "w-full px-3.5 py-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500 transition-colors";
     });
 </script>
+
+<!-- Interactive Air Waybill (AWB) Courier Tracking Modal -->
+<dialog id="awbTrackingModal" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box bg-[#111113] border border-zinc-800 rounded-2xl p-7 max-w-lg text-left space-y-5">
+        <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+            <div>
+                <span class="text-[9px] font-mono tracking-[0.2em] text-zinc-500 uppercase block">LOGISTICS SATELLITE RADAR</span>
+                <h3 class="font-luxury font-bold text-white text-base mt-0.5" id="modalAwbTitle">Shipment Tracking</h3>
+            </div>
+            <form method="dialog"><button class="btn btn-sm btn-circle btn-ghost text-zinc-400">✕</button></form>
+        </div>
+
+        <div class="p-4 rounded-xl bg-zinc-950 border border-zinc-800/80 space-y-2 text-xs">
+            <div class="flex justify-between">
+                <span class="text-zinc-500 font-mono">Air Waybill (AWB):</span>
+                <strong class="text-white font-mono" id="modalAwbNum">SS-EXP-240182</strong>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-zinc-500 font-mono">Courier Network:</span>
+                <span class="text-zinc-300 font-medium">Delhivery Air Express • Priority Priority Air</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-zinc-500 font-mono">Current Status:</span>
+                <span class="text-emerald-400 font-mono font-bold" id="modalAwbStatus">Prepped & In Transit</span>
+            </div>
+        </div>
+
+        <!-- Live Checkpoints Stepper -->
+        <div class="space-y-4 pt-1">
+            <span class="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block">Milestone Chronology:</span>
+            
+            <div class="space-y-3 relative pl-6 border-l border-zinc-800 text-xs">
+                <div class="relative">
+                    <span class="absolute -left-[31px] top-0.5 w-3 h-3 rounded-full bg-emerald-400"></span>
+                    <strong class="text-white block font-medium">Order Placed & Confirmed</strong>
+                    <span class="text-[11px] text-zinc-500">Order verification complete. Quality assurance packaging sealed.</span>
+                </div>
+                <div class="relative">
+                    <span class="absolute -left-[31px] top-0.5 w-3 h-3 rounded-full bg-emerald-400"></span>
+                    <strong class="text-white block font-medium">Atelier Quality Inspection Passed</strong>
+                    <span class="text-[11px] text-zinc-500">240+ GSM textile grammage and pigment integrity certified at Panchkula Atelier.</span>
+                </div>
+                <div class="relative">
+                    <span class="absolute -left-[31px] top-0.5 w-3 h-3 rounded-full bg-zinc-700"></span>
+                    <strong class="text-zinc-300 block font-medium">Handed to Express Air Logistics Hub</strong>
+                    <span class="text-[11px] text-zinc-500">Scheduled for priority dispatch via regional cargo connection.</span>
+                </div>
+                <div class="relative">
+                    <span class="absolute -left-[31px] top-0.5 w-3 h-3 rounded-full bg-zinc-800"></span>
+                    <strong class="text-zinc-500 block font-medium">Out for Doorstep Delivery</strong>
+                    <span class="text-[11px] text-zinc-600">Contactless verification with client upon arrival.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs">
+            <span class="text-[10px] text-zinc-500 font-light">Tamper-evident luxury packaging</span>
+            <form method="dialog">
+                <button class="px-5 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-xs text-white font-medium">
+                    Close Tracker
+                </button>
+            </form>
+        </div>
+    </div>
+</dialog>
+
+<script>
+    function openAwbTracker(awb, orderId, date, status) {
+        document.getElementById('modalAwbTitle').innerText = 'Shipment for Order #' + orderId;
+        document.getElementById('modalAwbNum').innerText = awb;
+        document.getElementById('modalAwbStatus').innerText = status + ' • On Schedule';
+        document.getElementById('awbTrackingModal').showModal();
+    }
+</script>
+
 {% endblock %}

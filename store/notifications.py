@@ -1,30 +1,79 @@
-import urllib.parse
+from django.core.mail import send_mail
 from django.conf import settings
+from datetime import datetime, timedelta
 
-def generate_customer_whatsapp_url(order):
-    phone = getattr(settings, 'STORE_WHATSAPP_NUMBER', '919781855165')
-    items_list = "%0A".join([f"• {item.quantity}x {item.product.name} (Size: {item.size})" for item in order.items.all()])
-    message = (
-        f"🔥 *Style Sphere Order Confirmation*%0A"
-        f"Hi {order.first_name}, your order *#{order.id}* is confirmed!%0A%0A"
-        f"*Items Ordered:*%0A{items_list}%0A%0A"
-        f"💰 *Total Due:* ₹{order.get_total_cost()}%0A"
-        f"💳 *Payment Mode:* {order.payment_method}%0A"
-        f"🚚 *Tracking AWB:* {order.tracking_number or f'SS-IND-{order.id:06d}'}%0A"
-        f"📍 *Shipping To:* {order.address}, {order.city} ({order.postal_code})%0A%0A"
-        f"Need help with your order? Reply directly to this chat."
-    )
-    return f"https://wa.me/{phone}?text={message}"
+def send_order_confirmation_email(order):
+    """
+    Sends an automated, branded luxury order confirmation email to the customer.
+    Gracefully handles console backend during local development and SMTP in production.
+    """
+    if not order or not order.email:
+        return False
 
-def generate_admin_order_alert_message(order):
-    items_summary = ", ".join([f"{item.quantity}x {item.product.name} ({item.size})" for item in order.items.all()])
-    text = (
-        f"🚨 *NEW ORDER ALERT - #{order.id}*%0A"
-        f"👤 Customer: {order.first_name} {order.last_name}%0A"
-        f"📞 Phone/Email: {order.phone or order.email}%0A"
-        f"📦 Items: {items_summary}%0A"
-        f"💰 Total: ₹{order.get_total_cost()} ({order.payment_method})%0A"
-        f"📍 City: {order.city} - {order.postal_code}"
-    )
-    phone = getattr(settings, 'STORE_WHATSAPP_NUMBER', '919781855165')
-    return f"https://wa.me/{phone}?text={text}"
+    recipient = order.email
+    subject = f"Style Sphere Atelier — Order #{order.id} Confirmed (AWB: {order.awb_code})"
+
+    # Calculate estimated delivery date
+    est_delivery = (datetime.now() + timedelta(days=4)).strftime("%A, %B %d, %Y")
+
+    items_text = ""
+    for item in order.items.all():
+        items_text += f"  • {item.product.name} | Size: {item.size} | Qty: {item.quantity} | ₹{item.get_cost()}\n"
+
+    message = f"""STYLE SPHERE ATELIER DE COUTURE
+ORDER CONFIRMATION & TRANSIT RECEIPT
+------------------------------------------------------------
+Dear {order.first_name} {order.last_name},
+
+Thank you for your patronage. Your order has been confirmed and
+is currently being prepped for dispatch in tamper-evident packaging.
+
+ORDER DETAILS:
+Order Number: #{order.id}
+Date: {order.created.strftime('%d %B %Y, %I:%M %p')}
+Payment Method: {order.payment_method}
+Payment Status: {'PAID (Verified)' if order.paid else 'CASH ON DELIVERY (Pending Collection)'}
+
+PIECES ORDERED:
+{items_text}
+TOTAL COST: ₹{order.get_total_cost()} (Inclusive of all taxes & complimentary insured shipping)
+
+DISPATCH DESTINATION:
+{order.first_name} {order.last_name}
+{order.address}
+{order.city}, PIN: {order.postal_code}
+
+AIR LOGISTICS & COURIER TRACKING:
+Air Waybill (AWB): {order.awb_code}
+Logistics Partner: Bluedart Express / Delhivery Air
+Estimated Delivery: {est_delivery}
+
+You can track your order status in real time through your Atelier client dashboard
+or view your official Tax Invoice online.
+
+Client Services & Concierge:
+WhatsApp: +91 9781855165 | Email: concierge@stylesphere.in
+
+STYLE SPHERE ATELIER INC.
+Industrial Area Phase 2, Panchkula, Haryana 134113
+------------------------------------------------------------
+"""
+
+    print("\n" + "="*60)
+    print(f"📧 [STYLE SPHERE TRANSACTIONAL EMAIL DISPATCHED]")
+    print(f"To: {recipient} | Subject: {subject}")
+    print(f"Order #{order.id} | Amount: ₹{order.get_total_cost()} | AWB: {order.awb_code}")
+    print("="*60 + "\n")
+
+    try:
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'Style Sphere Atelier <noreply@stylesphere.in>'),
+            recipient_list=[recipient],
+            fail_silently=True
+        )
+        return True
+    except Exception as e:
+        print(f"Email dispatch note: {e}")
+        return False

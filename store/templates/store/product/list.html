@@ -74,11 +74,16 @@
                              class="w-full h-full object-contain transition-transform duration-500 ease-out group-hover:scale-105">
                     </a>
                     
-                    <!-- Clean Matte GSM Badge -->
-                    <div class="absolute top-3 left-3 pointer-events-none">
+                    <!-- Clean Matte GSM & Stock Badge -->
+                    <div class="absolute top-3 left-3 pointer-events-none flex items-center gap-1.5">
                         <span class="px-2 py-0.5 rounded bg-zinc-900/90 border border-zinc-800 text-[9px] font-mono tracking-wider text-zinc-400">
                             {{ product.gsm }} GSM
                         </span>
+                        {% if product.stock <= 0 or not product.available %}
+                            <span class="px-2 py-0.5 rounded bg-zinc-950/95 border border-zinc-700 text-[9px] font-mono tracking-wider text-rose-400">
+                                SOLD OUT
+                            </span>
+                        {% endif %}
                     </div>
 
                     <!-- Minimalist Wishlist Button -->

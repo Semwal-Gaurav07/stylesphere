@@ -1,3 +1,4 @@
+from .notifications import send_order_confirmation_email
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -115,6 +116,15 @@ def cart_add(request, product_id):
     size = request.POST.get('size', 'M')
     override = request.POST.get('override') == 'True'
     buy_now = request.POST.get('buy_now') == 'true'
+
+    # Inventory & Out-of-Stock Guard
+    if product.stock <= 0 or not product.available:
+        messages.error(request, f'Sorry, "{product.name}" is an archival edition and currently out of stock.')
+        return redirect(product.get_absolute_url())
+
+    if quantity > product.stock:
+        quantity = product.stock
+        messages.warning(request, f'Adjusted to maximum available atelier inventory ({product.stock} pieces).')
 
     cart.add(product=product, quantity=quantity, size=size, override_quantity=override)
 
@@ -253,6 +263,8 @@ def order_create(request):
                 cart.clear()
                 request.session['coupon_id'] = None
                 request.session['order_id'] = order.id
+                # Trigger transactional order receipt
+                send_order_confirmation_email(order)
                 return redirect('payment:process')
     else:
         form = OrderCreateForm(initial=initial_data)
