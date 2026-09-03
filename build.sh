@@ -6,4 +6,4 @@ python manage.py collectstatic --no-input
 python manage.py makemigrations store accounts payment
 python manage.py migrate
 python seed_data.py
-python download_images.py
+python download_images.py || true

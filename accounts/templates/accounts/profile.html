@@ -217,6 +217,23 @@
                                     {% endif %}
                                 </div>
 
+                                <!-- Itemized Pieces & Sizes -->
+                                <div class="pt-2 border-t border-zinc-900 space-y-2">
+                                    <span class="text-[10px] font-mono uppercase tracking-wider text-zinc-500 block">Ordered Pieces:</span>
+                                    <div class="space-y-1.5">
+                                        {% for item in order.items.all %}
+                                            <div class="flex items-center justify-between text-xs text-zinc-300 py-1 px-2.5 rounded bg-zinc-900/60 border border-zinc-900">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="px-1.5 py-0.5 rounded bg-zinc-950 border border-zinc-800 text-[10px] font-mono text-white font-bold">Size: {{ item.size }}</span>
+                                                    <span class="font-medium text-white">{{ item.product.name }}</span>
+                                                    <span class="text-zinc-500 text-[11px]">× {{ item.quantity }} Qty</span>
+                                                </div>
+                                                <span class="font-mono text-zinc-300">₹{{ item.get_cost }}</span>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
                                 <!-- Step-by-Step 4-Stage Delivery Tracker -->
                                 <div class="pt-2 border-t border-zinc-900">
                                     <span class="text-[10px] font-mono uppercase tracking-wider text-zinc-500 block mb-2.5">Transit Milestone:</span>

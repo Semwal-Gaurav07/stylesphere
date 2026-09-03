@@ -128,3 +128,6 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'Style Sphere Atelier <nore
 # Razorpay Payment Gateway Settings (Test keys by default; override in .env for production)
 RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', 'rzp_test_stylesphere2026')
 RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', 'stylesphere_secret_key_demo')
+
+# WhiteNoise Production Resiliency
+WHITENOISE_MANIFEST_STRICT = False

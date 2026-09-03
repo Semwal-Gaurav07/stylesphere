@@ -9,10 +9,10 @@ from store.models import Category, Product, ProductImage, Coupon
 def seed():
     print("Seeding Style Sphere - Exclusive Printed T-Shirts Studio...")
 
-    # Clear previous non-tshirt categories if any
-    ProductImage.objects.all().delete()
-    Product.objects.all().delete()
-    Category.objects.all().delete()
+    # Protect existing orders: only seed if catalog is empty
+    if Product.objects.count() >= 12:
+        print("Catalog already seeded with 12 flagship printed t-shirts. Preserving customer orders and stock.")
+        return
 
     # Create Printed T-Shirt Categories
     cat_anime, _ = Category.objects.get_or_create(
