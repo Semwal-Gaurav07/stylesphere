@@ -1,9 +1,16 @@
+from django.http import HttpResponse
+
+def health_check(request):
+    return HttpResponse("OK", status=200)
+
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf import settings
 from django.views.static import serve
 
 urlpatterns = [
+    path('healthz', health_check, name='health_check'),
+    path('health/', health_check, name='health_check_slash'),
     path('admin/', admin.site.urls),
     path('', include('store.urls', namespace='store')),
     path('accounts/', include('accounts.urls', namespace='accounts')),
