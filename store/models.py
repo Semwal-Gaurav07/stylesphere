@@ -73,109 +73,93 @@ class Product(models.Model):
 
     @property
     def image_url(self):
+        """Returns the primary high-resolution image URL for this product."""
+        # 1. Primary uploaded image on this product
         if self.image:
             try:
                 if self.image.storage.exists(self.image.name):
                     return self.image.url
             except Exception:
                 pass
-        
-        # Check first child ProductImage if available
+
+        # 2. Check if a child ProductImage has an uploaded file
+        uploaded_img = self.images.filter(image__isnull=False).first()
+        if uploaded_img:
+            u = uploaded_img.get_url()
+            if u:
+                return u
+
+        # 3. Check child ProductImage if available
         first_img = self.images.first()
         if first_img:
-            return first_img.get_url()
+            u = first_img.get_url()
+            if u:
+                return u
 
-        # Reliable Fallback mapping for printed t-shirts
-        return self.get_gallery_images()[0]
+        # 4. Dedicated fallback mapping
+        return self.get_fallback_image()
+
+    def get_fallback_image(self):
+        """Consistent, dedicated fallback photo for each specific product."""
+        single_image_map = {
+            'susanoo-spectral-armor-tee': 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
+            'six-eyes-void-inversion-tee': 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
+            'fallen-seraphim-baroque-tee': 'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=800&auto=format&fit=crop&q=80',
+            'memento-mori-gilded-vanitas-tee': 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80',
+            'neo-shinjuku-2099-glitch-tee': 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=800&auto=format&fit=crop&q=80',
+            'kurogane-mecha-core-tee': 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80',
+            'tokyo-midnight-racer-1994-tee': 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&auto=format&fit=crop&q=80',
+            'nirvana-in-utero-mineral-wash-tee': 'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800&auto=format&fit=crop&q=80',
+            'form-follows-chaos-boxy-tee': 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
+            'kyoto-botanica-ink-wash-tee': 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&auto=format&fit=crop&q=80',
+            'elden-sovereign-gilded-grace-tee': 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
+            'venomous-symbiosis-liquid-obsidian-tee': 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80',
+            # Legacy product slugs
+            'naruto-itachi-oversized-tee': 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
+            'deadpool-merc-comic-tee': 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80',
+            'deadpool-merc-pullover': 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80',
+            'aot-survey-corps-tee': 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&auto=format&fit=crop&q=80',
+            'spiderman-oscorp-graphic-tee': 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
+            'spiderman-symbiote-graphic-tee': 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
+            'acid-wash-vintage-tee': 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80',
+            'nirvana-vintage-acid-wash-tee': 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80',
+            'cyberpunk-tokyo-2099-tee': 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80',
+            'cotton-linen-cuban-shirt': 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
+            'korean-baggy-joggers-offwhite': 'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=800&auto=format&fit=crop&q=80',
+            'tactical-cargo-pants-slate': 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=800&auto=format&fit=crop&q=80',
+            'tss-snow-storm-hoodie': 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
+            'urban-bomber-jacket-green': 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80',
+            'milano-retro-sneakers-olive': 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
+            'street-chunky-trainers-white': 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
+            'crossbody-fanny-pack-black': 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80',
+        }
+        return single_image_map.get(self.slug, 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80')
 
     def get_gallery_images(self):
-        """Returns at least 3-4 images for every product."""
-        db_images = [img.get_url() for img in self.images.all() if img.get_url()]
-        if len(db_images) >= 3:
-            return db_images
+        """Returns consistent image URLs for THIS product only.
+        Guarantees that the product's own primary image is always first,
+        and never includes mismatched images of different garments."""
+        primary = self.image_url
+        gallery = [primary] if primary else []
 
-        # Curated 4-image sets per t-shirt (Front, Back Print, Model Fit, Detail/Close-up)
-        gallery_map = {
-            'naruto-itachi-oversized-tee': [
-                'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80',
-            ],
-            'cyberpunk-tokyo-2099-tee': [
-                'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800&auto=format&fit=crop&q=80',
-            ],
-            'aot-survey-corps-tee': [
-                'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80',
-            ],
-            'spiderman-symbiote-graphic-tee': [
-                'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80',
-            ],
-            'nirvana-vintage-acid-wash-tee': [
-                'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800&auto=format&fit=crop&q=80',
-            ],
-            'jujutsu-kaisen-gojo-domain-tee': [
-                'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
-            ],
-            'kanji-glitch-minimalist-tee': [
-                'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800&auto=format&fit=crop&q=80',
-            ],
-            'elden-ring-erdtree-graphic-tee': [
-                'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80',
-            ],
-            'deadpool-merc-comic-tee': [
-                'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800&auto=format&fit=crop&q=80',
-            ],
-            'retro-synthwave-80s-tee': [
-                'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80',
-            ],
-            'minimalist-botanical-line-tee': [
-                'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800&auto=format&fit=crop&q=80',
-            ],
-            'death-note-ryuk-oversized-tee': [
-                'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80',
-                'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80',
-            ],
-        }
-        fallback_list = gallery_map.get(self.slug, [
-            'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
-            'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
-            'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&auto=format&fit=crop&q=80',
-            'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80',
-        ])
-        return fallback_list
+        # If the product has uploaded file images in ProductImage, add them
+        uploaded_images = self.images.filter(image__isnull=False)
+        for img in uploaded_images:
+            u = img.get_url()
+            if u and u not in gallery:
+                gallery.append(u)
+
+        # If no uploaded child images exist, but child ProductImages exist:
+        if len(gallery) <= 1:
+            for img in self.images.all():
+                u = img.get_url()
+                # If product already has an uploaded media file, ignore external URLs of other shirts
+                if self.image and u.startswith('http'):
+                    continue
+                if u and u not in gallery:
+                    gallery.append(u)
+
+        return gallery
 
 
 class ProductImage(models.Model):

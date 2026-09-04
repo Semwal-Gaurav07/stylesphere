@@ -10,6 +10,14 @@ class UserRegistrationForm(forms.ModelForm):
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '').strip().lower()
+        if not email:
+            raise forms.ValidationError('A valid email address is required.')
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError('An account with this email address is already registered. Please sign in or reset your password.')
+        return email
+
     def clean_password_confirm(self):
         cd = self.cleaned_data
         if cd.get('password') != cd.get('password_confirm'):
@@ -20,6 +28,14 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '').strip().lower()
+        if not email:
+            raise forms.ValidationError('A valid email address is required.')
+        if User.objects.filter(email__iexact=email).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError('This email address is already linked to another account.')
+        return email
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:

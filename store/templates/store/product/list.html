@@ -4,7 +4,7 @@
 
 {% block content %}
 <!-- Editorial Luxury Hero Banner (Clean, architectural, no radial glow orbs) -->
-<div class="relative w-full rounded-2xl overflow-hidden bg-[#101013] border border-zinc-800/80 mb-12 p-8 sm:p-12 lg:p-16">
+<div class="relative w-full rounded-2xl overflow-hidden bg-[#101013] border border-zinc-800/80 mb-6 sm:mb-12 p-5 sm:p-12 lg:p-16">
     <div class="relative z-10 max-w-2xl space-y-4">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400">
             <span>SERIES 2026 // LIMITED EDITIONS</span>
@@ -20,7 +20,7 @@
         </p>
 
         <div class="flex items-center gap-3 pt-2 flex-wrap">
-            <a href="#collectionGrid" class="px-6 py-3 rounded bg-white hover:bg-zinc-200 text-black font-semibold text-xs uppercase tracking-[0.15em] transition-colors">
+            <a href="#productsSection" class="px-5 py-2.5 sm:px-6 sm:py-3 rounded bg-white hover:bg-zinc-200 text-black font-bold text-xs uppercase tracking-[0.15em] transition-all flex items-center gap-1.5 shadow-lg shadow-white/5">
                 Explore Collection
             </a>
             <a href="#atelierTrust" class="px-6 py-3 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-medium text-xs uppercase tracking-[0.15em] border border-zinc-800 transition-colors">
@@ -62,16 +62,18 @@
 
 <!-- Clean, Matte Luxury Product Grid (No Glow, No Fake Shadow Halos) -->
 {% if products %}
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 mb-20">
+    <div id="productsSection" class="product-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 mb-20 scroll-mt-24">
         {% for product in products %}
             <div class="luxury-card rounded-xl overflow-hidden flex flex-col justify-between group border border-zinc-800/80 hover:border-zinc-600 transition-all bg-[#111113]">
                 
-                <!-- Product Studio Photo: Clean Matte Background, Tappable to View Details -->
-                <div class="relative aspect-square bg-[#0b0b0d] p-6 flex items-center justify-center overflow-hidden border-b border-zinc-800/60">
-                    <a href="{{ product.get_absolute_url }}" class="w-full h-full flex items-center justify-center" title="Tap to view {{ product.name }} details">
+                <!-- Product Studio Photo: Mobile-Resilient Absolute-Fit Container -->
+                <div class="product-img-box relative aspect-square w-full bg-[#0b0b0d] p-2 sm:p-5 flex items-center justify-center overflow-hidden border-b border-zinc-800/60" style="min-height: 150px;">
+                    <a href="{{ product.get_absolute_url }}" class="absolute inset-0 p-2 sm:p-4 flex items-center justify-center" title="Tap to view {{ product.name }} details">
                         <img src="{{ product.image_url }}" 
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800';" 
                              alt="{{ product.name }}" 
-                             class="w-full h-full object-contain transition-transform duration-500 ease-out group-hover:scale-105">
+                             loading="eager"
+                             class="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-105">
                     </a>
                     
                     <!-- Clean Matte GSM & Stock Badge -->
@@ -95,7 +97,7 @@
                 </div>
 
                 <!-- Product Specifications, Sizing & Details -->
-                <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
+                <div class="p-3 sm:p-5 flex-1 flex flex-col justify-between space-y-2 sm:space-y-3">
                     <div class="space-y-1">
                         <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-[0.2em] block">
                             {{ product.category.name }}
@@ -114,7 +116,7 @@
                             <span>SIZES:</span>
                             <span class="text-zinc-500 font-light">Drop Shoulder</span>
                         </div>
-                        <div class="grid grid-cols-5 gap-1">
+                        <div class="grid grid-cols-5 gap-0.5 sm:gap-1">
                             <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[10px] hover:border-zinc-500 hover:text-white transition-colors">S</a>
                             <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[10px] hover:border-zinc-500 hover:text-white transition-colors">M</a>
                             <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[10px] hover:border-zinc-500 hover:text-white transition-colors">L</a>

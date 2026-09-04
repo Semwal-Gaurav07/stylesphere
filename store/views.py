@@ -14,6 +14,13 @@ from .cart import Cart
 from .forms import CartAddProductForm, OrderCreateForm, CouponApplyForm, ReviewForm
 
 def product_list(request, category_slug=None):
+    # Auto-seed database if empty (ensures products always display on mobile, local, or cloud deployments)
+    if Product.objects.count() == 0:
+        try:
+            import seed_data
+            seed_data.seed()
+        except Exception:
+            pass
     category = None
     categories = Category.objects.all()
     products = Product.objects.filter(available=True)

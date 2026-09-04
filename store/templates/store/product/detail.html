@@ -18,9 +18,10 @@
     <!-- Left Column: Studio Gallery Viewer -->
     <div class="lg:col-span-7 space-y-4">
         <!-- Main Large Studio Image Container -->
-        <div class="relative w-full aspect-square rounded-3xl bg-[#0c0c0e] border border-white/5 flex items-center justify-center p-8 overflow-hidden group border border-zinc-800">
+        <div class="relative w-full aspect-square rounded-3xl bg-[#0c0c0e] border border-white/5 flex items-center justify-center p-3 sm:p-8 overflow-hidden group border border-zinc-800" style="min-height: 260px;">
             <img id="mainGalleryImage" 
                  src="{{ product.image_url }}" 
+                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800';" 
                  alt="{{ product.name }}" 
                  class="w-full h-full object-contain  transition-transform duration-700 group-hover:scale-105 cursor-zoom-in">
 
@@ -45,19 +46,36 @@
             </a>
         </div>
 
-        <!-- 4 Thumbnail Angle Selector Tabs -->
-        <div class="grid grid-cols-4 gap-3.5">
-            {% for img_url in product.get_gallery_images %}
-                <button type="button" 
-                        onclick="switchGalleryImage('{{ img_url }}', this)" 
-                        class="gallery-thumb relative aspect-square rounded-2xl bg-[#111114] border {% if forloop.first %}border-luxury-gold shadow-md{% else %}border-zinc-800/80 hover:border-zinc-600{% endif %} p-2.5 overflow-hidden transition-all duration-300">
-                    <img src="{{ img_url }}" alt="Angle {{ forloop.counter }}" class="w-full h-full object-contain">
-                    <span class="absolute bottom-1.5 right-1.5 bg-black/80 text-[8px] font-mono uppercase tracking-wider text-zinc-400 px-1.5 py-0.5 rounded">
-                        {% if forloop.counter == 1 %}Front{% elif forloop.counter == 2 %}Back{% elif forloop.counter == 3 %}Fit{% else %}Macro{% endif %}
-                    </span>
-                </button>
-            {% endfor %}
-        </div>
+        <!-- Product Gallery & Studio Inspection Controls -->
+        {% with gallery=product.get_gallery_images %}
+            {% if gallery|length > 1 %}
+                <div class="grid grid-cols-{{ gallery|length }} gap-3.5">
+                    {% for img_url in gallery %}
+                        <button type="button" 
+                                onclick="switchGalleryImage('{{ img_url }}', this)" 
+                                class="gallery-thumb relative aspect-square rounded-2xl bg-[#111114] border {% if forloop.first %}border-luxury-gold shadow-md{% else %}border-zinc-800/80 hover:border-zinc-600{% endif %} p-2.5 overflow-hidden transition-all duration-300">
+                            <img src="{{ img_url }}" alt="Angle {{ forloop.counter }}" class="w-full h-full object-contain">
+                            <span class="absolute bottom-1.5 right-1.5 bg-black/80 text-[8px] font-mono uppercase tracking-wider text-zinc-400 px-1.5 py-0.5 rounded">
+                                {% if forloop.first %}Front{% else %}View {{ forloop.counter }}{% endif %}
+                            </span>
+                        </button>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <!-- Studio Inspection Controls for this Piece (No Mismatched Shirts) -->
+                <div class="flex items-center justify-center gap-2.5 pt-2">
+                    <button type="button" onclick="setStudioView('standard', this)" class="studio-view-btn px-4 py-2 rounded-xl bg-zinc-900 border border-luxury-gold text-white text-[11px] font-mono uppercase tracking-wider transition-all shadow-sm">
+                        <i class="bi bi-arrows-fullscreen mr-1.5 text-luxury-gold"></i> Studio Full View
+                    </button>
+                    <button type="button" onclick="setStudioView('zoom', this)" class="studio-view-btn px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white text-[11px] font-mono uppercase tracking-wider transition-all">
+                        <i class="bi bi-search mr-1.5"></i> Macro Detail (1.5x)
+                    </button>
+                    <button type="button" onclick="setStudioView('print', this)" class="studio-view-btn px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white text-[11px] font-mono uppercase tracking-wider transition-all">
+                        <i class="bi bi-bullseye mr-1.5"></i> Graphic Focus (2x)
+                    </button>
+                </div>
+            {% endif %}
+        {% endwith %}
     </div>
 
     <!-- Right Column: Specs, Tailoring & Purchasing Architecture -->
@@ -314,6 +332,30 @@
 </div>
 
 <script>
+        function setStudioView(mode, el) {
+        const mainImg = document.getElementById('mainGalleryImage');
+        if (!mainImg) return;
+        mainImg.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+        if (mode === 'standard') {
+            mainImg.style.transform = 'scale(1)';
+            mainImg.style.transformOrigin = 'center center';
+        } else if (mode === 'zoom') {
+            mainImg.style.transform = 'scale(1.5)';
+            mainImg.style.transformOrigin = 'center center';
+        } else if (mode === 'print') {
+            mainImg.style.transform = 'scale(2.0)';
+            mainImg.style.transformOrigin = 'center 40%';
+        }
+        document.querySelectorAll('.studio-view-btn').forEach(btn => {
+            btn.classList.remove('border-luxury-gold', 'text-white');
+            btn.classList.add('border-zinc-800', 'text-zinc-400');
+        });
+        if (el) {
+            el.classList.remove('border-zinc-800', 'text-zinc-400');
+            el.classList.add('border-luxury-gold', 'text-white');
+        }
+    }
+
     function switchGalleryImage(url, el) {
         const mainImg = document.getElementById('mainGalleryImage');
         if (mainImg) {
