@@ -3,14 +3,14 @@
 {% block title %}Style Sphere Atelier — Exclusive Heavyweight Printed T-Shirts{% endblock %}
 
 {% block content %}
-<!-- Editorial Luxury Hero Banner (Clean, architectural, no radial glow orbs) -->
-<div class="relative w-full rounded-2xl overflow-hidden bg-[#101013] border border-zinc-800/80 mb-6 sm:mb-12 p-5 sm:p-12 lg:p-16">
-    <div class="relative z-10 max-w-2xl space-y-4">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400">
+<!-- Editorial Luxury Hero Banner -->
+<div class="relative w-full rounded-2xl overflow-hidden bg-[#101013] border border-zinc-800/80 mb-10 p-6 sm:p-12 lg:p-16">
+    <div class="relative z-10 max-w-2xl space-y-3.5">
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400">
             <span>SERIES 2026 // LIMITED EDITIONS</span>
         </div>
 
-        <h1 class="text-3xl sm:text-5xl font-luxury font-bold text-white leading-tight tracking-tight">
+        <h1 class="text-2xl sm:text-5xl font-luxury font-bold text-white leading-tight tracking-tight">
             TIMELESS FORM. <br>
             <span class="text-zinc-400 font-light">ELEVATED TAILORING.</span>
         </h1>
@@ -19,11 +19,11 @@
             Engineered exclusively in 240+ GSM bio-washed French Terry cotton. Designed with dropped shoulders, bespoke artisan prints, and structural permanence.
         </p>
 
-        <div class="flex items-center gap-3 pt-2 flex-wrap">
-            <a href="#productsSection" onclick="document.getElementById('productsSection')?.scrollIntoView({behavior:'smooth'})" class="px-5 py-2.5 sm:px-6 sm:py-3 rounded bg-white hover:bg-zinc-200 text-black font-bold text-xs uppercase tracking-[0.15em] transition-all flex items-center gap-1.5 shadow-lg shadow-white/5">
+        <div class="flex items-center gap-3 pt-1 flex-wrap">
+            <a href="#collectionGrid" class="px-5 py-2.5 rounded bg-white hover:bg-zinc-200 text-black font-semibold text-xs uppercase tracking-[0.15em] transition-colors">
                 Explore Collection
             </a>
-            <a href="#atelierTrust" class="px-6 py-3 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-medium text-xs uppercase tracking-[0.15em] border border-zinc-800 transition-colors">
+            <a href="#atelierTrust" class="px-5 py-2.5 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-medium text-xs uppercase tracking-[0.15em] border border-zinc-800 transition-colors">
                 Fabric Standards
             </a>
         </div>
@@ -32,10 +32,10 @@
 
 <!-- Minimalist Collection Filter Navigation -->
 <div class="mb-8" id="collectionGrid">
-    <div class="flex flex-col sm:flex-row sm:items-end justify-between border-b border-zinc-800/80 pb-4 mb-5 gap-3">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between border-b border-zinc-800/80 pb-3.5 mb-5 gap-2.5">
         <div>
             <span class="text-[9px] font-mono tracking-[0.25em] text-zinc-500 uppercase block">CURATED ARCHIVE</span>
-            <h2 class="text-xl font-luxury font-bold text-white tracking-wide mt-0.5">
+            <h2 class="text-lg sm:text-xl font-luxury font-bold text-white tracking-wide mt-0.5">
                 {% if category %}{{ category.name }}{% elif query %}Search Results: "{{ query }}"{% else %}The Atelier Catalog{% endif %}
             </h2>
         </div>
@@ -47,94 +47,98 @@
     <!-- Category Tabs -->
     <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
         <a href="{% url 'store:product_list' %}" 
-           class="px-4 py-1.5 rounded text-xs font-medium uppercase tracking-wider transition-colors whitespace-nowrap {% if not category %}bg-white text-black font-semibold{% else %}bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800{% endif %}">
+           class="px-3.5 py-1.5 rounded text-xs font-medium uppercase tracking-wider transition-colors whitespace-nowrap {% if not category %}bg-white text-black font-semibold{% else %}bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800{% endif %}">
             All Pieces
         </a>
 
         {% for c in categories %}
             <a href="{{ c.get_absolute_url }}" 
-               class="px-4 py-1.5 rounded text-xs font-medium uppercase tracking-wider transition-colors whitespace-nowrap {% if category.slug == c.slug %}bg-white text-black font-semibold{% else %}bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800{% endif %}">
+               class="px-3.5 py-1.5 rounded text-xs font-medium uppercase tracking-wider transition-colors whitespace-nowrap {% if category.slug == c.slug %}bg-white text-black font-semibold{% else %}bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800{% endif %}">
                 {{ c.name }}
             </a>
         {% endfor %}
     </div>
 </div>
 
-<!-- Clean, Matte Luxury Product Grid (No Glow, No Fake Shadow Halos) -->
+<!-- Mobile-Optimized Luxury Products Grid -->
 {% if products %}
-    <div id="productsSection" class="product-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 mb-20 scroll-mt-24">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 mb-20">
         {% for product in products %}
             <div class="luxury-card rounded-xl overflow-hidden flex flex-col justify-between group border border-zinc-800/80 hover:border-zinc-600 transition-all bg-[#111113]">
                 
-                <!-- Product Studio Photo: Guaranteed Visible on All Mobile Devices -->
-                <div class="product-img-box relative aspect-square w-full bg-[#0b0b0d] p-2.5 sm:p-5 flex items-center justify-center overflow-hidden border-b border-zinc-800/60" style="min-height: 160px;">
-                    <a href="{{ product.get_absolute_url }}" class="w-full h-full flex items-center justify-center" title="Tap to view {{ product.name }} details">
+                <!-- 100% UNRESTRICTED STUDIO PHOTO CONTAINER (NO OVERLAPPING BUTTONS) -->
+                <div class="relative w-full aspect-[4/5] sm:aspect-square bg-[#0b0b0d] overflow-hidden border-b border-zinc-800/60">
+                    
+                    <!-- Direct Tap-to-View Link covering entire image area -->
+                    <a href="{{ product.get_absolute_url }}" class="absolute inset-0 p-3 sm:p-5 flex items-center justify-center z-0" title="Tap to view {{ product.name }} details">
                         <img src="{{ product.image_url }}" 
-                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80';" 
                              alt="{{ product.name }}" 
                              loading="eager"
-                             class="w-full h-full object-contain transition-transform duration-500 ease-out group-hover:scale-105 block"
-                             style="width: 100% !important; height: 100% !important; max-width: 100% !important; max-height: 100% !important; object-fit: contain !important; display: block !important;">
+                             class="w-full h-full max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80';">
                     </a>
                     
-                    <!-- Clean Matte GSM & Stock Badge -->
-                    <div class="absolute top-3 left-3 pointer-events-none flex items-center gap-1.5">
-                        <span class="px-2 py-0.5 rounded bg-zinc-900/90 border border-zinc-800 text-[9px] font-mono tracking-wider text-zinc-400">
+                    <!-- Minimal GSM & Stock Pill (Top-Left Only, unobtrusive) -->
+                    <div class="absolute top-2 left-2 pointer-events-none flex items-center gap-1 z-10">
+                        <span class="px-1.5 py-0.5 rounded bg-black/80 border border-zinc-800 text-[8px] font-mono tracking-wider text-zinc-400">
                             {{ product.gsm }} GSM
                         </span>
                         {% if product.stock <= 0 or not product.available %}
-                            <span class="px-2 py-0.5 rounded bg-zinc-950/95 border border-zinc-700 text-[9px] font-mono tracking-wider text-rose-400">
+                            <span class="px-1.5 py-0.5 rounded bg-black/90 border border-zinc-700 text-[8px] font-mono tracking-wider text-rose-400">
                                 SOLD OUT
                             </span>
                         {% endif %}
                     </div>
 
-                    <!-- Minimalist Wishlist Button -->
-                    <a href="{% url 'store:wishlist_toggle' product.id %}" 
-                       class="absolute top-3 right-3 w-8 h-8 rounded-lg bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center text-sm transition-colors z-10"
-                       title="Save Piece">
-                        <i class="bi bi-heart"></i>
-                    </a>
                 </div>
 
                 <!-- Product Specifications, Sizing & Details -->
-                <div class="p-3 sm:p-5 flex-1 flex flex-col justify-between space-y-2 sm:space-y-3">
-                    <div class="space-y-1">
-                        <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-[0.2em] block">
+                <div class="p-3 sm:p-5 flex-1 flex flex-col justify-between space-y-2.5 sm:space-y-3">
+                    <div class="space-y-0.5 sm:space-y-1">
+                        <span class="text-[8px] sm:text-[9px] font-mono text-zinc-500 uppercase tracking-[0.2em] block truncate">
                             {{ product.category.name }}
                         </span>
                         
-                        <h3 class="text-xs sm:text-sm font-medium text-white group-hover:text-zinc-300 transition-colors line-clamp-2 leading-snug">
+                        <h3 class="text-xs sm:text-sm font-medium text-white group-hover:text-zinc-300 transition-colors line-clamp-2 leading-tight">
                             <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
                         </h3>
                         
-                        <p class="text-[11px] text-zinc-400 font-light line-clamp-1">{{ product.print_type }}</p>
+                        <p class="text-[10px] sm:text-[11px] text-zinc-400 font-light truncate">{{ product.print_type }}</p>
                     </div>
 
-                    <!-- Explicit Sizes Row (S, M, L, XL, XXL) -->
+                    <!-- Available Sizes Row (S, M, L, XL, XXL) -->
                     <div class="pt-1">
-                        <div class="flex items-center justify-between text-[9px] font-mono text-zinc-500 uppercase tracking-wider mb-1.5">
+                        <div class="flex items-center justify-between text-[8px] sm:text-[9px] font-mono text-zinc-500 uppercase tracking-wider mb-1">
                             <span>SIZES:</span>
-                            <span class="text-zinc-500 font-light">Drop Shoulder</span>
+                            <span class="text-zinc-500">Drop Shoulder</span>
                         </div>
-                        <div class="grid grid-cols-5 gap-0.5 sm:gap-1">
-                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[10px] hover:border-zinc-500 hover:text-white transition-colors">S</a>
-                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[10px] hover:border-zinc-500 hover:text-white transition-colors">M</a>
-                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[10px] hover:border-zinc-500 hover:text-white transition-colors">L</a>
-                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[10px] hover:border-zinc-500 hover:text-white transition-colors">XL</a>
-                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[10px] hover:border-zinc-500 hover:text-white transition-colors">XXL</a>
+                        <div class="grid grid-cols-5 gap-1">
+                            <a href="{{ product.get_absolute_url }}" class="py-0.5 sm:py-1 text-center rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">S</a>
+                            <a href="{{ product.get_absolute_url }}" class="py-0.5 sm:py-1 text-center rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">M</a>
+                            <a href="{{ product.get_absolute_url }}" class="py-0.5 sm:py-1 text-center rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">L</a>
+                            <a href="{{ product.get_absolute_url }}" class="py-0.5 sm:py-1 text-center rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">XL</a>
+                            <a href="{{ product.get_absolute_url }}" class="py-0.5 sm:py-1 text-center rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">XXL</a>
                         </div>
                     </div>
 
-                    <!-- Price & View Link -->
-                    <div class="pt-3 border-t border-zinc-800/60 flex items-center justify-between">
+                    <!-- Price & Actions: Wishlist Heart + Details Button in the Bottom Row -->
+                    <div class="pt-2 sm:pt-3 border-t border-zinc-800/60 flex items-center justify-between gap-1">
                         <div>
-                            <span class="text-base font-semibold text-white font-sans">₹{{ product.price }}</span>
-                            <span class="text-[11px] text-zinc-500 line-through block -mt-0.5 font-mono">₹{{ product.price|add:500 }}</span>
+                            <span class="text-xs sm:text-base font-semibold text-white font-sans">₹{{ product.price }}</span>
+                            <span class="text-[9px] sm:text-[10px] text-zinc-500 line-through block -mt-0.5 font-mono">₹{{ product.price|add:500 }}</span>
                         </div>
-                        <a href="{{ product.get_absolute_url }}" class="px-3 py-1 rounded bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[11px] font-medium uppercase tracking-wider text-zinc-300 hover:text-white transition-colors">
-                            Details →
-                        </a>
+                        
+                        <!-- Actions: Clean Wishlist Toggle + Details Button -->
+                        <div class="flex items-center gap-1.5">
+                            <a href="{% url 'store:wishlist_toggle' product.id %}" 
+                               class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 hover:text-rose-400 flex items-center justify-center text-xs transition-colors"
+                               title="Save to Wishlist">
+                                <i class="bi bi-heart"></i>
+                            </a>
+                            <a href="{{ product.get_absolute_url }}" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-white hover:bg-zinc-200 text-black text-[10px] sm:text-xs font-semibold uppercase tracking-wider transition-colors">
+                                View →
+                            </a>
+                        </div>
                     </div>
                 </div>
 
