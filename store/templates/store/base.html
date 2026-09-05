@@ -165,7 +165,7 @@
 <body class="bg-luxury-black text-luxury-platinum antialiased min-h-screen flex flex-col justify-between selection:bg-luxury-gold selection:text-black pb-16 md:pb-0">
 
     <!-- Minimalist Luxury Top Notification Strip -->
-    <div class="bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 text-zinc-300 text-[11px] py-2 px-4 text-center border-b border-white/5 font-medium tracking-wider uppercase">
+    <div class="bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 text-zinc-200 text-xs sm:text-sm py-2.5 px-4 font-semibold text-center border-b border-white/5 font-medium tracking-wider uppercase">
         <span class="inline-block w-1.5 h-1.5 rounded-full bg-luxury-gold mr-2 animate-pulse"></span>
         Complimentary Insured Shipping Across India on Orders Above ₹999 • Atelier Code <strong class="text-luxury-gold font-bold">FIRST10</strong>
     </div>
@@ -182,22 +182,28 @@
                     </button>
                 </div>
 
-                <!-- Brand Logo (Left on Desktop, Center on Mobile) -->
+                <!-- Brand Logo: Official Atelier Icon & Luxury Typography -->
                 <div class="flex items-center">
-                    <a href="{% url 'store:product_list' %}" class="flex flex-col group">
-                        <span class="text-lg sm:text-2xl font-luxury font-black tracking-[0.18em] text-white group-hover:text-luxury-gold transition-colors">
-                            STYLE SPHERE
-                        </span>
-                        <span class="text-[8px] sm:text-[9px] font-mono tracking-[0.3em] text-zinc-500 uppercase -mt-1 hidden sm:block">
-                            ATELIER DE COUTURE
-                        </span>
+                    <a href="{% url 'store:product_list' %}" class="flex items-center group gap-2.5">
+                        <img src="{% static 'images/stylesphere_icon.png' %}" 
+                             alt="Style Sphere Atelier Icon" 
+                             class="h-9 w-9 sm:h-11 sm:w-11 object-contain rounded-xl border border-zinc-800 shadow-md flex-shrink-0"
+                             onerror="this.style.display='none'">
+                        <div class="flex flex-col">
+                            <span class="text-lg sm:text-2xl font-luxury font-black tracking-[0.15em] text-white group-hover:text-luxury-gold transition-colors leading-none">
+                                STYLE SPHERE
+                            </span>
+                            <span class="text-[10px] sm:text-xs font-mono tracking-[0.25em] text-zinc-400 uppercase mt-1 hidden sm:block">
+                                ATELIER DE COUTURE
+                            </span>
+                        </div>
                     </a>
                 </div>
 
-                <!-- Desktop Center: Simple, Clear Navigation Links -->
-                <nav class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-[0.15em] text-zinc-400">
-                    <a href="{% url 'store:product_list' %}" class="hover:text-white transition-colors {% if not category and not query %}text-white font-bold border-b border-luxury-gold pb-0.5{% endif %}">
-                        Shop All
+                <!-- Desktop Center: Simple, Clear Navigation Links (Large & Readable) -->
+                <nav class="hidden md:flex items-center gap-8 text-sm font-semibold uppercase tracking-[0.12em] text-zinc-300">
+                    <a href="{% url 'store:product_list' %}" class="hover:text-white transition-colors {% if not category and not query %}text-white font-bold border-b-2 border-luxury-gold pb-1{% endif %}">
+                        Shop All Pieces
                     </a>
 
                     <!-- Collections Dropdown -->
@@ -259,33 +265,55 @@
                         {% endwith %}
                     </a>
 
-                                        <!-- Account / Sign In & Sign Up CTAs on Laptop -->
-                    <div class="hidden sm:flex items-center gap-2.5">
+                                        <!-- Mobile Direct Profile / Sign-in Quick Button -->
+                    <div class="flex sm:hidden items-center">
                         {% if user.is_authenticated %}
+                            <a href="{% url 'accounts:profile' %}" class="px-3 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-white flex items-center gap-1.5 text-xs font-bold" title="My Profile">
+                                <i class="bi bi-person-circle text-emerald-400 text-base"></i>
+                                <span>Profile</span>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'accounts:login' %}" class="px-3 py-1.5 rounded-xl bg-white text-black flex items-center gap-1.5 text-xs font-bold shadow-sm" title="Sign In">
+                                <i class="bi bi-box-arrow-in-right text-sm"></i>
+                                <span>Login</span>
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <!-- Laptop / Desktop: Highly Visible Sign In, Sign Up & Profile Logo -->
+                    <div class="hidden sm:flex items-center gap-3">
+                        {% if user.is_authenticated %}
+                            <!-- Logged In: Prominent Profile Logo & Status Badge -->
                             <div class="dropdown dropdown-end">
-                                <label tabindex="0" class="cursor-pointer py-1.5 px-3.5 rounded-full bg-zinc-900 border border-zinc-700 text-xs font-medium text-white flex items-center gap-2 hover:bg-zinc-800 transition-all">
-                                    <i class="bi bi-person-check text-emerald-400"></i>
-                                    <span class="truncate max-w-[110px]">{{ user.first_name|default:user.username }}</span>
-                                    <i class="bi bi-chevron-down text-[10px] text-zinc-500"></i>
+                                <label tabindex="0" class="cursor-pointer py-2 px-4 rounded-xl bg-zinc-900 border border-zinc-700 text-sm font-semibold text-white flex items-center gap-2.5 hover:bg-zinc-800 hover:border-zinc-500 transition-all shadow-md">
+                                    <i class="bi bi-person-circle text-xl text-emerald-400"></i>
+                                    <div class="flex flex-col text-left">
+                                        <span class="text-xs text-zinc-400 leading-none">Atelier Member</span>
+                                        <span class="text-sm font-bold text-white leading-tight truncate max-w-[120px]">{{ user.first_name|default:user.username }}</span>
+                                    </div>
+                                    <i class="bi bi-chevron-down text-xs text-zinc-400 ml-1"></i>
                                 </label>
-                                <ul tabindex="0" class="dropdown-content z-50 menu p-2.5 shadow-2xl bg-zinc-950 border border-zinc-800 rounded-2xl w-56 mt-2 text-xs divide-y divide-zinc-900">
-                                    <li class="px-3 py-1.5 text-zinc-500 font-mono text-[10px] uppercase">
-                                        Signed In: <strong class="text-white">{{ user.username }}</strong>
+                                <ul tabindex="0" class="dropdown-content z-50 menu p-3 shadow-2xl bg-zinc-950 border border-zinc-800 rounded-2xl w-64 mt-2 text-sm divide-y divide-zinc-900">
+                                    <li class="px-3 py-2 text-zinc-400 font-mono text-xs uppercase">
+                                        Active Account: <strong class="text-white">{{ user.username }}</strong>
                                     </li>
-                                    <li><a href="{% url 'accounts:profile' %}" class="py-2.5 text-zinc-300 hover:text-white"><i class="bi bi-box-seam"></i> My Orders & Tracking</a></li>
-                                    <li><a href="{% url 'store:wishlist_detail' %}" class="py-2.5 text-zinc-300 hover:text-white"><i class="bi bi-heart"></i> Saved Pieces</a></li>
+                                    <li><a href="{% url 'accounts:profile' %}" class="py-3 text-zinc-200 hover:text-white font-medium"><i class="bi bi-box-seam text-base"></i> My Orders & Live Tracking</a></li>
+                                    <li><a href="{% url 'store:wishlist_detail' %}" class="py-3 text-zinc-200 hover:text-white font-medium"><i class="bi bi-heart text-base"></i> Saved Pieces (Wishlist)</a></li>
                                     {% if user.is_staff %}
-                                        <li><a href="{% url 'store:admin_analytics' %}" class="py-2.5 text-zinc-300 hover:text-white"><i class="bi bi-graph-up-arrow text-emerald-400"></i> Executive Analytics</a></li>
+                                        <li><a href="{% url 'store:admin_analytics' %}" class="py-3 text-zinc-200 hover:text-white font-medium"><i class="bi bi-graph-up-arrow text-emerald-400 text-base"></i> Executive Analytics</a></li>
                                     {% endif %}
-                                    <li><a href="{% url 'accounts:logout' %}" class="py-2.5 text-rose-400 hover:text-rose-300"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
+                                    <li><a href="{% url 'accounts:logout' %}" class="py-3 text-rose-400 hover:text-rose-300 font-medium"><i class="bi bi-box-arrow-right text-base"></i> Sign Out</a></li>
                                 </ul>
                             </div>
                         {% else %}
-                            <a href="{% url 'accounts:login' %}" class="py-1.5 px-3.5 rounded-full border border-zinc-700 hover:border-zinc-500 text-zinc-300 hover:text-white text-xs font-semibold uppercase tracking-wider transition-all">
-                                Sign In
+                            <!-- Not Logged In: Prominent Sign In & Sign Up Buttons with Icons -->
+                            <a href="{% url 'accounts:login' %}" class="py-2 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-sm font-semibold text-zinc-200 hover:text-white flex items-center gap-2 transition-all">
+                                <i class="bi bi-box-arrow-in-right text-base"></i>
+                                <span>Sign In</span>
                             </a>
-                            <a href="{% url 'accounts:register' %}" class="py-1.5 px-4 rounded-full bg-white hover:bg-zinc-200 text-black text-xs font-bold uppercase tracking-wider transition-all shadow-md">
-                                Sign Up
+                            <a href="{% url 'accounts:register' %}" class="py-2 px-5 rounded-xl bg-white hover:bg-zinc-200 text-black text-sm font-bold uppercase tracking-wider flex items-center gap-2 shadow-lg transition-all">
+                                <i class="bi bi-person-plus text-base"></i>
+                                <span>Sign Up</span>
                             </a>
                         {% endif %}
                     </div>

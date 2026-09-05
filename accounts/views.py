@@ -24,7 +24,8 @@ def mask_email(val):
 
 def register(request):
     if request.user.is_authenticated:
-        return redirect('store:product_list')
+        messages.info(request, f"You already have an active session as '{request.user.username}'. Sign out below to create a new account.")
+        return redirect('accounts:profile')
     
     next_url = request.GET.get('next') or request.POST.get('next') or 'store:product_list'
 
@@ -44,7 +45,8 @@ def register(request):
 
 def user_login(request):
     if request.user.is_authenticated:
-        return redirect('store:product_list')
+        messages.info(request, f"You are currently signed in as '{request.user.username}'. Sign out below to access a different account.")
+        return redirect('accounts:profile')
     
     next_url = request.GET.get('next') or request.POST.get('next') or 'store:product_list'
 

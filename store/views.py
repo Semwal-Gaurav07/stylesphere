@@ -14,6 +14,13 @@ from .cart import Cart
 from .forms import CartAddProductForm, OrderCreateForm, CouponApplyForm, ReviewForm
 
 def product_list(request, category_slug=None):
+    # Auto-Heal: If catalog is empty (e.g. fresh Render container), auto-seed the 12 flagship editions
+    if Product.objects.count() == 0:
+        try:
+            import seed_data
+            seed_data.seed()
+        except Exception as err:
+            print(f"Auto-seed exception: {err}")
     # Auto-seed database if empty (ensures products always display on mobile, local, or cloud deployments)
     if Product.objects.count() == 0:
         try:
