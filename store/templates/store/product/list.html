@@ -173,15 +173,15 @@
         {% for product in products %}
             <div class="luxury-card rounded-xl overflow-hidden flex flex-col justify-between group border border-zinc-800/80 hover:border-zinc-600 transition-all bg-[#111113]">
                 
-                <!-- 100% RELIABLE STUDIO PHOTO CONTAINER (NEVER COLLAPSES ON MOBILE) -->
-                <div class="relative w-full aspect-[4/5] sm:aspect-square bg-[#0b0b0d] overflow-hidden border-b border-zinc-800/60 flex items-center justify-center">
+                <!-- 100% ROCK-SOLID STUDIO PHOTO CONTAINER (EXPLICIT HEIGHT GUARANTEES VISIBILITY ON ALL MOBILE PHONES) -->
+                <div class="relative w-full h-44 sm:h-56 md:h-64 bg-[#0b0b0d] border-b border-zinc-800/60 flex items-center justify-center overflow-hidden">
                     
                     <!-- Direct Tap-to-View Link covering entire image area -->
-                    <a href="{{ product.get_absolute_url }}" class="absolute inset-0 p-3 sm:p-5 flex items-center justify-center z-0" title="Tap to view {{ product.name }} details">
+                    <a href="{{ product.get_absolute_url }}" class="w-full h-full p-2.5 sm:p-4 flex items-center justify-center" title="Tap to view {{ product.name }} details">
                         <img src="{{ product.image_url }}" 
                              alt="{{ product.name }}" 
                              loading="eager"
-                             class="w-full h-full max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105"
+                             class="w-full h-full max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105 block"
                              onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80';">
                     </a>
                     
