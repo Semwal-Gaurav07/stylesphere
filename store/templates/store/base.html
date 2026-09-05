@@ -160,6 +160,62 @@
         ::-webkit-scrollbar-track { background: #09090b; }
         ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+    
+        /* Mobile Instagram Story Bubbles (As Before) */
+        .cat-bubble-container {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 10px 4px 16px 4px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .cat-bubble-container::-webkit-scrollbar { display: none; }
+        .cat-bubble {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            min-width: 68px;
+            text-align: center;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+        .cat-bubble:active { transform: scale(0.95); }
+        .cat-bubble-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #18181b;
+            border: 2px solid #ef4444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+            box-shadow: 0 0 14px rgba(239, 68, 68, 0.25);
+            transition: all 0.3s ease;
+        }
+        .cat-bubble.active .cat-bubble-img {
+            border-color: #ffffff;
+            box-shadow: 0 0 18px rgba(255, 255, 255, 0.4);
+            transform: scale(1.06);
+        }
+        .cat-bubble-text {
+            font-size: 10px;
+            font-weight: 700;
+            color: #a1a1aa;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            max-width: 72px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .cat-bubble.active .cat-bubble-text {
+            color: #ffffff;
+        }
+
     </style>
 </head>
 <body class="bg-luxury-black text-luxury-platinum antialiased min-h-screen flex flex-col justify-between selection:bg-luxury-gold selection:text-black pb-16 md:pb-0">
