@@ -20,7 +20,7 @@
         </p>
 
         <div class="flex items-center gap-3 pt-2 flex-wrap">
-            <a href="#productsSection" class="px-5 py-2.5 sm:px-6 sm:py-3 rounded bg-white hover:bg-zinc-200 text-black font-bold text-xs uppercase tracking-[0.15em] transition-all flex items-center gap-1.5 shadow-lg shadow-white/5">
+            <a href="#productsSection" onclick="document.getElementById('productsSection')?.scrollIntoView({behavior:'smooth'})" class="px-5 py-2.5 sm:px-6 sm:py-3 rounded bg-white hover:bg-zinc-200 text-black font-bold text-xs uppercase tracking-[0.15em] transition-all flex items-center gap-1.5 shadow-lg shadow-white/5">
                 Explore Collection
             </a>
             <a href="#atelierTrust" class="px-6 py-3 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-medium text-xs uppercase tracking-[0.15em] border border-zinc-800 transition-colors">
@@ -66,14 +66,15 @@
         {% for product in products %}
             <div class="luxury-card rounded-xl overflow-hidden flex flex-col justify-between group border border-zinc-800/80 hover:border-zinc-600 transition-all bg-[#111113]">
                 
-                <!-- Product Studio Photo: Mobile-Resilient Absolute-Fit Container -->
-                <div class="product-img-box relative aspect-square w-full bg-[#0b0b0d] p-2 sm:p-5 flex items-center justify-center overflow-hidden border-b border-zinc-800/60" style="min-height: 150px;">
-                    <a href="{{ product.get_absolute_url }}" class="absolute inset-0 p-2 sm:p-4 flex items-center justify-center" title="Tap to view {{ product.name }} details">
+                <!-- Product Studio Photo: Guaranteed Visible on All Mobile Devices -->
+                <div class="product-img-box relative aspect-square w-full bg-[#0b0b0d] p-2.5 sm:p-5 flex items-center justify-center overflow-hidden border-b border-zinc-800/60" style="min-height: 160px;">
+                    <a href="{{ product.get_absolute_url }}" class="w-full h-full flex items-center justify-center" title="Tap to view {{ product.name }} details">
                         <img src="{{ product.image_url }}" 
-                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800';" 
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80';" 
                              alt="{{ product.name }}" 
                              loading="eager"
-                             class="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-105">
+                             class="w-full h-full object-contain transition-transform duration-500 ease-out group-hover:scale-105 block"
+                             style="width: 100% !important; height: 100% !important; max-width: 100% !important; max-height: 100% !important; object-fit: contain !important; display: block !important;">
                     </a>
                     
                     <!-- Clean Matte GSM & Stock Badge -->

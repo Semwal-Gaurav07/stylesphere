@@ -88,18 +88,34 @@
             position: relative;
             width: 100%;
             aspect-ratio: 1 / 1;
-            min-height: 140px;
+            min-height: 160px;
             background: #0b0b0d;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
         }
-        .product-img-box img {
+        .product-img-box a {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .product-img-box img {
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
+            object-fit: contain !important;
+            display: block !important;
+        }
+        /* Active Drawer State */
+        #mobileNavDrawer.drawer-open {
+            transform: translateX(0) !important;
+        }
+        #mobileDrawerBackdrop.backdrop-open {
+            display: block !important;
         }
 
         body {
@@ -294,9 +310,9 @@
     </header>
 
     <!-- Slide-Out Mobile Navigation Drawer -->
-    <div id="mobileDrawerBackdrop" onclick="toggleMobileMenu()" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm transition-opacity duration-300 md:hidden" style="display: none;"></div>
+    <div id="mobileDrawerBackdrop" onclick="toggleMobileMenu()" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm transition-opacity duration-300 md:hidden"></div>
 
-    <aside id="mobileNavDrawer" class="fixed top-0 left-0 bottom-0 w-72 z-50 bg-zinc-950 border-r border-zinc-800 p-6 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden shadow-2xl overflow-y-auto" style="transform: translateX(-100%);">
+    <aside id="mobileNavDrawer" class="fixed top-0 left-0 bottom-0 w-72 z-50 bg-zinc-950 border-r border-zinc-800 p-6 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden shadow-2xl overflow-y-auto">
         <div class="space-y-6">
             <!-- Drawer Header -->
             <div class="flex items-center justify-between border-b border-zinc-900 pb-4">
@@ -376,15 +392,27 @@
         function toggleMobileMenu() {
             const drawer = document.getElementById('mobileNavDrawer');
             const backdrop = document.getElementById('mobileDrawerBackdrop');
-            if (drawer && backdrop) {
-                const isOpen = !drawer.classList.contains('-translate-x-full');
-                if (isOpen) {
-                    drawer.classList.add('-translate-x-full');
-                    backdrop.classList.add('hidden');
-                } else {
-                    drawer.classList.remove('-translate-x-full');
-                    backdrop.classList.remove('hidden');
-                }
+            if (!drawer || !backdrop) return;
+
+            const isClosed = drawer.classList.contains('-translate-x-full') && !drawer.classList.contains('drawer-open');
+            if (isClosed) {
+                // OPEN SIDEBAR DRAWER
+                drawer.classList.remove('-translate-x-full');
+                drawer.classList.add('drawer-open');
+                drawer.style.transform = 'translateX(0px)';
+                backdrop.classList.remove('hidden');
+                backdrop.classList.add('backdrop-open');
+                backdrop.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            } else {
+                // CLOSE SIDEBAR DRAWER
+                drawer.classList.add('-translate-x-full');
+                drawer.classList.remove('drawer-open');
+                drawer.style.transform = 'translateX(-100%)';
+                backdrop.classList.add('hidden');
+                backdrop.classList.remove('backdrop-open');
+                backdrop.style.display = 'none';
+                document.body.style.overflow = '';
             }
         }
 
@@ -524,6 +552,10 @@
 
     <!-- Minimalist Mobile Bottom Nav Bar -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-zinc-900 flex justify-around items-center h-16">
+        <button type="button" onclick="toggleMobileMenu()" class="flex flex-col items-center text-[10px] font-semibold tracking-wider uppercase text-zinc-400 hover:text-white transition-colors focus:outline-none">
+            <i class="bi bi-grid text-base mb-0.5"></i>
+            <span>Menu</span>
+        </button>
         <a href="{% url 'store:product_list' %}" class="flex flex-col items-center text-[10px] font-semibold tracking-wider uppercase {% if request.path == '/' %}text-luxury-gold font-bold{% else %}text-zinc-400{% endif %}">
             <i class="bi bi-house text-base mb-0.5"></i>
             <span>Atelier</span>
