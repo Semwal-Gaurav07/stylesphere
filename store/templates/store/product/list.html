@@ -3,164 +3,191 @@
 {% block title %}Style Sphere Atelier — Exclusive Heavyweight Printed T-Shirts{% endblock %}
 
 {% block content %}
-<!-- ======================================================= -->
-<!-- 1. MOBILE-ONLY VIEW (AS BEFORE: APP & STORY BUBBLES)    -->
-<!-- ======================================================= -->
-<div class="block md:hidden mb-8">
+
+<!-- ================================================================= -->
+<!-- TOP BANNER: 4 UNIQUE ATELIER SPOTLIGHT EDITIONS (MOBILE OPTIMIZED) -->
+<!-- ================================================================= -->
+<section class="relative w-full rounded-2xl overflow-hidden bg-[#0d0d10] border border-zinc-800/90 mb-12 p-5 sm:p-8 lg:p-10">
     
-    <!-- Mobile Live Drop Countdown Strip -->
-    <div class="p-4 rounded-2xl bg-gradient-to-r from-red-950/70 via-zinc-950 to-zinc-950 border border-red-900/40 shadow-[0_0_30px_-10px_rgba(239,68,68,0.3)] mb-5">
-        <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
-                <span class="text-[10px] font-mono font-bold text-red-400 uppercase tracking-widest">LIMITED DROP</span>
+    <!-- Editorial Banner Header -->
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between border-b border-zinc-800/80 pb-4 mb-6 gap-3">
+        <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400 mb-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>CURATED TOP BANNER // 4 UNIQUE FLAGSHIP RELEASES</span>
             </div>
-            <div class="text-[10px] font-mono text-zinc-400">
-                CLOSES: <span id="mobileCountdown" class="text-white font-bold tracking-wider">04:38:19</span>
-            </div>
-        </div>
-        <div class="text-xs font-bold text-white mt-1">
-            240+ GSM Heavyweight Editions • Code <span class="text-red-400 bg-black/60 px-1.5 py-0.5 rounded border border-red-900/50">FIRST10</span>
-        </div>
-    </div>
-
-    <!-- Mobile Category Story Bubbles (Horizontal Scroll as Before) -->
-    <div class="mb-4">
-        <div class="flex items-center justify-between mb-2 px-1">
-            <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-wider font-bold">COLLECTIONS</span>
-            <span class="text-[10px] text-zinc-500 font-mono">Swipe ➔</span>
-        </div>
-        
-        <div class="cat-bubble-container no-scrollbar">
-            <!-- All Categories Story Bubble -->
-            <a href="{% url 'store:product_list' %}" class="cat-bubble {% if not category %}active{% endif %}">
-                <div class="cat-bubble-img">🔥</div>
-                <span class="cat-bubble-text">All Tees</span>
-            </a>
-
-            {% for c in categories %}
-                <a href="{{ c.get_absolute_url }}" class="cat-bubble {% if category.slug == c.slug %}active{% endif %}">
-                    <div class="cat-bubble-img">{{ c.icon|default:"👕" }}</div>
-                    <span class="cat-bubble-text">{{ c.name }}</span>
-                </a>
-            {% endfor %}
-        </div>
-    </div>
-
-    <!-- Mobile Header Title -->
-    <div class="flex items-baseline justify-between px-1 mb-3">
-        <h2 class="text-base font-bold text-white font-luxury">
-            {% if category %}{{ category.name }}{% elif query %}Search: "{{ query }}"{% else %}Featured Pieces{% endif %}
-        </h2>
-        <span class="text-[11px] text-zinc-500 font-mono">{{ products.count }} Pieces</span>
-    </div>
-</div>
-
-<!-- ======================================================= -->
-<!-- 2. LAPTOP/DESKTOP-ONLY VIEW (EDITORIAL LUXURY ATELIER)  -->
-<!-- ======================================================= -->
-<div class="hidden md:block">
-    <!-- Editorial Luxury Hero Banner -->
-    <div class="relative w-full rounded-2xl overflow-hidden bg-[#101013] border border-zinc-800/80 mb-12 p-8 lg:p-14">
-        <div class="relative z-10 max-w-2xl space-y-4">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400">
-                <span>SERIES 2026 // LIMITED EDITIONS</span>
-            </div>
-
-            <h1 class="text-3xl lg:text-5xl font-luxury font-bold text-white leading-tight tracking-tight">
-                TIMELESS FORM. <br>
-                <span class="text-zinc-400 font-light">ELEVATED TAILORING.</span>
+            <h1 class="text-2xl sm:text-4xl font-luxury font-bold text-white tracking-wide">
+                Atelier Spotlight Editions
             </h1>
-
-            <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed font-light">
-                Engineered exclusively in 240+ GSM bio-washed French Terry cotton. Designed with dropped shoulders, bespoke artisan prints, and structural permanence.
+            <p class="text-xs sm:text-sm text-zinc-400 font-light max-w-2xl mt-1 leading-relaxed">
+                260–280 GSM heavyweight French Terry cotton. Crafted with 3D high-density puff ink, hand-finished acid washes, and structural drop-shoulder silhouettes.
             </p>
-
-            <div class="flex items-center gap-3 pt-2">
-                <a href="#collectionGrid" class="px-6 py-3 rounded bg-white hover:bg-zinc-200 text-black font-semibold text-xs uppercase tracking-[0.15em] transition-colors">
-                    Explore Collection
-                </a>
-                <a href="#atelierTrust" class="px-6 py-3 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-medium text-xs uppercase tracking-[0.15em] border border-zinc-800 transition-colors">
-                    Fabric Standards
-                </a>
-            </div>
+        </div>
+        <div class="hidden sm:flex items-center gap-2 text-xs font-mono text-zinc-400">
+            <span>4 UNIQUE PIECES</span>
         </div>
     </div>
 
-    <!-- Desktop Collection Header & Tabs -->
-    <div class="mb-8" id="collectionGrid">
-        <div class="flex items-end justify-between border-b border-zinc-800/80 pb-4 mb-5">
-            <div>
-                <span class="text-[9px] font-mono tracking-[0.25em] text-zinc-500 uppercase block">CURATED ARCHIVE</span>
-                <h2 class="text-xl font-luxury font-bold text-white tracking-wide mt-0.5">
-                    {% if category %}{{ category.name }}{% elif query %}Search Results: "{{ query }}"{% else %}The Atelier Catalog{% endif %}
-                </h2>
+    <!-- 4 Unique Products: Mobile Horizontal Swipeable Strip / Desktop 4-Col Grid -->
+    <div class="flex overflow-x-auto snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 pb-2 sm:pb-0 no-scrollbar">
+        {% for product in spotlight_products %}
+            <div class="snap-center flex-shrink-0 w-[280px] sm:w-auto luxury-card rounded-xl overflow-hidden flex flex-col justify-between group border border-zinc-800 hover:border-zinc-500 transition-all bg-[#121215]">
+                
+                <!-- Studio Product Photo: Guaranteed Non-Collapsing Mobile Container -->
+                <div class="relative aspect-square min-h-[180px] w-full bg-[#08080a] overflow-hidden border-b border-zinc-800/80">
+                    <a href="{{ product.get_absolute_url }}" class="absolute inset-0 p-3 sm:p-4 flex items-center justify-center">
+                        <img src="{{ product.image_url }}" 
+                             alt="{{ product.name }}" 
+                             class="w-full h-full max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105"
+                             loading="eager"
+                             onerror="this.onerror=null; this.src='https://placehold.co/600x600/141416/ffffff.png?text={{ product.name|urlencode }}';">
+                    </a>
+
+                    <!-- Top Banner Badge -->
+                    <div class="absolute top-2.5 left-2.5 pointer-events-none flex items-center gap-1">
+                        <span class="px-2 py-0.5 rounded bg-zinc-950/90 border border-zinc-700 text-[9px] font-mono tracking-wider text-white font-semibold">
+                            {{ product.gsm }} GSM
+                        </span>
+                        <span class="px-2 py-0.5 rounded bg-zinc-900/90 border border-zinc-800 text-[8px] font-mono tracking-wider text-emerald-400">
+                            UNIQUE
+                        </span>
+                    </div>
+
+                    <!-- Wishlist Heart Toggle -->
+                    <a href="{% url 'store:wishlist_toggle' product.id %}" 
+                       class="absolute top-2.5 right-2.5 w-7 h-7 rounded-lg bg-zinc-950/90 border border-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center text-xs transition-colors z-10"
+                       title="Save Drop">
+                        <i class="bi bi-heart"></i>
+                    </a>
+                </div>
+
+                <!-- Product Specifications & Sizing -->
+                <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+                    <div class="space-y-1">
+                        <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-[0.2em] block">
+                            {{ product.category.name }}
+                        </span>
+                        <h3 class="text-xs sm:text-sm font-semibold text-white group-hover:text-zinc-200 transition-colors line-clamp-2 leading-snug">
+                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                        </h3>
+                        <p class="text-[11px] text-zinc-400 font-light line-clamp-1">{{ product.print_type }}</p>
+                    </div>
+
+                    <!-- Explicit Sizes Row -->
+                    <div class="pt-1">
+                        <div class="flex items-center justify-between text-[8px] font-mono text-zinc-500 uppercase tracking-wider mb-1">
+                            <span>AVAILABLE SIZES:</span>
+                            <span class="text-zinc-400">Drop Shoulder</span>
+                        </div>
+                        <div class="grid grid-cols-5 gap-1">
+                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] hover:border-zinc-500 hover:text-white transition-colors">S</a>
+                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] hover:border-zinc-500 hover:text-white transition-colors">M</a>
+                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] hover:border-zinc-500 hover:text-white transition-colors">L</a>
+                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] hover:border-zinc-500 hover:text-white transition-colors">XL</a>
+                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] hover:border-zinc-500 hover:text-white transition-colors">XXL</a>
+                        </div>
+                    </div>
+
+                    <!-- Price & Quick Order -->
+                    <div class="pt-2.5 border-t border-zinc-800/80 flex items-center justify-between">
+                        <div>
+                            <span class="text-sm sm:text-base font-bold text-white font-sans">₹{{ product.price }}</span>
+                            <span class="text-[10px] text-zinc-500 line-through block -mt-0.5 font-mono">₹{{ product.price|add:500 }}</span>
+                        </div>
+                        <a href="{{ product.get_absolute_url }}" class="px-3 py-1.5 rounded-lg bg-white hover:bg-zinc-200 text-black text-[10px] font-bold uppercase tracking-wider transition-colors flex items-center gap-1">
+                            <span>Order</span>
+                            <i class="bi bi-arrow-right text-[9px]"></i>
+                        </a>
+                    </div>
+                </div>
+
             </div>
-            <span class="text-xs text-zinc-500 font-mono">
-                {{ products.count }} Editions Available
-            </span>
-        </div>
+        {% endfor %}
+    </div>
 
-        <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
-            <a href="{% url 'store:product_list' %}" 
-               class="px-4 py-1.5 rounded text-xs font-medium uppercase tracking-wider transition-colors whitespace-nowrap {% if not category %}bg-white text-black font-semibold{% else %}bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800{% endif %}">
-                All Pieces
+    <!-- Mobile Scroll Hint -->
+    <div class="flex items-center justify-center gap-1.5 pt-3 sm:hidden text-[10px] text-zinc-500 font-mono">
+        <i class="bi bi-arrow-left"></i>
+        <span>SWIPE TO EXPLORE 4 UNIQUE DROPS</span>
+        <i class="bi bi-arrow-right"></i>
+    </div>
+</section>
+
+
+<!-- ================================================================= -->
+<!-- MAIN CATALOG ARCHIVE & CATEGORY NAVIGATION -->
+<!-- ================================================================= -->
+<div class="mb-8" id="collectionGrid">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between border-b border-zinc-800/80 pb-4 mb-5 gap-3">
+        <div>
+            <span class="text-[9px] font-mono tracking-[0.25em] text-zinc-500 uppercase block">ALL RELEASES</span>
+            <h2 class="text-xl font-luxury font-bold text-white tracking-wide mt-0.5">
+                {% if category %}{{ category.name }}{% elif query %}Search Results: "{{ query }}"{% else %}The Complete Atelier Catalog{% endif %}
+            </h2>
+        </div>
+        <span class="text-xs text-zinc-500 font-mono">
+            {{ products.count }} Editions Available
+        </span>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
+        <a href="{% url 'store:product_list' %}" 
+           class="px-4 py-1.5 rounded text-xs font-medium uppercase tracking-wider transition-colors whitespace-nowrap {% if not category %}bg-white text-black font-semibold{% else %}bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800{% endif %}">
+            All Pieces
+        </a>
+
+        {% for c in categories %}
+            <a href="{{ c.get_absolute_url }}" 
+               class="px-4 py-1.5 rounded text-xs font-medium uppercase tracking-wider transition-colors whitespace-nowrap {% if category.slug == c.slug %}bg-white text-black font-semibold{% else %}bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800{% endif %}">
+                {{ c.name }}
             </a>
-
-            {% for c in categories %}
-                <a href="{{ c.get_absolute_url }}" 
-                   class="px-4 py-1.5 rounded text-xs font-medium uppercase tracking-wider transition-colors whitespace-nowrap {% if category.slug == c.slug %}bg-white text-black font-semibold{% else %}bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800{% endif %}">
-                    {{ c.name }}
-                </a>
-            {% endfor %}
-        </div>
+        {% endfor %}
     </div>
 </div>
 
-<!-- ======================================================= -->
-<!-- 3. UNIFIED RESPONSIVE PRODUCT GRID                      -->
-<!-- (Bulletproof on mobile phones: Large images, no height 0)-->
-<!-- ======================================================= -->
+<!-- ================================================================= -->
+<!-- MAIN PRODUCT GRID (100% BULLETPROOF ON ALL MOBILE DEVICES) -->
+<!-- ================================================================= -->
 {% if products %}
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 mb-20">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mb-20">
         {% for product in products %}
             <div class="luxury-card rounded-xl overflow-hidden flex flex-col justify-between group border border-zinc-800/80 hover:border-zinc-600 transition-all bg-[#111113]">
                 
-                <!-- Product Studio Photo Container (Fixed height & aspect-square: Guaranteed 100% visible on all phones) -->
-                <a href="{{ product.get_absolute_url }}" 
-                   class="relative block w-full aspect-square bg-[#0b0b0d] p-2.5 sm:p-5 overflow-hidden border-b border-zinc-800/60 group-hover:bg-[#0e0e11] transition-colors" 
-                   title="View {{ product.name }} details">
+                <!-- Product Studio Photo: Absolute Inset container with min-height prevents height collapse on iOS Safari & Mobile Chrome -->
+                <div class="relative aspect-square min-h-[150px] sm:min-h-[220px] w-full bg-[#08080a] overflow-hidden border-b border-zinc-800/60">
+                    <a href="{{ product.get_absolute_url }}" class="absolute inset-0 p-2.5 sm:p-4 flex items-center justify-center" title="Tap to view {{ product.name }} details">
+                        <img src="{{ product.image_url }}" 
+                             alt="{{ product.name }}" 
+                             class="w-full h-full max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105"
+                             loading="lazy"
+                             onerror="this.onerror=null; this.src='https://placehold.co/600x600/141416/ffffff.png?text={{ product.name|urlencode }}';">
+                    </a>
                     
-                    <!-- Main Product Image (Direct block display prevents mobile height collapse) -->
-                    <img src="{{ product.image_url }}" 
-                         alt="{{ product.name }}" 
-                         loading="eager"
-                         class="w-full h-full object-contain mx-auto transition-transform duration-500 ease-out group-hover:scale-105">
-                    
-                    <!-- Clean GSM & Stock Badge -->
-                    <div class="absolute top-2 left-2 sm:top-3 sm:left-3 pointer-events-none flex items-center gap-1">
-                        <span class="px-1.5 py-0.5 sm:px-2 rounded bg-zinc-900/90 border border-zinc-800 text-[8px] sm:text-[9px] font-mono tracking-wider text-zinc-300">
+                    <!-- Clean Matte GSM & Stock Badge -->
+                    <div class="absolute top-2.5 left-2.5 pointer-events-none flex items-center gap-1.5">
+                        <span class="px-2 py-0.5 rounded bg-zinc-900/90 border border-zinc-800 text-[9px] font-mono tracking-wider text-zinc-400">
                             {{ product.gsm }} GSM
                         </span>
                         {% if product.stock <= 0 or not product.available %}
-                            <span class="px-1.5 py-0.5 rounded bg-zinc-950 border border-zinc-700 text-[8px] sm:text-[9px] font-mono text-rose-400 font-bold">
+                            <span class="px-2 py-0.5 rounded bg-zinc-950/95 border border-zinc-700 text-[9px] font-mono tracking-wider text-rose-400">
                                 SOLD OUT
                             </span>
                         {% endif %}
                     </div>
 
                     <!-- Minimalist Wishlist Button -->
-                    <span onclick="event.preventDefault(); window.location.href='{% url 'store:wishlist_toggle' product.id %}';" 
-                          class="absolute top-2 right-2 sm:top-3 sm:right-3 w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center text-xs sm:text-sm transition-colors z-10"
-                          title="Save Piece">
+                    <a href="{% url 'store:wishlist_toggle' product.id %}" 
+                       class="absolute top-2.5 right-2.5 w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center text-xs sm:text-sm transition-colors z-10"
+                       title="Save Piece">
                         <i class="bi bi-heart"></i>
-                    </span>
-                </a>
+                    </a>
+                </div>
 
                 <!-- Product Specifications, Sizing & Details -->
-                <div class="p-3 sm:p-5 flex-1 flex flex-col justify-between space-y-2 sm:space-y-3">
-                    <div class="space-y-0.5 sm:space-y-1">
-                        <span class="text-[8px] sm:text-[9px] font-mono text-zinc-500 uppercase tracking-[0.15em] block truncate">
+                <div class="p-3.5 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
+                    <div class="space-y-1">
+                        <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-[0.2em] block">
                             {{ product.category.name }}
                         </span>
                         
@@ -168,32 +195,32 @@
                             <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
                         </h3>
                         
-                        <p class="text-[10px] sm:text-[11px] text-zinc-400 font-light line-clamp-1">{{ product.print_type }}</p>
+                        <p class="text-[11px] text-zinc-400 font-light line-clamp-1">{{ product.print_type }}</p>
                     </div>
 
                     <!-- Explicit Sizes Row (S, M, L, XL, XXL) -->
-                    <div class="pt-0.5">
+                    <div class="pt-1">
                         <div class="flex items-center justify-between text-[8px] sm:text-[9px] font-mono text-zinc-500 uppercase tracking-wider mb-1">
                             <span>SIZES:</span>
                             <span class="text-zinc-500 font-light hidden sm:inline">Drop Shoulder</span>
                         </div>
-                        <div class="grid grid-cols-5 gap-1 text-center">
-                            <a href="{{ product.get_absolute_url }}" class="py-0.5 sm:py-1 rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">S</a>
-                            <a href="{{ product.get_absolute_url }}" class="py-0.5 sm:py-1 rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">M</a>
-                            <a href="{{ product.get_absolute_url }}" class="py-0.5 sm:py-1 rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">L</a>
-                            <a href="{{ product.get_absolute_url }}" class="py-0.5 sm:py-1 rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">XL</a>
-                            <a href="{{ product.get_absolute_url }}" class="py-0.5 sm:py-1 rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">XXL</a>
+                        <div class="grid grid-cols-5 gap-1">
+                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">S</a>
+                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">M</a>
+                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">L</a>
+                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">XL</a>
+                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">XXL</a>
                         </div>
                     </div>
 
                     <!-- Price & View Link -->
-                    <div class="pt-2 sm:pt-3 border-t border-zinc-800/60 flex items-center justify-between">
+                    <div class="pt-3 border-t border-zinc-800/60 flex items-center justify-between">
                         <div>
                             <span class="text-sm sm:text-base font-semibold text-white font-sans">₹{{ product.price }}</span>
-                            <span class="text-[10px] sm:text-[11px] text-zinc-500 line-through block -mt-0.5 font-mono">₹{{ product.price|add:500 }}</span>
+                            <span class="text-[10px] text-zinc-500 line-through block -mt-0.5 font-mono">₹{{ product.price|add:500 }}</span>
                         </div>
-                        <a href="{{ product.get_absolute_url }}" class="px-2.5 py-1 sm:px-3 sm:py-1 rounded bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider text-zinc-300 hover:text-white transition-colors">
-                            View →
+                        <a href="{{ product.get_absolute_url }}" class="px-2.5 sm:px-3 py-1 rounded bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider text-zinc-300 hover:text-white transition-colors">
+                            Details →
                         </a>
                     </div>
                 </div>
@@ -202,30 +229,18 @@
         {% endfor %}
     </div>
 {% else %}
-    <div class="text-center py-16 sm:py-20 bg-zinc-950 rounded-xl border border-zinc-800 space-y-4 mb-20">
-        <h3 class="text-sm font-luxury font-bold text-white uppercase tracking-wider">No matching editions found</h3>
-        <p class="text-xs text-zinc-400 max-w-sm mx-auto font-light">Explore all curated categories or search by artwork or silhouette.</p>
-        <a href="{% url 'store:product_list' %}" class="inline-block px-5 py-2 rounded bg-white text-black font-semibold text-xs uppercase tracking-wider">
-            View All Pieces
-        </a>
+    <div class="text-center py-16 px-4 bg-zinc-950 rounded-xl border border-zinc-800 space-y-3 mb-20">
+        <div class="w-12 h-12 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 flex items-center justify-center text-xl mx-auto">
+            <i class="bi bi-box-seam"></i>
+        </div>
+        <h3 class="text-sm font-luxury font-bold text-white uppercase tracking-wider">Catalog Initializing or No Matching Editions</h3>
+        <p class="text-xs text-zinc-400 max-w-sm mx-auto font-light">Explore all curated categories or refresh to view the complete atelier collection.</p>
+        <div class="pt-2">
+            <a href="{% url 'store:product_list' %}" class="inline-block px-6 py-2.5 rounded-full bg-white text-black font-semibold text-xs uppercase tracking-wider hover:bg-zinc-200 transition-colors">
+                Reload Collection (All Pieces)
+            </a>
+        </div>
     </div>
 {% endif %}
 
-<script>
-    // Live Mobile Countdown Timer
-    function updateCountdown() {
-        const el = document.getElementById('mobileCountdown');
-        if (!el) return;
-        const now = new Date();
-        const endOfDay = new Date();
-        endOfDay.setHours(23, 59, 59, 999);
-        const diff = Math.max(0, endOfDay - now);
-        const h = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');
-        const m = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, '0');
-        const s = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
-        el.innerText = `${h}:${m}:${s}`;
-    }
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-</script>
 {% endblock %}

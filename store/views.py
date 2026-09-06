@@ -17,17 +17,20 @@ def product_list(request, category_slug=None):
     # Auto-Heal: If catalog is empty (e.g. fresh Render container), auto-seed the 12 flagship editions
     if Product.objects.count() == 0:
         try:
+            import sys
+            from pathlib import Path
+            base_dir = str(Path(__file__).resolve().parent.parent)
+            if base_dir not in sys.path:
+                sys.path.insert(0, base_dir)
             import seed_data
             seed_data.seed()
+            print("Auto-healed database: Seeded 12 flagship printed t-shirts successfully!")
         except Exception as err:
             print(f"Auto-seed exception: {err}")
-    # Auto-seed database if empty (ensures products always display on mobile, local, or cloud deployments)
-    if Product.objects.count() == 0:
-        try:
-            import seed_data
-            seed_data.seed()
-        except Exception:
-            pass
+
+    # Ensure all products are marked available so they are never hidden
+    if Product.objects.filter(available=True).count() == 0 and Product.objects.exists():
+        Product.objects.all().update(available=True)
     category = None
     categories = Category.objects.all()
     products = Product.objects.filter(available=True)
@@ -79,11 +82,15 @@ def product_list(request, category_slug=None):
     if request.user.is_authenticated:
         user_wishlist_ids = list(Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True))
 
+    # 4 Unique Flagship Spotlight Editions for the Top Banner
+    spotlight_products = Product.objects.filter(available=True)[:4]
+
     return render(request, 'store/product/list.html', {
         'category': category,
         'categories': categories,
         'products': products,
         'trending_products': trending_products,
+        'spotlight_products': spotlight_products,
         'query': query,
         'min_price': min_price,
         'max_price': max_price,
@@ -253,6 +260,7 @@ def order_create(request):
                 order.user = request.user
                 order.discount = discount
                 order.awb_code = f"SS-EXP-{random.randint(100000, 999999)}"
+                order.tracking_number = order.awb_code
                 order.save()
 
                 if not profile.address:

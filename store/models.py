@@ -95,6 +95,10 @@ class Product(models.Model):
     def get_fallback_image(self):
         """Consistent, dedicated fallback photo for each specific product."""
         single_image_map = {
+            'tokyo-shibuya-ghost-tee': 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
+            'berserk-guts-dragonslayer-tee': 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&auto=format&fit=crop&q=80',
+            'evangelion-unit01-awakening-tee': 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80',
+            'akira-neo-tokyo-1988-tee': 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
             'susanoo-spectral-armor-tee': 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80',
             'six-eyes-void-inversion-tee': 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
             'fallen-seraphim-baroque-tee': 'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=800&auto=format&fit=crop&q=80',
@@ -210,6 +214,7 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Placed')
     discount = models.IntegerField(default=0)
     awb_code = models.CharField(max_length=100, blank=True, null=True)
+    tracking_number = models.CharField(max_length=100, blank=True, null=True, default='')
 
     class Meta:
         ordering = ['-created']
@@ -219,6 +224,14 @@ class Order(models.Model):
 
     def get_subtotal_cost(self):
         return sum(item.get_cost() for item in self.items.all())
+
+    def save(self, *args, **kwargs):
+        if not self.awb_code:
+            import random
+            self.awb_code = f"SS-EXP-{random.randint(100000, 999999)}"
+        if not self.tracking_number:
+            self.tracking_number = self.awb_code
+        super().save(*args, **kwargs)
 
     def get_total_cost(self):
         subtotal = self.get_subtotal_cost()
