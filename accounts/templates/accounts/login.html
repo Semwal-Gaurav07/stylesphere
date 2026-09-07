@@ -167,13 +167,15 @@
         const btnIcon = document.getElementById('btnIcon');
         const btnSpinner = document.getElementById('btnSpinner');
 
-        btnText.innerText = "AUTHENTICATING...";
-        btnIcon.classList.add('hidden');
-        btnSpinner.classList.remove('hidden');
-        btn.disabled = true;
+        if (btnText) btnText.innerText = "AUTHENTICATING...";
+        if (btnIcon) btnIcon.classList.add('hidden');
+        if (btnSpinner) btnSpinner.classList.remove('hidden');
         
-        // Submit standard Django form
-        e.target.submit();
+        // Prevent double submit race condition without interfering with standard form submission
+        setTimeout(() => {
+            if (btn) btn.disabled = true;
+        }, 50);
+        // Form submits naturally - do not call e.target.submit() here!
     }
 </script>
 {% endblock %}
