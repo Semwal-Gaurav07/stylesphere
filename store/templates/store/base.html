@@ -258,39 +258,44 @@
                 </div>
 
                 <!-- Desktop Center: Simple, Clear Navigation Links (Large & Readable) -->
-                <nav class="hidden md:flex items-center gap-8 text-sm font-semibold uppercase tracking-[0.12em] text-zinc-300">
-                    <a href="{% url 'store:product_list' %}" class="hover:text-white transition-colors {% if not category and not query %}text-white font-bold border-b-2 border-luxury-gold pb-1{% endif %}">
-                        Shop All Pieces
-                    </a>
-
-                    <!-- Collections Dropdown -->
+                <nav class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-300">
+                    <!-- Shop ▾ (Matching Video) -->
                     <div class="dropdown dropdown-hover">
-                        <label tabindex="0" class="cursor-pointer hover:text-white transition-colors flex items-center gap-1 {% if category %}text-white font-bold border-b border-luxury-gold pb-0.5{% endif %}">
-                            <span>Collections</span>
+                        <label tabindex="0" class="cursor-pointer hover:text-white transition-colors flex items-center gap-1.5 py-2">
+                            <span>Shop</span>
                             <i class="bi bi-chevron-down text-[10px] text-zinc-500"></i>
                         </label>
-                        <ul tabindex="0" class="dropdown-content z-50 menu p-3 shadow-2xl bg-zinc-950 border border-zinc-800 rounded-2xl w-60 text-xs divide-y divide-zinc-900 mt-2">
-                            <li class="px-3 py-1.5 text-zinc-500 font-mono text-[10px] uppercase tracking-wider">
-                                Curated Series
+                        <ul tabindex="0" class="dropdown-content z-50 menu p-3 shadow-2xl bg-[#0e0e11] border border-zinc-800 rounded-xl w-64 text-xs divide-y divide-zinc-900 mt-1">
+                            <li>
+                                <a href="{% url 'store:product_list' %}" class="py-2.5 text-white font-bold hover:bg-zinc-900 rounded-lg">
+                                    All Pieces (Catalog)
+                                </a>
                             </li>
                             {% for c in categories %}
                                 <li>
-                                    <a href="{{ c.get_absolute_url }}" class="py-2.5 text-zinc-300 hover:text-white hover:bg-zinc-900 rounded-xl transition-colors flex items-center justify-between">
+                                    <a href="{{ c.get_absolute_url }}" class="py-2 text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-lg flex justify-between">
                                         <span>{{ c.name }}</span>
-                                        <span class="text-[10px] text-zinc-500 font-mono">→</span>
+                                        <span class="text-[10px] text-zinc-600 font-mono">→</span>
                                     </a>
                                 </li>
+                            {% empty %}
+                                <li><a href="{% url 'store:product_list' %}?q=Anime" class="py-2 text-zinc-400 hover:text-white">Anime & Manga</a></li>
+                                <li><a href="{% url 'store:product_list' %}?q=Oversized" class="py-2 text-zinc-400 hover:text-white">Oversized & Acid Wash</a></li>
+                                <li><a href="{% url 'store:product_list' %}?q=Cyberpunk" class="py-2 text-zinc-400 hover:text-white">Cyberpunk 2099</a></li>
                             {% endfor %}
                         </ul>
                     </div>
 
-                    <a href="{% if user.is_authenticated %}{% url 'accounts:profile' %}{% else %}{% url 'accounts:login' %}{% endif %}" class="hover:text-white transition-colors flex items-center gap-1.5">
-                        <i class="bi bi-box-seam text-zinc-500 text-xs"></i>
-                        <span>Track Order</span>
+                    <a href="#whoWeAre" class="hover:text-white transition-colors">
+                        About
                     </a>
 
-                    <a href="#atelierTrust" class="hover:text-white transition-colors">
-                        Heritage
+                    <a href="#howItsMade" class="hover:text-white transition-colors">
+                        Our values
+                    </a>
+
+                    <a href="#contactFooter" class="hover:text-white transition-colors">
+                        Contact
                     </a>
                 </nav>
 
@@ -583,60 +588,94 @@
     </section>
 
     <!-- Luxury Footer -->
-    <footer class="bg-black text-zinc-500 border-t border-zinc-900 py-16">
-        <div class="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
+    <footer class="bg-[#0b0b0e] text-zinc-400 border-t border-zinc-800 py-16" id="contactFooter">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+            
+            <!-- Tier 1: Split Top Row (About us on Left + Email address newsletter on Right, matching video) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 pb-12 border-b border-zinc-800/80" id="aboutUsSection">
                 
-                <!-- Brand Statement -->
-                <div class="md:col-span-5 space-y-4">
-                    <h3 class="text-lg font-luxury font-bold tracking-[0.2em] text-white">STYLE SPHERE</h3>
-                    <p class="text-xs text-zinc-400 leading-relaxed max-w-sm">
-                        Curating the heaviest French Terry cotton t-shirts, artisan graphic prints, and dropped-shoulder silhouettes. Designed with restraint, tailored for endurance.
+                <!-- Left: About us -->
+                <div class="lg:col-span-7 space-y-3">
+                    <h3 class="text-xl font-luxury font-bold text-white tracking-wide">
+                        About us
+                    </h3>
+                    <p class="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed max-w-xl">
+                        Style Sphere Atelier was born from an obsession with heavyweight cotton and bespoke graphics. We believe menswear should be permanent, not disposable. Every piece is engineered from 240+ GSM French Terry cotton with dropped shoulders and bio-wash permanence to elevate everyday streetwear for the better.
                     </p>
-                    <div class="text-[11px] text-zinc-500 font-mono">
-                        HEADQUARTERS // ATELIER STUDIO, PANCHKULA, HARYANA, INDIA
+                </div>
+
+                <!-- Right: Email address Newsletter Form -->
+                <div class="lg:col-span-5 space-y-3">
+                    <h4 class="text-sm font-semibold text-white uppercase tracking-wider font-mono text-[11px]">
+                        Email address
+                    </h4>
+                    <form onsubmit="event.preventDefault(); alert('Thank you for subscribing to Style Sphere Atelier privilege drops.'); this.reset();" class="space-y-3">
+                        <div class="w-full">
+                            <input type="email" 
+                                   required 
+                                   placeholder="Your email address" 
+                                   class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-400 transition-colors rounded-none">
+                        </div>
+                        <button type="submit" class="px-8 py-3 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold text-xs uppercase tracking-[0.2em] border border-zinc-600 transition-colors">
+                            SUBMIT
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- Tier 2: 4 Clean Columns matching video (Address, Contact us, Follow, Info) -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-xs font-light">
+                
+                <!-- Column 1: Address -->
+                <div class="space-y-3">
+                    <h5 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Address</h5>
+                    <p class="text-zinc-400 leading-relaxed text-[11px]">
+                        Industrial Area Phase 2,<br>
+                        Panchkula, Haryana,<br>
+                        Post code 134113, India
+                    </p>
+                </div>
+
+                <!-- Column 2: Contact us -->
+                <div class="space-y-3">
+                    <h5 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Contact us</h5>
+                    <div class="space-y-1.5 text-[11px] text-zinc-400">
+                        <div><a href="mailto:concierge@stylesphere.in" class="hover:text-white transition-colors">concierge@stylesphere.in</a></div>
+                        <div><a href="https://wa.me/919781855165" target="_blank" class="hover:text-white transition-colors">+91 9781855165</a></div>
+                        <div class="text-zinc-500 text-[10px] font-mono">Mon–Sat • 10:00 AM – 7:00 PM IST</div>
                     </div>
                 </div>
 
-                <!-- Collections -->
-                <div class="md:col-span-3 space-y-3">
-                    <h4 class="text-xs font-luxury font-bold text-white uppercase tracking-widest">Collections</h4>
-                    <ul class="space-y-2 text-xs text-zinc-400">
-                        <li><a href="{% url 'store:product_list' %}?q=Anime" class="hover:text-luxury-gold transition-colors">Anime & Manga Graphic Tees</a></li>
-                        <li><a href="{% url 'store:product_list' %}?q=Cyberpunk" class="hover:text-luxury-gold transition-colors">Cyberpunk & Futuristic Editions</a></li>
-                        <li><a href="{% url 'store:product_list' %}?q=Vintage" class="hover:text-luxury-gold transition-colors">Vintage Acid Wash Heavyweight</a></li>
-                        <li><a href="{% url 'store:product_list' %}?q=Minimalist" class="hover:text-luxury-gold transition-colors">Minimalist Typography Series</a></li>
+                <!-- Column 3: Follow -->
+                <div class="space-y-3">
+                    <h5 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Follow</h5>
+                    <ul class="space-y-1.5 text-[11px] text-zinc-400">
+                        <li><a href="https://instagram.com/code.xr" target="_blank" class="hover:text-white transition-colors">Instagram (@code.xr)</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Facebook</a></li>
+                        <li><a href="{% url 'accounts:profile' %}" class="hover:text-white transition-colors">Atelier Archive</a></li>
                     </ul>
                 </div>
 
-                <!-- Concierge / Client Services -->
-                <div class="md:col-span-4 space-y-3">
-                    <h4 class="text-xs font-luxury font-bold text-white uppercase tracking-widest">Atelier Concierge</h4>
-                    <p class="text-xs text-zinc-400 leading-relaxed">
-                        For bespoke sizing inquiries, custom corporate orders, or order status support:
-                    </p>
-                    <div class="pt-2 flex flex-col gap-2 text-xs">
-                        <a href="https://wa.me/919781855165?text=Hello%20Style%20Sphere%20Atelier,%20I%20have%20an%20inquiry" target="_blank" class="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-semibold">
-                            <i class="bi bi-whatsapp"></i> WhatsApp Concierge (+91 9781855165)
-                        </a>
-                        <a href="{% url 'accounts:profile' %}" class="inline-flex items-center gap-2 text-zinc-400 hover:text-white">
-                            <i class="bi bi-box-seam"></i> Track Air Waybill (AWB) Order Status
-                        </a>
-                    </div>
+                <!-- Column 4: Info -->
+                <div class="space-y-3">
+                    <h5 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Info</h5>
+                    <ul class="space-y-1.5 text-[11px] text-zinc-400">
+                        <li><a href="{% url 'store:shipping_policy' %}" class="hover:text-white transition-colors">Shipping & returns</a></li>
+                        <li><a href="{% url 'store:returns_policy' %}" class="hover:text-white transition-colors">30-Day size exchanges</a></li>
+                        <li><a href="{% url 'store:privacy_policy' %}" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="{% url 'store:terms_of_service' %}" class="hover:text-white transition-colors">Terms conditions</a></li>
+                    </ul>
                 </div>
 
             </div>
 
-            <!-- Bottom Copyright & Legal -->
-            <div class="pt-8 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between text-[11px] text-zinc-500 gap-4">
+            <!-- Bottom Copyright Line -->
+            <div class="pt-8 border-t border-zinc-900 text-[10px] font-mono text-zinc-600 flex flex-col sm:flex-row justify-between items-center gap-2">
                 <span>&copy; {% now "Y" %} STYLE SPHERE ATELIER INC. ALL RIGHTS RESERVED.</span>
-                <div class="flex items-center gap-5 flex-wrap font-mono text-[10px]">
-                    <a href="{% url 'store:shipping_policy' %}" class="hover:text-zinc-300 transition-colors">SHIPPING POLICY</a>
-                    <a href="{% url 'store:returns_policy' %}" class="hover:text-zinc-300 transition-colors">30-DAY EXCHANGES</a>
-                    <a href="{% url 'store:privacy_policy' %}" class="hover:text-zinc-300 transition-colors">PRIVACY POLICY</a>
-                    <a href="{% url 'store:terms_of_service' %}" class="hover:text-zinc-300 transition-colors">TERMS OF SERVICE</a>
-                </div>
+                <span>DESIGNED WITH RESTRAINT • CRAFTED FOR ENDURANCE</span>
             </div>
+
         </div>
     </footer>
 

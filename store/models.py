@@ -166,19 +166,6 @@ class ProductImage(models.Model):
     caption = models.CharField(max_length=150, blank=True, help_text='e.g. Front View, Back Print, Model Shot, Detail')
     created = models.DateTimeField(auto_now_add=True)
 
-    def get_url(self):
-        if self.image_url:
-            return self.image_url
-        if self.image:
-            try:
-                return self.image.url
-            except Exception:
-                pass
-        return ""
-
-    def __str__(self):
-        return f"{self.product.name} - {self.caption or 'Image'}" 
-
     class Meta:
         ordering = ['id']
 
@@ -186,13 +173,15 @@ class ProductImage(models.Model):
         return f"{self.product.name} Image ({self.caption or 'Gallery'})"
 
     def get_url(self):
+        if self.image_url:
+            return self.image_url
         if self.image:
             try:
                 if self.image.storage.exists(self.image.name):
                     return self.image.url
             except Exception:
                 pass
-        return self.image_url
+        return ""
 
 
 class Coupon(models.Model):

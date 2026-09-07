@@ -41,28 +41,20 @@ def payment_process(request):
             print(f"Razorpay Client Order Creation Note: {e}")
             razorpay_order_id = f"rzp_order_{order.id}"
 
-    # Handle standard POST fallback (COD or Direct Transfer)
+    # Handle standard POST fallback (COD or Razorpay checkout redirection)
     if request.method == 'POST':
         payment_type = request.POST.get('payment_type', 'cod')
         
         if payment_type == 'cod':
             order.paid = False
             order.payment_method = 'Cash on Delivery (COD)'
-        elif payment_type == 'card':
-            card_num = request.POST.get('card_number', '4242')
-            last4 = card_num.replace(' ', '')[-4:] if len(card_num) >= 4 else '4242'
-            order.paid = True
-            order.payment_method = f'Card Ending in {last4}'
-        elif payment_type == 'upi':
-            order.paid = True
-            order.payment_method = 'UPI / QR Transfer'
+            order.save()
+            send_order_confirmation_email(order)
+            return redirect('payment:done')
         else:
-            order.paid = True
-            order.payment_method = 'Online Payment'
-            
-        order.save()
-        send_order_confirmation_email(order)
-        return redirect('payment:done')
+            # Card / UPI / NetBanking must be processed via verified Razorpay checkout
+            messages.info(request, 'Please complete payment using the secure Razorpay portal below.')
+            return redirect('payment:process')
 
     return render(request, 'payment/process.html', {
         'order': order,
@@ -108,9 +100,7 @@ def payment_verify(request):
                     })
                 except Exception as e:
                     print(f"Razorpay Signature Warning: {e}")
-                    # Allow dev pass-through if test key
-                    if 'test' not in getattr(settings, 'RAZORPAY_KEY_ID', ''):
-                        verified = False
+                    verified = False
 
             if verified:
                 order.paid = True

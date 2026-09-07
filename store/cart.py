@@ -1,4 +1,4 @@
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 from django.conf import settings
 from .models import Product
 
@@ -34,7 +34,6 @@ class Cart:
             del self.cart[item_key]
             self.save()
         else:
-            # Fallback: match by product id prefix (e.g. '1' matches '1_L' or '1_M')
             removed = False
             for k in list(self.cart.keys()):
                 if k == item_key or k.startswith(f"{item_key}_"):
@@ -75,33 +74,37 @@ class Cart:
                 item_copy['product'] = product
                 item_copy['item_key'] = key
                 item_copy['size'] = item.get('size', 'M')
-                item_copy['price'] = Decimal(item.get('price', product.price))
-                item_copy['total_price'] = int(item_copy['price'] * item.get('quantity', 1))
+                item_copy['price'] = Decimal(str(item.get('price', product.price)))
+                item_copy['total_price'] = (item_copy['price'] * Decimal(str(item.get('quantity', 1)))).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
                 yield item_copy
 
     def __len__(self):
         return sum(item['quantity'] for item in self.cart.values() if isinstance(item, dict))
 
     def get_total_price(self):
-        total = 0
+        total = Decimal('0.00')
         for item in self.cart.values():
             if isinstance(item, dict):
                 try:
-                    total += int(Decimal(item.get('price', 0)) * item.get('quantity', 0))
+                    price = Decimal(str(item.get('price', 0)))
+                    qty = Decimal(str(item.get('quantity', 0)))
+                    total += price * qty
                 except Exception:
                     pass
-        return total
+        return total.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
 
     def get_free_shipping_needed(self):
         total = self.get_total_price()
-        threshold = 999
+        threshold = Decimal('999.00')
         if total >= threshold:
-            return 0
-        return threshold - total
+            return Decimal('0.00')
+        return (threshold - total).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
 
     def get_free_shipping_percent(self):
         total = self.get_total_price()
-        threshold = 999
+        threshold = Decimal('999.00')
+        if threshold <= Decimal('0.00'):
+            return 100
         return min(int((total / threshold) * 100), 100)
 
     def clear(self):

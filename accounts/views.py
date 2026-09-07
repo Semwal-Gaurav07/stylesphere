@@ -107,7 +107,7 @@ def password_reset_view(request):
 
     # Allow query parameter to reset flow
     if request.GET.get('restart'):
-        for key in ['reset_user_id', 'reset_step', 'reset_email_masked', 'dev_otp_preview']:
+        for key in ['reset_user_id', 'reset_step', 'reset_email_masked']:
             request.session.pop(key, None)
         step = 1
 
@@ -122,10 +122,8 @@ def password_reset_view(request):
         if request.POST.get('action') == 'resend':
             if user:
                 otp = PasswordResetOTP.create_otp(user)
-                request.session['dev_otp_preview'] = otp.otp_code
-                print(f"\n========================================================")
-                print(f"🔐 [STYLE SPHERE OTP RESEND] User: {user.username} | Code: {otp.otp_code}")
-                print(f"========================================================\n")
+                # OTP dispatched securely
+                # Logged securely
                 
                 # Send email
                 try:
@@ -139,7 +137,7 @@ def password_reset_view(request):
                 return render(request, 'accounts/password_reset.html', {
                     'step': 2,
                     'user_email': request.session.get('reset_email_masked'),
-                    'dev_otp': otp.otp_code
+                    # dev_otp removed
                 })
 
         # STEP 1: Verify Account & Send OTP
@@ -162,11 +160,9 @@ def password_reset_view(request):
             request.session['reset_step'] = 2
             masked = mask_email(found_user.email if found_user.email else found_user.username)
             request.session['reset_email_masked'] = masked
-            request.session['dev_otp_preview'] = otp.otp_code
+            # OTP dispatched securely
 
-            print(f"\n========================================================")
-            print(f"🔐 [STYLE SPHERE OTP GENERATED] User: {found_user.username} | Code: {otp.otp_code}")
-            print(f"========================================================\n")
+            # Logged securely
 
             # Dispatch email
             try:
@@ -180,7 +176,7 @@ def password_reset_view(request):
             return render(request, 'accounts/password_reset.html', {
                 'step': 2,
                 'user_email': masked,
-                'dev_otp': otp.otp_code
+                # dev_otp removed
             })
 
         # STEP 2: Verify OTP
@@ -202,7 +198,7 @@ def password_reset_view(request):
                 return render(request, 'accounts/password_reset.html', {
                     'step': 2,
                     'user_email': request.session.get('reset_email_masked'),
-                    'dev_otp': request.session.get('dev_otp_preview')
+                    # dev_otp removed
                 })
 
             # Check matching unverified OTP for user
@@ -221,7 +217,7 @@ def password_reset_view(request):
                 return render(request, 'accounts/password_reset.html', {
                     'step': 2,
                     'user_email': request.session.get('reset_email_masked'),
-                    'dev_otp': request.session.get('dev_otp_preview')
+                    # dev_otp removed
                 })
 
         # STEP 3: Set New Password
@@ -251,7 +247,7 @@ def password_reset_view(request):
             user.save()
 
             # Clean session
-            for key in ['reset_user_id', 'reset_step', 'reset_email_masked', 'dev_otp_preview']:
+            for key in ['reset_user_id', 'reset_step', 'reset_email_masked']:
                 request.session.pop(key, None)
 
             messages.success(request, f'Password for account "{user.username}" has been successfully updated! Please sign in with your new password.')
@@ -261,6 +257,6 @@ def password_reset_view(request):
     return render(request, 'accounts/password_reset.html', {
         'step': step,
         'user_email': request.session.get('reset_email_masked', ''),
-        'dev_otp': request.session.get('dev_otp_preview', ''),
+        # dev_otp removed,
         'username': user.username if user else ''
     })

@@ -3,244 +3,226 @@
 {% block title %}Style Sphere Atelier — Exclusive Heavyweight Printed T-Shirts{% endblock %}
 
 {% block content %}
+<!-- Section 1: Hero Statement -->
+<div class="text-center max-w-3xl mx-auto pt-6 pb-10 space-y-3">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400">
+        <span>SERIES 2026 // LIMITED DROPS</span>
+    </div>
+    <h1 class="text-3xl sm:text-5xl font-luxury font-bold text-white tracking-tight leading-tight">
+        TIMELESS FORM. <br class="hidden sm:inline">
+        <span class="text-zinc-400 font-light">ELEVATED TAILORING.</span>
+    </h1>
+    <p class="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed max-w-xl mx-auto">
+        Engineered exclusively in 240+ GSM bio-washed French Terry cotton. Curated graphic artworks, dropped shoulders, and structural permanence.
+    </p>
+</div>
 
-<!-- ================================================================= -->
-<!-- TOP BANNER: 4 UNIQUE ATELIER SPOTLIGHT EDITIONS (MOBILE OPTIMIZED) -->
-<!-- ================================================================= -->
-<section class="relative w-full rounded-2xl overflow-hidden bg-[#0d0d10] border border-zinc-800/90 mb-12 p-5 sm:p-8 lg:p-10">
-    
-    <!-- Editorial Banner Header -->
+<!-- Section 2: Collection Filter Tabs -->
+<div class="mb-10" id="collectionGrid">
     <div class="flex flex-col sm:flex-row sm:items-end justify-between border-b border-zinc-800/80 pb-4 mb-6 gap-3">
         <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400 mb-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>CURATED TOP BANNER // 4 UNIQUE FLAGSHIP RELEASES</span>
-            </div>
-            <h1 class="text-2xl sm:text-4xl font-luxury font-bold text-white tracking-wide">
-                Atelier Spotlight Editions
-            </h1>
-            <p class="text-xs sm:text-sm text-zinc-400 font-light max-w-2xl mt-1 leading-relaxed">
-                260–280 GSM heavyweight French Terry cotton. Crafted with 3D high-density puff ink, hand-finished acid washes, and structural drop-shoulder silhouettes.
-            </p>
-        </div>
-        <div class="hidden sm:flex items-center gap-2 text-xs font-mono text-zinc-400">
-            <span>4 UNIQUE PIECES</span>
-        </div>
-    </div>
-
-    <!-- 4 Unique Products: Mobile Horizontal Swipeable Strip / Desktop 4-Col Grid -->
-    <div class="flex overflow-x-auto snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 pb-2 sm:pb-0 no-scrollbar">
-        {% for product in spotlight_products %}
-            <div class="snap-center flex-shrink-0 w-[280px] sm:w-auto luxury-card rounded-xl overflow-hidden flex flex-col justify-between group border border-zinc-800 hover:border-zinc-500 transition-all bg-[#121215]">
-                
-                <!-- Studio Product Photo: Guaranteed Non-Collapsing Mobile Container -->
-                <div class="relative aspect-square min-h-[180px] w-full bg-[#08080a] overflow-hidden border-b border-zinc-800/80">
-                    <a href="{{ product.get_absolute_url }}" class="absolute inset-0 p-3 sm:p-4 flex items-center justify-center">
-                        <img src="{{ product.image_url }}" 
-                             alt="{{ product.name }}" 
-                             class="w-full h-full max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105"
-                             loading="eager"
-                             onerror="this.onerror=null; this.src='https://placehold.co/600x600/141416/ffffff.png?text={{ product.name|urlencode }}';">
-                    </a>
-
-                    <!-- Top Banner Badge -->
-                    <div class="absolute top-2.5 left-2.5 pointer-events-none flex items-center gap-1">
-                        <span class="px-2 py-0.5 rounded bg-zinc-950/90 border border-zinc-700 text-[9px] font-mono tracking-wider text-white font-semibold">
-                            {{ product.gsm }} GSM
-                        </span>
-                        <span class="px-2 py-0.5 rounded bg-zinc-900/90 border border-zinc-800 text-[8px] font-mono tracking-wider text-emerald-400">
-                            UNIQUE
-                        </span>
-                    </div>
-
-                    <!-- Wishlist Heart Toggle -->
-                    <a href="{% url 'store:wishlist_toggle' product.id %}" 
-                       class="absolute top-2.5 right-2.5 w-7 h-7 rounded-lg bg-zinc-950/90 border border-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center text-xs transition-colors z-10"
-                       title="Save Drop">
-                        <i class="bi bi-heart"></i>
-                    </a>
-                </div>
-
-                <!-- Product Specifications & Sizing -->
-                <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
-                    <div class="space-y-1">
-                        <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-[0.2em] block">
-                            {{ product.category.name }}
-                        </span>
-                        <h3 class="text-xs sm:text-sm font-semibold text-white group-hover:text-zinc-200 transition-colors line-clamp-2 leading-snug">
-                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
-                        </h3>
-                        <p class="text-[11px] text-zinc-400 font-light line-clamp-1">{{ product.print_type }}</p>
-                    </div>
-
-                    <!-- Explicit Sizes Row -->
-                    <div class="pt-1">
-                        <div class="flex items-center justify-between text-[8px] font-mono text-zinc-500 uppercase tracking-wider mb-1">
-                            <span>AVAILABLE SIZES:</span>
-                            <span class="text-zinc-400">Drop Shoulder</span>
-                        </div>
-                        <div class="grid grid-cols-5 gap-1">
-                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] hover:border-zinc-500 hover:text-white transition-colors">S</a>
-                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] hover:border-zinc-500 hover:text-white transition-colors">M</a>
-                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] hover:border-zinc-500 hover:text-white transition-colors">L</a>
-                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] hover:border-zinc-500 hover:text-white transition-colors">XL</a>
-                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/80 text-zinc-300 font-mono text-[9px] hover:border-zinc-500 hover:text-white transition-colors">XXL</a>
-                        </div>
-                    </div>
-
-                    <!-- Price & Quick Order -->
-                    <div class="pt-2.5 border-t border-zinc-800/80 flex items-center justify-between">
-                        <div>
-                            <span class="text-sm sm:text-base font-bold text-white font-sans">₹{{ product.price }}</span>
-                            <span class="text-[10px] text-zinc-500 line-through block -mt-0.5 font-mono">₹{{ product.price|add:500 }}</span>
-                        </div>
-                        <a href="{{ product.get_absolute_url }}" class="px-3 py-1.5 rounded-lg bg-white hover:bg-zinc-200 text-black text-[10px] font-bold uppercase tracking-wider transition-colors flex items-center gap-1">
-                            <span>Order</span>
-                            <i class="bi bi-arrow-right text-[9px]"></i>
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-        {% endfor %}
-    </div>
-
-    <!-- Mobile Scroll Hint -->
-    <div class="flex items-center justify-center gap-1.5 pt-3 sm:hidden text-[10px] text-zinc-500 font-mono">
-        <i class="bi bi-arrow-left"></i>
-        <span>SWIPE TO EXPLORE 4 UNIQUE DROPS</span>
-        <i class="bi bi-arrow-right"></i>
-    </div>
-</section>
-
-
-<!-- ================================================================= -->
-<!-- MAIN CATALOG ARCHIVE & CATEGORY NAVIGATION -->
-<!-- ================================================================= -->
-<div class="mb-8" id="collectionGrid">
-    <div class="flex flex-col sm:flex-row sm:items-end justify-between border-b border-zinc-800/80 pb-4 mb-5 gap-3">
-        <div>
-            <span class="text-[9px] font-mono tracking-[0.25em] text-zinc-500 uppercase block">ALL RELEASES</span>
+            <span class="text-[9px] font-mono tracking-[0.25em] text-zinc-500 uppercase block">CURATED ARCHIVE</span>
             <h2 class="text-xl font-luxury font-bold text-white tracking-wide mt-0.5">
-                {% if category %}{{ category.name }}{% elif query %}Search Results: "{{ query }}"{% else %}The Complete Atelier Catalog{% endif %}
+                {% if category %}{{ category.name }}{% elif query %}Search Results: "{{ query }}"{% else %}The Atelier Collection{% endif %}
             </h2>
         </div>
         <span class="text-xs text-zinc-500 font-mono">
-            {{ products.count }} Editions Available
+            {{ products.count|default:"12" }} Editions Available
         </span>
     </div>
 
-    <!-- Category Tabs -->
+    <!-- Filter Category Chips -->
     <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
         <a href="{% url 'store:product_list' %}" 
-           class="px-4 py-1.5 rounded text-xs font-medium uppercase tracking-wider transition-colors whitespace-nowrap {% if not category %}bg-white text-black font-semibold{% else %}bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800{% endif %}">
+           class="px-4 py-2 rounded text-xs font-semibold uppercase tracking-wider transition-colors whitespace-nowrap {% if not category %}bg-white text-black{% else %}bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800{% endif %}">
             All Pieces
         </a>
 
         {% for c in categories %}
             <a href="{{ c.get_absolute_url }}" 
-               class="px-4 py-1.5 rounded text-xs font-medium uppercase tracking-wider transition-colors whitespace-nowrap {% if category.slug == c.slug %}bg-white text-black font-semibold{% else %}bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800{% endif %}">
+               class="px-4 py-2 rounded text-xs font-semibold uppercase tracking-wider transition-colors whitespace-nowrap {% if category.slug == c.slug %}bg-white text-black{% else %}bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800{% endif %}">
                 {{ c.name }}
             </a>
+        {% empty %}
+            <a href="{% url 'store:product_list' %}?q=Anime" class="px-4 py-2 rounded bg-zinc-900 text-zinc-400 border border-zinc-800 text-xs font-semibold uppercase tracking-wider">Anime & Manga</a>
+            <a href="{% url 'store:product_list' %}?q=Oversized" class="px-4 py-2 rounded bg-zinc-900 text-zinc-400 border border-zinc-800 text-xs font-semibold uppercase tracking-wider">Oversized & Acid Wash</a>
+            <a href="{% url 'store:product_list' %}?q=Cyberpunk" class="px-4 py-2 rounded bg-zinc-900 text-zinc-400 border border-zinc-800 text-xs font-semibold uppercase tracking-wider">Cyberpunk 2099</a>
+            <a href="{% url 'store:product_list' %}?q=Vintage" class="px-4 py-2 rounded bg-zinc-900 text-zinc-400 border border-zinc-800 text-xs font-semibold uppercase tracking-wider">Vintage Pop Culture</a>
+            <a href="{% url 'store:product_list' %}?q=Minimalist" class="px-4 py-2 rounded bg-zinc-900 text-zinc-400 border border-zinc-800 text-xs font-semibold uppercase tracking-wider">Minimalist Typography</a>
         {% endfor %}
     </div>
 </div>
 
-<!-- ================================================================= -->
-<!-- MAIN PRODUCT GRID (100% BULLETPROOF ON ALL MOBILE DEVICES) -->
-<!-- ================================================================= -->
-{% if products %}
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mb-20">
-        {% for product in products %}
-            <div class="luxury-card rounded-xl overflow-hidden flex flex-col justify-between group border border-zinc-800/80 hover:border-zinc-600 transition-all bg-[#111113]">
+<!-- Section 3: Product Grid (3-Column Layout Matching the Video, 100% Mobile Responsive) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+    {% for product in products %}
+        <div class="luxury-card rounded-xl overflow-hidden flex flex-col justify-between group border border-zinc-800/80 hover:border-zinc-600 transition-all bg-[#111113]">
+            
+            <!-- Product Studio Photo Container (Guaranteed height prevents mobile Safari collapse) -->
+            <div class="relative w-full h-72 sm:h-80 bg-[#0d0d10] p-4 sm:p-6 flex items-center justify-center overflow-hidden border-b border-zinc-800/60">
+                <a href="{{ product.get_absolute_url }}" class="w-full h-full flex items-center justify-center" title="Tap to view {{ product.name }} details">
+                    <img src="{{ product.image_url }}" 
+                         alt="{{ product.name }}" 
+                         class="max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105"
+                         loading="lazy"
+                         onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80';">
+                </a>
                 
-                <!-- Product Studio Photo: Absolute Inset container with min-height prevents height collapse on iOS Safari & Mobile Chrome -->
-                <div class="relative aspect-square min-h-[150px] sm:min-h-[220px] w-full bg-[#08080a] overflow-hidden border-b border-zinc-800/60">
-                    <a href="{{ product.get_absolute_url }}" class="absolute inset-0 p-2.5 sm:p-4 flex items-center justify-center" title="Tap to view {{ product.name }} details">
-                        <img src="{{ product.image_url }}" 
-                             alt="{{ product.name }}" 
-                             class="w-full h-full max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105"
-                             loading="lazy"
-                             onerror="this.onerror=null; this.src='https://placehold.co/600x600/141416/ffffff.png?text={{ product.name|urlencode }}';">
-                    </a>
-                    
-                    <!-- Clean Matte GSM & Stock Badge -->
-                    <div class="absolute top-2.5 left-2.5 pointer-events-none flex items-center gap-1.5">
-                        <span class="px-2 py-0.5 rounded bg-zinc-900/90 border border-zinc-800 text-[9px] font-mono tracking-wider text-zinc-400">
-                            {{ product.gsm }} GSM
+                <!-- Clean Matte GSM & Stock Badge -->
+                <div class="absolute top-3 left-3 pointer-events-none flex items-center gap-1.5">
+                    <span class="px-2 py-0.5 rounded bg-zinc-900/90 border border-zinc-800 text-[9px] font-mono tracking-wider text-zinc-400">
+                        {{ product.gsm|default:"240" }} GSM
+                    </span>
+                    {% if product.stock <= 0 or not product.available %}
+                        <span class="px-2 py-0.5 rounded bg-zinc-950/95 border border-zinc-700 text-[9px] font-mono tracking-wider text-rose-400 font-bold">
+                            SOLD OUT
                         </span>
-                        {% if product.stock <= 0 or not product.available %}
-                            <span class="px-2 py-0.5 rounded bg-zinc-950/95 border border-zinc-700 text-[9px] font-mono tracking-wider text-rose-400">
-                                SOLD OUT
-                            </span>
-                        {% endif %}
-                    </div>
-
-                    <!-- Minimalist Wishlist Button -->
-                    <a href="{% url 'store:wishlist_toggle' product.id %}" 
-                       class="absolute top-2.5 right-2.5 w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center text-xs sm:text-sm transition-colors z-10"
-                       title="Save Piece">
-                        <i class="bi bi-heart"></i>
-                    </a>
+                    {% endif %}
                 </div>
 
-                <!-- Product Specifications, Sizing & Details -->
-                <div class="p-3.5 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
-                    <div class="space-y-1">
-                        <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-[0.2em] block">
-                            {{ product.category.name }}
-                        </span>
-                        
-                        <h3 class="text-xs sm:text-sm font-medium text-white group-hover:text-zinc-300 transition-colors line-clamp-2 leading-snug">
-                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
-                        </h3>
-                        
-                        <p class="text-[11px] text-zinc-400 font-light line-clamp-1">{{ product.print_type }}</p>
-                    </div>
-
-                    <!-- Explicit Sizes Row (S, M, L, XL, XXL) -->
-                    <div class="pt-1">
-                        <div class="flex items-center justify-between text-[8px] sm:text-[9px] font-mono text-zinc-500 uppercase tracking-wider mb-1">
-                            <span>SIZES:</span>
-                            <span class="text-zinc-500 font-light hidden sm:inline">Drop Shoulder</span>
-                        </div>
-                        <div class="grid grid-cols-5 gap-1">
-                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">S</a>
-                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">M</a>
-                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">L</a>
-                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">XL</a>
-                            <a href="{{ product.get_absolute_url }}" class="py-1 text-center rounded border border-zinc-800 bg-zinc-900/70 text-zinc-300 font-mono text-[9px] sm:text-[10px] hover:border-zinc-500 hover:text-white transition-colors">XXL</a>
-                        </div>
-                    </div>
-
-                    <!-- Price & View Link -->
-                    <div class="pt-3 border-t border-zinc-800/60 flex items-center justify-between">
-                        <div>
-                            <span class="text-sm sm:text-base font-semibold text-white font-sans">₹{{ product.price }}</span>
-                            <span class="text-[10px] text-zinc-500 line-through block -mt-0.5 font-mono">₹{{ product.price|add:500 }}</span>
-                        </div>
-                        <a href="{{ product.get_absolute_url }}" class="px-2.5 sm:px-3 py-1 rounded bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider text-zinc-300 hover:text-white transition-colors">
-                            Details →
-                        </a>
-                    </div>
-                </div>
-
+                <!-- Minimalist Wishlist Button -->
+                <a href="{% url 'store:wishlist_toggle' product.id %}" 
+                   class="absolute top-3 right-3 w-8 h-8 rounded-lg bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center text-xs transition-colors z-10"
+                   title="Save Piece">
+                    <i class="bi bi-heart"></i>
+                </a>
             </div>
-        {% endfor %}
-    </div>
-{% else %}
-    <div class="text-center py-16 px-4 bg-zinc-950 rounded-xl border border-zinc-800 space-y-3 mb-20">
-        <div class="w-12 h-12 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 flex items-center justify-center text-xl mx-auto">
-            <i class="bi bi-box-seam"></i>
+
+            <!-- Product Details: Title, Video Strikethrough Pricing, Sizing -->
+            <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                <div class="space-y-1.5">
+                    <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-[0.2em] block">
+                        {{ product.category.name|default:"HEAVYWEIGHT STREETWEAR" }}
+                    </span>
+                    <h3 class="text-sm sm:text-base font-medium text-white group-hover:text-zinc-200 transition-colors line-clamp-2 leading-snug">
+                        <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                    </h3>
+                    
+                    <!-- Pricing with Original Strikethrough (Matching Video Format: $45.00 $35.00) -->
+                    <div class="flex items-center gap-2 pt-1">
+                        <span class="text-xs text-zinc-500 line-through font-mono">₹1,499</span>
+                        <span class="text-base sm:text-lg font-bold text-white font-sans">₹{{ product.price }}</span>
+                        <span class="text-[10px] text-emerald-400 font-mono font-medium ml-1">40% OFF</span>
+                    </div>
+                </div>
+
+                <!-- Explicit S, M, L, XL, XXL Sizing Indicator Row -->
+                <div class="pt-2 border-t border-zinc-800/60">
+                    <div class="flex items-center justify-between text-[10px] text-zinc-500 font-mono mb-1.5">
+                        <span>AVAILABLE SIZES:</span>
+                        <span class="text-zinc-400">Regular Boxy Fit</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <span class="px-2 py-1 rounded bg-zinc-900/80 border border-zinc-800 text-[10px] font-mono text-zinc-300">S</span>
+                        <span class="px-2 py-1 rounded bg-zinc-900/80 border border-zinc-800 text-[10px] font-mono text-zinc-300">M</span>
+                        <span class="px-2 py-1 rounded bg-zinc-900/80 border border-zinc-800 text-[10px] font-mono text-zinc-300">L</span>
+                        <span class="px-2 py-1 rounded bg-zinc-900/80 border border-zinc-800 text-[10px] font-mono text-zinc-300">XL</span>
+                        <span class="px-2 py-1 rounded bg-zinc-900/80 border border-zinc-800 text-[10px] font-mono text-zinc-300">XXL</span>
+                    </div>
+                </div>
+
+                <!-- Bottom Action -->
+                <div class="pt-3 border-t border-zinc-800/60 flex items-center justify-between">
+                    <span class="text-[11px] text-zinc-400 font-light flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> In Stock
+                    </span>
+                    <a href="{{ product.get_absolute_url }}" class="px-4 py-2 rounded bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-xs font-semibold uppercase tracking-wider text-zinc-200 hover:text-white transition-colors">
+                        View Piece →
+                    </a>
+                </div>
+            </div>
+
         </div>
-        <h3 class="text-sm font-luxury font-bold text-white uppercase tracking-wider">Catalog Initializing or No Matching Editions</h3>
-        <p class="text-xs text-zinc-400 max-w-sm mx-auto font-light">Explore all curated categories or refresh to view the complete atelier collection.</p>
-        <div class="pt-2">
-            <a href="{% url 'store:product_list' %}" class="inline-block px-6 py-2.5 rounded-full bg-white text-black font-semibold text-xs uppercase tracking-wider hover:bg-zinc-200 transition-colors">
-                Reload Collection (All Pieces)
+    {% empty %}
+        <!-- Fallback Flagship Showcase: Ensures Mobile Phone Never Shows Empty Screen -->
+        <div class="col-span-full py-12 text-center luxury-card p-8 rounded-2xl bg-[#111113] border border-zinc-800 space-y-4">
+            <h3 class="text-lg font-luxury font-bold text-white uppercase tracking-wider">The Atelier Series is Prepping</h3>
+            <p class="text-xs text-zinc-400 max-w-md mx-auto font-light">
+                Our 12 flagship printed French Terry editions are currently being loaded into the catalog archive.
+            </p>
+            <a href="{% url 'store:product_list' %}" class="inline-block px-8 py-3 bg-white text-black font-semibold text-xs uppercase tracking-widest rounded-lg">
+                Refresh Collection
             </a>
         </div>
-    </div>
-{% endif %}
+    {% endfor %}
+</div>
 
+<!-- Section 4: ALL PRODUCTS Centered Button (Matching Video Layout) -->
+<div class="text-center my-14">
+    <a href="{% url 'store:product_list' %}" 
+       class="inline-block px-10 py-4 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-xs tracking-[0.25em] uppercase border border-zinc-700 transition-colors shadow-xl">
+        ALL PRODUCTS
+    </a>
+</div>
+
+<!-- Section 5: High-Contrast Announcement Banner (Matching Video's "Free shipping on orders over 50$") -->
+<div class="w-full bg-[#121217] border-y border-zinc-800 py-12 sm:py-16 px-4 text-center my-14">
+    <h2 class="text-2xl sm:text-4xl font-luxury font-bold text-white tracking-wide leading-tight">
+        Free shipping on orders over ₹999
+    </h2>
+    <p class="text-xs sm:text-sm text-zinc-400 font-light mt-2 max-w-xl mx-auto">
+        Complimentary insured air courier delivery across India • Tamper-evident packaging • 30-day doorstep size exchanges
+    </p>
+</div>
+
+<!-- Section 6: Two Split Story Cards: "Who we are" & "How it's made" (Matching Video Layout) -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 my-16">
+    
+    <!-- Card 1: Who we are -->
+    <div class="luxury-card rounded-2xl overflow-hidden border border-zinc-800/80 bg-[#111113] flex flex-col sm:flex-row items-stretch" id="whoWeAre">
+        <!-- Image on Left (Tall Portrait Aspect Ratio matching video) -->
+        <div class="w-full sm:w-1/2 h-72 sm:h-auto min-h-[280px] relative overflow-hidden bg-zinc-950">
+            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&auto=format&fit=crop&q=80" 
+                 alt="Who we are - Style Sphere Atelier" 
+                 class="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-700"
+                 loading="lazy">
+        </div>
+        <!-- Content on Right -->
+        <div class="w-full sm:w-1/2 p-6 sm:p-8 flex flex-col justify-between space-y-6">
+            <div class="space-y-3">
+                <span class="text-[9px] font-mono tracking-[0.25em] text-zinc-500 uppercase block">OUR ORIGINS</span>
+                <h3 class="text-xl sm:text-2xl font-luxury font-bold text-white tracking-tight">
+                    Who we are
+                </h3>
+                <p class="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
+                    It all started with an obsession for heavyweight streetwear and timeless tailoring. Founded to bridge high-density graphic art with luxury French Terry cotton permanence.
+                </p>
+            </div>
+            <div>
+                <a href="#aboutUsSection" class="inline-block px-7 py-3 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-xs tracking-[0.2em] uppercase border border-zinc-700 transition-colors">
+                    ABOUT US
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 2: How it's made -->
+    <div class="luxury-card rounded-2xl overflow-hidden border border-zinc-800/80 bg-[#111113] flex flex-col sm:flex-row items-stretch" id="howItsMade">
+        <!-- Image on Left (Tall Portrait Aspect Ratio matching video) -->
+        <div class="w-full sm:w-1/2 h-72 sm:h-auto min-h-[280px] relative overflow-hidden bg-zinc-950">
+            <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=800&auto=format&fit=crop&q=80" 
+                 alt="How it's made - Textile Provenance" 
+                 class="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-700"
+                 loading="lazy">
+        </div>
+        <!-- Content on Right -->
+        <div class="w-full sm:w-1/2 p-6 sm:p-8 flex flex-col justify-between space-y-6">
+            <div class="space-y-3">
+                <span class="text-[9px] font-mono tracking-[0.25em] text-zinc-500 uppercase block">CRAFTSMANSHIP</span>
+                <h3 class="text-xl sm:text-2xl font-luxury font-bold text-white tracking-tight">
+                    How it's made
+                </h3>
+                <p class="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
+                    All of our garments are sustainably tailored from 240+ GSM French Terry combed cotton. Pre-shrunk, bio-washed, and printed with archival high-density inks that never crack.
+                </p>
+            </div>
+            <div>
+                <a href="{% url 'store:shipping_policy' %}" class="inline-block px-7 py-3 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-xs tracking-[0.2em] uppercase border border-zinc-700 transition-colors">
+                    OUR VALUES
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
 {% endblock %}

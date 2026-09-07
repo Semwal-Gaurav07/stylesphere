@@ -7,13 +7,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-stylesphere-productio
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = [
-    'stylesphere-store.onrender.com',
-    '.onrender.com',
-    'localhost',
-    '127.0.0.1',
-    '*',
-]
+ALLOWED_HOSTS = os.environ.get(
+    'ALLOWED_HOSTS',
+    'stylesphere-store.onrender.com,.onrender.com,localhost,127.0.0.1'
+).split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -38,7 +35,6 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'ecommerce_project.middleware.CSRFNullOriginFixMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

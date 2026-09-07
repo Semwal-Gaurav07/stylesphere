@@ -14,19 +14,7 @@ from .cart import Cart
 from .forms import CartAddProductForm, OrderCreateForm, CouponApplyForm, ReviewForm
 
 def product_list(request, category_slug=None):
-    # Auto-Heal: If catalog is empty (e.g. fresh Render container), auto-seed the 12 flagship editions
-    if Product.objects.count() == 0:
-        try:
-            import sys
-            from pathlib import Path
-            base_dir = str(Path(__file__).resolve().parent.parent)
-            if base_dir not in sys.path:
-                sys.path.insert(0, base_dir)
-            import seed_data
-            seed_data.seed()
-            print("Auto-healed database: Seeded 12 flagship printed t-shirts successfully!")
-        except Exception as err:
-            print(f"Auto-seed exception: {err}")
+    # Ensure catalog is populated via  on build
 
     # Ensure all products are marked available so they are never hidden
     if Product.objects.filter(available=True).count() == 0 and Product.objects.exists():
@@ -269,18 +257,29 @@ def order_create(request):
                     profile.postal_code = order.postal_code
                     profile.save()
 
+                from django.db.models import F
                 for item in cart:
                     product = item['product']
+                    qty = item['quantity']
+
+                    # Atomic stock decrement to prevent race conditions & overselling
+                    rows_updated = Product.objects.filter(
+                        id=product.id,
+                        stock__gte=qty,
+                        available=True
+                    ).update(stock=F('stock') - qty)
+
+                    if not rows_updated:
+                        messages.error(request, f'Sorry, "{product.name}" does not have enough inventory remaining ({qty} requested).')
+                        raise transaction.TransactionManagementError(f'Insufficient stock for {product.name}')
+
                     OrderItem.objects.create(
                         order=order,
                         product=product,
                         price=item['price'],
-                        quantity=item['quantity'],
+                        quantity=qty,
                         size=item['size']
                     )
-                    if product.stock >= item['quantity']:
-                        product.stock -= item['quantity']
-                        product.save()
 
                 cart.clear()
                 request.session['coupon_id'] = None
@@ -304,7 +303,10 @@ def order_invoice(request, order_id):
 @user_passes_test(lambda u: u.is_staff)
 def admin_analytics(request):
     total_orders = Order.objects.count()
-    total_revenue = sum(o.get_total_cost() for o in Order.objects.all())
+    revenue_agg = OrderItem.objects.filter(order__paid=True).aggregate(
+        rev=Sum(F('price') * F('quantity'))
+    )
+    total_revenue = revenue_agg['rev'] or Decimal('0.00')
     paid_orders = Order.objects.filter(paid=True).count()
     cod_orders = Order.objects.filter(payment_method__icontains='COD').count()
     low_stock_products = Product.objects.filter(stock__lte=3)
