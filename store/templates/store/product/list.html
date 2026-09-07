@@ -7,14 +7,14 @@
 <!-- SECTION 1: CINEMATIC FULL-BLEED EDITORIAL HERO                   -->
 <!-- ================================================================= -->
 <div class="relative w-full rounded-3xl overflow-hidden mb-16 border border-zinc-800/80 bg-zinc-950 shadow-2xl">
-    <!-- Hero Visual Container -->
+    <!-- Background Hero Visual Container -->
     <div class="relative min-h-[560px] sm:min-h-[640px] flex items-end p-6 sm:p-12 lg:p-16">
-        <!-- High-Resolution Curated Streetwear Editorial Background -->
+        <!-- Hero Background Image (Curated Editorial High-Contrast Streetwear) -->
         <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1800&auto=format&fit=crop&q=85" 
              alt="Style Sphere Atelier Luxury Hero" 
              class="absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.65] contrast-[1.1] scale-100 hover:scale-105 transition-transform duration-1000 ease-out">
         
-        <!-- Multi-Layer Vignette Gradients -->
+        <!-- Multi-Layer Vignette Gradients for Luxury Typography Readability -->
         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent"></div>
 
@@ -51,7 +51,7 @@
             </div>
         </div>
 
-        <!-- Live Inventory Indicator (Bottom Right) -->
+        <!-- Live Inventory Status Indicator (Bottom Right) -->
         <div class="hidden md:flex absolute bottom-12 right-12 flex-col items-end text-right z-10 space-y-1">
             <span class="text-[10px] font-mono uppercase tracking-[0.3em] text-zinc-400">BATCH RUN</span>
             <span class="text-xs font-mono font-bold text-white">LIMITED TO 100 PIECES</span>
@@ -63,7 +63,7 @@
 <!-- SECTION 2: SLOW LUXURY RUNWAY MARQUEE TICKER                      -->
 <!-- ================================================================= -->
 <div class="w-full bg-zinc-900/60 backdrop-blur-sm border-y border-zinc-800 py-3.5 overflow-hidden mb-16 select-none">
-    <div class="flex items-center gap-8 whitespace-nowrap text-[11px] font-mono tracking-[0.25em] text-zinc-400 uppercase">
+    <div class="flex items-center gap-8 whitespace-nowrap text-[11px] font-mono tracking-[0.25em] text-zinc-400 uppercase animate-marquee">
         <span>240+ GSM COMBED FRENCH TERRY</span>
         <span class="text-zinc-600">•</span>
         <span>ARCHIVAL HIGH-DENSITY PUFF PRINT</span>
@@ -96,14 +96,14 @@
         </span>
     </div>
 
-    <!-- Category Chips -->
+    <!-- Filter Category Chips -->
     <div class="flex items-center gap-2.5 overflow-x-auto pb-2 no-scrollbar">
         <a href="{% url 'store:product_list' %}" 
            class="px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap {% if not category %}bg-white text-black shadow-lg{% else %}bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800{% endif %}">
             All Pieces
         </a>
 
-        {% for c in categories %}
+        {% for c in categories %}.
             <a href="{{ c.get_absolute_url }}" 
                class="px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap {% if category.slug == c.slug %}bg-white text-black shadow-lg{% else %}bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800{% endif %}">
                 {{ c.name }}
@@ -118,14 +118,14 @@
 </div>
 
 <!-- ================================================================= -->
-<!-- SECTION 4: EDITORIAL PRODUCT GRID (4:5 STUDIO PORTRAIT CARDS)    -->
+<!-- SECTION 4: EDITORIAL PRODUCT GRID (2 COLUMNS MOBILE / 3 DESKTOP)  -->
 <!-- ================================================================= -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-16">
+<div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8 mb-16">
     {% for product in products %}
-        <div class="luxury-card rounded-2xl overflow-hidden flex flex-col justify-between group border border-zinc-800/80 hover:border-zinc-500/80 transition-all duration-500 bg-[#0f0f12] hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)]">
+        <div class="luxury-card rounded-xl sm:rounded-2xl overflow-hidden flex flex-col justify-between group border border-zinc-800/80 hover:border-zinc-500/80 transition-all duration-500 bg-[#0f0f12] hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)]">
             
-            <!-- Product Studio Image Container (4:5 Ratio) -->
-            <div class="relative w-full aspect-[4/5] bg-[#09090b] p-4 sm:p-6 flex items-center justify-center overflow-hidden border-b border-zinc-800/60">
+            <!-- Product Studio Image Container (4:5 Aspect Ratio) -->
+            <div class="relative w-full aspect-[4/5] bg-[#09090b] p-2.5 sm:p-6 flex items-center justify-center overflow-hidden border-b border-zinc-800/60">
                 <a href="{{ product.get_absolute_url }}" class="w-full h-full flex items-center justify-center" title="Inspect {{ product.name }}">
                     <img src="{{ product.image_url }}" 
                          alt="{{ product.name }}" 
@@ -134,65 +134,65 @@
                          onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80';">
                 </a>
                 
-                <!-- Minimalist GSM Badge -->
-                <div class="absolute top-3.5 left-3.5 pointer-events-none flex items-center gap-1.5">
-                    <span class="px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md border border-zinc-800 text-[9px] font-mono tracking-wider text-zinc-300">
+                <!-- Minimalist GSM & Stock Badge -->
+                <div class="absolute top-2 left-2 sm:top-3.5 sm:left-3.5 pointer-events-none flex items-center gap-1">
+                    <span class="px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded sm:rounded-lg bg-black/80 backdrop-blur-md border border-zinc-800 text-[8px] sm:text-[9px] font-mono tracking-wider text-zinc-300">
                         {{ product.gsm|default:"240" }} GSM
                     </span>
                     {% if product.stock <= 0 or not product.available %}
-                        <span class="px-2.5 py-1 rounded-lg bg-red-950/90 border border-red-800 text-[9px] font-mono tracking-wider text-red-300 font-bold">
-                            ARCHIVE // SOLD OUT
+                        <span class="px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded sm:rounded-lg bg-red-950/90 border border-red-800 text-[8px] sm:text-[9px] font-mono tracking-wider text-red-300 font-bold">
+                            SOLD OUT
                         </span>
                     {% endif %}
                 </div>
 
                 <!-- Wishlist Toggle Button -->
                 <a href="{% url 'store:wishlist_toggle' product.id %}" 
-                   class="absolute top-3.5 right-3.5 w-8 h-8 rounded-lg bg-black/80 backdrop-blur-md border border-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center text-xs transition-colors z-10"
+                   class="absolute top-2 right-2 sm:top-3.5 sm:right-3.5 w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-black/80 backdrop-blur-md border border-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center text-[11px] sm:text-xs transition-colors z-10"
                    title="Save Piece to Wishlist">
                     <i class="bi bi-heart"></i>
                 </a>
             </div>
 
             <!-- Product Specs & Editorial Card Details -->
-            <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
-                <div class="space-y-1.5">
-                    <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-[0.2em] block">
+            <div class="p-3 sm:p-5 lg:p-6 flex-1 flex flex-col justify-between space-y-2.5 sm:space-y-4">
+                <div class="space-y-1 sm:space-y-1.5">
+                    <span class="text-[8px] sm:text-[9px] font-mono text-zinc-500 uppercase tracking-[0.15em] sm:tracking-[0.2em] truncate block">
                         {{ product.category.name|default:"HEAVYWEIGHT ATELIER" }}
                     </span>
-                    <h3 class="text-sm sm:text-base font-semibold text-white group-hover:text-zinc-300 transition-colors line-clamp-2 leading-snug">
+                    <h3 class="text-xs sm:text-base font-semibold text-white group-hover:text-zinc-300 transition-colors line-clamp-2 leading-tight sm:leading-snug">
                         <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
                     </h3>
                     
                     <!-- Pricing Display -->
-                    <div class="flex items-center gap-2 pt-1">
-                        <span class="text-xs text-zinc-500 line-through font-mono">₹1,999</span>
-                        <span class="text-base sm:text-lg font-bold text-white font-sans">₹{{ product.price }}</span>
-                        <span class="text-[10px] text-emerald-400 font-mono font-medium ml-1">SPECIAL EDITION</span>
+                    <div class="flex items-baseline sm:items-center gap-1.5 sm:gap-2 pt-0.5 sm:pt-1 flex-wrap sm:flex-nowrap">
+                        <span class="text-[10px] sm:text-xs text-zinc-500 line-through font-mono">₹1,999</span>
+                        <span class="text-sm sm:text-lg font-bold text-white font-sans">₹{{ product.price }}</span>
+                        <span class="text-[8px] sm:text-[10px] text-emerald-400 font-mono font-medium">SPECIAL</span>
                     </div>
                 </div>
 
-                <!-- Sizing Indicator Strip -->
-                <div class="pt-2 border-t border-zinc-800/60">
-                    <div class="flex items-center justify-between text-[10px] text-zinc-500 font-mono mb-1.5">
+                <!-- Standardized Sizing Selector Strip -->
+                <div class="pt-1.5 sm:pt-2 border-t border-zinc-800/60">
+                    <div class="hidden sm:flex items-center justify-between text-[10px] text-zinc-500 font-mono mb-1.5">
                         <span>SIZE FIT:</span>
                         <span class="text-zinc-400">Oversized Silhouette</span>
                     </div>
-                    <div class="flex items-center gap-1.5 flex-wrap">
-                        <span class="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-300">S</span>
-                        <span class="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-300">M</span>
-                        <span class="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-300">L</span>
-                        <span class="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-300">XL</span>
-                        <span class="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-300">XXL</span>
+                    <div class="flex items-center gap-1 flex-wrap">
+                        <span class="px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[9px] sm:text-[10px] font-mono text-zinc-300">S</span>
+                        <span class="px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[9px] sm:text-[10px] font-mono text-zinc-300">M</span>
+                        <span class="px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[9px] sm:text-[10px] font-mono text-zinc-300">L</span>
+                        <span class="px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[9px] sm:text-[10px] font-mono text-zinc-300">XL</span>
+                        <span class="px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[9px] sm:text-[10px] font-mono text-zinc-300">2XL</span>
                     </div>
                 </div>
 
                 <!-- Card Action Footer -->
-                <div class="pt-3 border-t border-zinc-800/60 flex items-center justify-between">
-                    <span class="text-[11px] text-zinc-400 font-light flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Ready to Dispatch
+                <div class="pt-2 sm:pt-3 border-t border-zinc-800/60 flex items-center justify-between gap-1">
+                    <span class="hidden sm:flex text-[11px] text-zinc-400 font-light items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> In Stock
                     </span>
-                    <a href="{{ product.get_absolute_url }}" class="px-4 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-xs font-semibold uppercase tracking-wider text-zinc-200 hover:text-white transition-colors">
+                    <a href="{{ product.get_absolute_url }}" class="w-full sm:w-auto text-center px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-zinc-200 hover:text-white transition-colors">
                         View Piece →
                     </a>
                 </div>
@@ -246,7 +246,7 @@
             </div>
         </div>
 
-        <!-- High-Impact Close-Up Visual -->
+        <!-- High-Impact Close-Up Visual (Fabric Weave / Model Detail) -->
         <div class="lg:col-span-5 rounded-2xl overflow-hidden aspect-[4/5] bg-zinc-950 border border-zinc-800 relative shadow-2xl">
             <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80" 
                  alt="Style Sphere Textile Craftsmanship" 
