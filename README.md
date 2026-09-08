@@ -1,75 +1,130 @@
-# StyleSphere Atelier — Luxury Streetwear & Heavyweight Graphic Studio 👕✨
+# StyleSphere Atelier — Luxury Heavyweight Streetwear & Archival Studio 👕✨
 
-StyleSphere Atelier is a full-stack, production-ready Django e-commerce platform curated exclusively for **Luxury Streetwear Drops, 3D Puff Prints, Dark Renaissance Chiaroscuro, Cyberpunk Matrices, and Vintage Acid Wash Heavyweight Tees**.
+StyleSphere Atelier is an end-to-end, production-grade Django e-commerce platform curated exclusively for **Luxury Streetwear Drops, 240+ GSM French Terry Cotton, 3D High-Density Puff Prints, and Archival Graphic Collections**.
 
----
-
-## ⚡ Luxury Atelier Catalog Architecture
-
-### 6 Curated Luxury Streetwear Categories:
-1. **Anime & Manga Atelier** (`⚔️`) — High-concept celestial samurai & jujutsu mythos.
-2. **Dark Renaissance & Baroque** (`🏛️`) — Classical chiaroscuro marble & liquid chrome foil.
-3. **Cyberpunk & Neo-Tokyo** (`🤖`) — Holographic glitch matrices & tactical mecha schematics.
-4. **Vintage Mineral & Acid Wash** (`⚡`) — Hand-distressed smoke charcoal washes & 90s racer heritage.
-5. **Brutalist & Modern Typography** (`✒️`) — Monogram deconstruction & sumi-e botanical ink washes.
-6. **Dark Fantasy & Fandom Atelier** (`🎮`) — Regal gilded foil runes & liquid obsidian symbiote puff prints.
-
-### 12 Flagship Luxury Pieces:
-- **Susano'o Spectral Armor // High-Density 3D Puff Tee** (260 GSM, Oversized Drop Shoulder, ₹1,199)
-- **Six Eyes: Void Inversion // High-Density Suede Boxy Tee** (280 GSM, Boxy Streetwear Fit, ₹1,299)
-- **Fallen Seraphim // Baroque Marble & Liquid Chrome Tee** (260 GSM, Boxy Streetwear Fit, ₹1,349)
-- **Memento Mori // Gilded Vanitas Botanical Heavyweight Tee** (250 GSM, Boxy Streetwear Fit, ₹1,099)
-- **Neo-Shinjuku 2099 // Cyber-Geisha Glitch Matrix Tee** (260 GSM, Oversized Drop Shoulder, ₹1,249)
-- **Kurogane Mecha Core // Tactical Structural Blueprint Tee** (270 GSM, Boxy Streetwear Fit, ₹1,149)
-- **Tokyo Midnight Racer 1994 // Acid Wash Relic Tee** (250 GSM, Oversized Drop Shoulder, ₹1,099)
-- **Nirvana In Utero // Aged Mineral Washed Heavyweight Tee** (240 GSM, Oversized Drop Shoulder, ₹999)
-- **Form Follows Chaos // Architectural Monogram Boxy Tee** (260 GSM, Boxy Streetwear Fit, ₹899)
-- **Kyoto Botanica // Ethereal Sumi-e Ink Wash Heavyweight Tee** (250 GSM, Relaxed Fit, ₹949)
-- **Elden Sovereign // Gilded Grace & Erdtree Metallic Foil Tee** (260 GSM, Oversized Drop Shoulder, ₹1,299)
-- **Venomous Symbiosis // Liquid Obsidian 3D Puff Streetwear Tee** (270 GSM, Oversized Drop Shoulder, ₹1,249)
+Live Deployment: [https://stylesphere-store.onrender.com/](https://stylesphere-store.onrender.com/)
 
 ---
 
-## 💎 Features & Engineering Standards
+## 💎 Core Architecture & Features
 
-1. **Front Motif vs. Backprint Statement Artwork**:
-   - Every product is engineered with minimalist front chest badges / typography and massive, high-definition back artwork.
-   - Interactive 4-view gallery: **Front View**, **Back Print**, **Streetwear Fit**, and **Macro Texture**.
+### 1. Luxury Front-End & Sensory Design
+* **Cinematic Editorial Layout:** High-contrast obsidian dark palette, typography pairing (*Cinzel*, *Cormorant Garamond*, *Plus Jakarta Sans*), and breathing whitespace.
+* **Responsive 2-Column Mobile Grid:** Clean 2-product side-by-side display on mobile viewports (`grid-cols-2`) scaling to 3 columns on desktop.
+* **Tactile Audio Branding (Web Audio API):** Native browser synthesizer producing acoustic micro-clicks on size selection and chime feedback (toggleable via `SFX: ON/OFF`).
+* **10x Textile Microscopy Loupe:** Interactive high-resolution inspection tool showcasing French Terry looped weave texture and 0.8mm puff print relief.
+* **Silhouette Drape Simulator:** Virtual tailoring fitting room calculating drop-shoulder offset, chest ease, and hemline drop based on client height and build.
+* **The Unboxing Ritual:** Physical presentation showcase detailing rigid magnetic boxes, wax-sealed Japanese glassine wrap, and cedarwood scent infusion.
 
-2. **Tactile Fabrication & Print Technologies**:
-   - Fabric weight ranging from **240 GSM to 280 GSM** French Terry & combed compact cotton.
-   - Advanced print technologies: High-Density 3D Puff, Antique Metallic Foil, Distressed Vintage Screen Print, Silicone Suede Touch, and Reflective Holographic.
+### 2. Exclusive Vaults & Provenance
+* **Digital Provenance Vault (`/provenance/`):** Serialized cryptographic ledger generating official Certificates of Authenticity with AWB tracking lookup and QA inspection seals.
+* **The Midnight Vault (`/vault/`):** Secret restricted drop area gated by VIP passkey (`STYLE2026` or `ATELIER`) with automatic 11:00 PM – 1:00 AM IST curfew unlock.
 
-3. **Production E-Commerce Flow**:
-   - Size variants (S, M, L, XL, XXL) with dynamic inventory tracking.
-   - 1-Click promo coupons (`FIRST10`, `TEES20`, `STAY5`).
-   - Free insured shipping progress tracker above ₹999.
-   - Live Air Waybill (AWB) generation on order placement.
-   - User wishlist, customer reviews, and automated printable tax invoices.
+### 3. Bulletproof E-Commerce & Inventory
+* **Per-Size Inventory Tracking:** Granular stock counters across all standard sizes (`S`, `M`, `L`, `XL`, `XXL`) preventing overselling when specific sizes run out.
+* **Atomic Concurrency:** Database-level `F('stock') - quantity` decrements wrapped in transactional rollback to eliminate checkout race conditions.
+* **Decimal Currency Precision:** High-precision cart and shipping calculations using Python `Decimal` with standard half-up rounding.
+* **Pincode & Logistics Serviceability (`/api/pincode/`):** Real-time Indian 6-digit postal pincode validation, estimated delivery date calculation, and COD verification.
+* **1-Click WhatsApp Concierge:** Instant WhatsApp dispatch notifications with pre-formatted customer order summaries.
+
+### 4. Payments & Security Hardening
+* **Dual Payment Channels:** Seamless Cash on Delivery (COD) and Razorpay gateway integration.
+* **Cryptographic Verification:** Server-side HMAC-SHA256 signature verification and automated webhook handler (`/payment/webhook/`).
+* **CSRF & Mobile WebView Protection:** Targeted `CSRFOriginFixMiddleware` supporting in-app browsers (Instagram, WhatsApp WebViews).
+* **Secure Authentication:** 3-step password recovery with cryptographically secure 6-digit OTP generation via Python `secrets`.
+* **Production Deployment Ready:** Automated WhiteNoise static collection, database flexibility via `dj-database-url` (PostgreSQL / SQLite), and strict security headers (`HSTS`, `X-Content-Type-Options`, `Secure Cookies`).
 
 ---
 
-## 🚀 Quick Setup & Installation
+## 📁 Project Structure
+
+```
+stylesphere/
+├── accounts/               # Auth, Profile, and Secure 6-Digit OTP Recovery
+├── api/                    # Django REST Framework viewsets and serializers
+├── ecommerce_project/      # Settings, hardened middleware, and root routing
+├── media/products/         # Uploaded high-resolution product photography
+├── payment/                # Razorpay checkout, signature verification, webhooks
+├── static/                 # CSS, JavaScript, icons, and branding assets
+├── store/                  # Products, variants, cart, checkout, and luxury vaults
+│   ├── management/         # Custom management commands (`seed_catalog`)
+│   ├── migrations/         # Database migration history
+│   ├── templates/store/    # Editorial HTML templates (Mobile 2-col, Vaults, Loupe)
+│   └── utils.py            # Pincode serviceability & WhatsApp alert generator
+├── check_user_data.py      # Terminal inspector for registered users & order data
+├── build.sh                # Render automated build script
+├── requirements.txt        # Production Python dependencies
+└── .env.example            # Environment configuration template
+```
+
+---
+
+## 🚀 Local Installation & Quickstart
 
 ```bash
-# 1. Clone or extract the project
-cd django_ecommerce
+# 1. Clone repository
+git clone https://github.com/semwal-gaurav07/stylesphere.git
+cd stylesphere
 
-# 2. Install requirements
+# 2. Set up virtual environment
+python -m venv .venv
+# Windows:
+.venv\Scripts\activate
+# macOS/Linux:
+source .venv/bin/activate
+
+# 3. Install dependencies
 pip install -r requirements.txt
 
-# 3. Create database tables and apply migrations
+# 4. Run database migrations
 python manage.py makemigrations
 python manage.py migrate
 
-# 4. Seed the 12 Flagship Luxury Streetwear Pieces
-python seed_data.py
+# 5. Populate initial flagship streetwear catalog
+python manage.py seed_catalog
 
-# 5. Download offline media images (optional)
-python download_images.py
+# 6. Create superuser account
+python manage.py createsuperuser
 
-# 6. Run local development server
+# 7. Start development server
 python manage.py runserver
 ```
 
-Visit the storefront at `http://127.0.0.1:8000/` and the Django Admin at `http://127.0.0.1:8000/admin/`.
+Storefront: `http://127.0.0.1:8000/`  
+Admin Control Panel: `http://127.0.0.1:8000/admin/`  
+Executive Analytics: `http://127.0.0.1:8000/admin-analytics/`
+
+---
+
+## 🔒 Environment Configuration
+
+Create a `.env` file in the project root based on `.env.example`:
+
+```ini
+SECRET_KEY=your-secure-random-secret-key
+DEBUG=False
+ALLOWED_HOSTS=stylesphere-store.onrender.com,localhost,127.0.0.1
+CSRF_TRUSTED_ORIGINS=https://stylesphere-store.onrender.com,http://localhost:8000
+
+# Database (PostgreSQL recommended for production)
+DATABASE_URL=sqlite:///db.sqlite3
+
+# Email SMTP
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=concierge@stylesphere.in
+EMAIL_HOST_PASSWORD=your-app-password
+DEFAULT_FROM_EMAIL=Style Sphere Atelier <concierge@stylesphere.in>
+
+# Razorpay Keys
+RAZORPAY_KEY_ID=rzp_live_your_key_id
+RAZORPAY_KEY_SECRET=your_key_secret
+RAZORPAY_WEBHOOK_SECRET=your_webhook_secret
+```
+
+---
+
+## 📄 License
+Private Commercial License. Developed by Style Sphere Atelier Inc. All rights reserved.

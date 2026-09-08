@@ -33,15 +33,19 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductVariantInline, ProductImageInline]
     
     fieldsets = (
-        ('1. Core Details (All you need to fill)', {
+        ('1. Core Details', {
             'fields': ('name', 'category', 'price', 'image')
         }),
-        ('2. Inventory & Visibility', {
+        ('2. Product Description & Story', {
+            'fields': ('description',),
+            'description': 'Enter the artwork details, fabric notes, and fit description here. This will show on both the product listing and detail pages.'
+        }),
+        ('3. Inventory & Visibility', {
             'fields': ('stock', 'available')
         }),
-        ('3. Optional Atelier Specs (Already set to defaults)', {
+        ('4. Optional Technical Specs (Pre-filled defaults)', {
             'classes': ('collapse',),
-            'fields': ('slug', 'description', 'fit_type', 'gsm', 'print_type')
+            'fields': ('slug', 'fit_type', 'gsm', 'print_type')
         }),
     )
 

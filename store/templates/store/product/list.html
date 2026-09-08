@@ -163,6 +163,13 @@
                     <h3 class="text-xs sm:text-base font-semibold text-white group-hover:text-zinc-300 transition-colors line-clamp-2 leading-tight sm:leading-snug">
                         <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
                     </h3>
+
+                    <!-- Editorial Description Section -->
+                    {% if product.description %}
+                        <p class="text-[10px] sm:text-xs text-zinc-400 font-light line-clamp-2 leading-relaxed pt-0.5">
+                            {{ product.description }}
+                        </p>
+                    {% endif %}
                     
                     <!-- Pricing Display -->
                     <div class="flex items-baseline sm:items-center gap-1.5 sm:gap-2 pt-0.5 sm:pt-1 flex-wrap sm:flex-nowrap">
