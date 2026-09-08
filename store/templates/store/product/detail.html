@@ -76,6 +76,9 @@
                     <button type="button" onclick="setStudioView('print', this)" class="studio-view-btn px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white text-[11px] font-mono uppercase tracking-wider transition-all">
                         <i class="bi bi-bullseye mr-1.5"></i> Graphic Focus (2x)
                     </button>
+                    <button type="button" onclick="document.getElementById('macroLoupeModal').showModal(); if(window.AtelierAudio) AtelierAudio.click();" class="px-4 py-2 rounded-xl bg-luxury-gold/10 border border-luxury-gold/50 text-luxury-gold hover:text-white text-[11px] font-mono uppercase tracking-wider transition-all shadow-sm">
+                        <i class="bi bi-layers-half mr-1.5"></i> 10x Texture Loupe
+                    </button>
                 </div>
             {% endif %}
         {% endwith %}
@@ -137,9 +140,15 @@
             <div class="space-y-3">
                 <div class="flex justify-between items-center text-xs">
                     <span class="font-medium text-zinc-300 uppercase tracking-wider text-[11px]">Select Size (Oversized Drop-Shoulder):</span>
-                    <button type="button" onclick="document.getElementById('sizeChartModal').showModal()" class="text-luxury-gold hover:underline font-medium text-[11px] tracking-wider uppercase">
-                        Sizing Matrix →
-                    </button>
+                    <div class="flex items-center gap-3">
+                        <button type="button" onclick="document.getElementById('drapeSimulatorModal').showModal(); if(window.AtelierAudio) AtelierAudio.click();" class="text-emerald-400 hover:text-emerald-300 font-mono text-[11px] tracking-wider uppercase flex items-center gap-1 transition-colors">
+                            <span>Drape Simulator</span> <span class="text-xs">✨</span>
+                        </button>
+                        <span class="text-zinc-700">|</span>
+                        <button type="button" onclick="document.getElementById('sizeChartModal').showModal(); if(window.AtelierAudio) AtelierAudio.click();" class="text-luxury-gold hover:underline font-medium text-[11px] tracking-wider uppercase">
+                            Sizing Matrix →
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Explicit Clean S, M, L, XL, XXL Radio Chips -->
@@ -399,3 +408,150 @@
     }
 </script>
 {% endblock %}
+
+<!-- ========================================================================= -->
+<!-- FEATURE 4: 10X MACRO FABRIC LOUPE MODAL ("TOUCH THE TEXTURE")             -->
+<!-- ========================================================================= -->
+<dialog id="macroLoupeModal" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box bg-zinc-950 border border-luxury-gold/40 rounded-3xl p-6 sm:p-8 max-w-2xl text-left shadow-2xl">
+        <div class="flex justify-between items-center border-b border-zinc-800 pb-3 mb-6">
+            <div>
+                <span class="text-[9px] font-mono uppercase tracking-[0.25em] text-luxury-gold block">TEXTILE MICROSCOPY</span>
+                <h3 class="font-luxury font-bold text-white text-base sm:text-lg uppercase tracking-wider">10x Fabric Weave & Puff Print Inspector</h3>
+            </div>
+            <form method="dialog"><button class="btn btn-sm btn-circle btn-ghost text-zinc-400">✕</button></form>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Macro Image Viewer with Tactile Zoom Lens -->
+            <div class="relative aspect-[16/9] rounded-2xl overflow-hidden bg-black border border-zinc-800 group cursor-crosshair">
+                <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=1600&auto=format&fit=crop&q=95" 
+                     alt="Macro 240 GSM Fabric Weave" 
+                     class="w-full h-full object-cover filter contrast-[1.12] transition-transform duration-500 ease-out group-hover:scale-[2.2]">
+                <div class="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-black/80 backdrop-blur-md border border-white/10 text-[10px] font-mono text-zinc-300 pointer-events-none">
+                    Hover across textile to inspect 240+ GSM French Terry loops & 3D puff relief
+                </div>
+            </div>
+
+            <!-- Certified Lab Specs -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
+                <div class="p-3 rounded-xl bg-zinc-900 border border-zinc-800/80">
+                    <span class="text-[9px] text-zinc-500 block">YARN DENSITY</span>
+                    <span class="font-bold text-white">240–260 GSM</span>
+                </div>
+                <div class="p-3 rounded-xl bg-zinc-900 border border-zinc-800/80">
+                    <span class="text-[9px] text-zinc-500 block">PRINT ELEVATION</span>
+                    <span class="font-bold text-white">0.8mm 3D Puff</span>
+                </div>
+                <div class="p-3 rounded-xl bg-zinc-900 border border-zinc-800/80">
+                    <span class="text-[9px] text-zinc-500 block">PRE-SHRUNK</span>
+                    <span class="font-bold text-emerald-400">100% Locked</span>
+                </div>
+                <div class="p-3 rounded-xl bg-zinc-900 border border-zinc-800/80">
+                    <span class="text-[9px] text-zinc-500 block">STITCH COUNT</span>
+                    <span class="font-bold text-white">Double-Needle</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>
+
+<!-- ========================================================================= -->
+<!-- FEATURE 5: INTERACTIVE SILHOUETTE & DRAPE FITTING SIMULATOR              -->
+<!-- ========================================================================= -->
+<dialog id="drapeSimulatorModal" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box bg-zinc-950 border border-zinc-800 rounded-3xl p-6 sm:p-8 max-w-xl text-left shadow-2xl">
+        <div class="flex justify-between items-center border-b border-zinc-800 pb-3 mb-6">
+            <div>
+                <span class="text-[9px] font-mono uppercase tracking-[0.25em] text-emerald-400 block">ATELIER VIRTUAL CONSULTATION</span>
+                <h3 class="font-luxury font-bold text-white text-base sm:text-lg uppercase tracking-wider">Silhouette Drape Simulator</h3>
+            </div>
+            <form method="dialog"><button class="btn btn-sm btn-circle btn-ghost text-zinc-400">✕</button></form>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Height Slider -->
+            <div class="space-y-2">
+                <div class="flex justify-between text-xs font-mono">
+                    <span class="text-zinc-400 uppercase tracking-wider">Client Height:</span>
+                    <span class="text-white font-bold" id="drapeHeightVal">5 ft 10 in (178 cm)</span>
+                </div>
+                <input type="range" min="160" max="195" value="178" id="drapeHeightInput" 
+                       oninput="updateDrapeSim()" 
+                       class="range range-xs range-warning">
+            </div>
+
+            <!-- Build Radio Toggles -->
+            <div class="space-y-2">
+                <span class="text-xs font-mono text-zinc-400 uppercase tracking-wider block">Body Frame:</span>
+                <div class="grid grid-cols-3 gap-2.5 text-xs font-mono">
+                    <button type="button" onclick="setDrapeBuild('slim', this)" class="drape-build-btn py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-300 font-bold transition-all hover:border-white">SLIM</button>
+                    <button type="button" onclick="setDrapeBuild('regular', this)" class="drape-build-btn py-2 rounded-xl bg-white text-black border border-white font-bold transition-all">REGULAR</button>
+                    <button type="button" onclick="setDrapeBuild('broad', this)" class="drape-build-btn py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-300 font-bold transition-all hover:border-white">BROAD</button>
+                </div>
+            </div>
+
+            <!-- Live Silhouette Drape Diagnostic Card -->
+            <div class="p-5 rounded-2xl bg-[#111114] border border-zinc-800 space-y-3">
+                <div class="flex items-center justify-between border-b border-zinc-800/80 pb-2">
+                    <span class="text-[10px] font-mono text-zinc-500 uppercase">ESTIMATED SILHOUETTE DRAPE</span>
+                    <span class="text-xs font-mono font-bold text-emerald-400" id="drapeRecommendation">RECOMMENDED SIZE: L</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-[11px] font-mono pt-1 text-zinc-300">
+                    <div>
+                        <span class="text-[9px] text-zinc-500 block">SHOULDER DROP</span>
+                        <span class="font-bold text-white" id="drapeShoulderVal">+3.2 in (Aggressive)</span>
+                    </div>
+                    <div>
+                        <span class="text-[9px] text-zinc-500 block">CHEST EASE</span>
+                        <span class="font-bold text-white" id="drapeChestVal">+8.0 in (Relaxed)</span>
+                    </div>
+                    <div>
+                        <span class="text-[9px] text-zinc-500 block">HEM POSITION</span>
+                        <span class="font-bold text-white" id="drapeHemVal">Mid-Hip Level</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>
+
+<script>
+let currentDrapeBuild = 'regular';
+
+function setDrapeBuild(build, btn) {
+    currentDrapeBuild = build;
+    document.querySelectorAll('.drape-build-btn').forEach(b => {
+        b.className = 'drape-build-btn py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-300 font-bold transition-all hover:border-white';
+    });
+    btn.className = 'drape-build-btn py-2 rounded-xl bg-white text-black border border-white font-bold transition-all';
+    updateDrapeSim();
+    if (window.AtelierAudio) AtelierAudio.click();
+}
+
+function updateDrapeSim() {
+    const val = parseInt(document.getElementById('drapeHeightInput').value);
+    const feet = Math.floor(val / 30.48);
+    const inches = Math.round((val % 30.48) / 2.54);
+    document.getElementById('drapeHeightVal').innerText = feet + " ft " + inches + " in (" + val + " cm)";
+
+    const rec = document.getElementById('drapeRecommendation');
+    const shoulder = document.getElementById('drapeShoulderVal');
+    const chest = document.getElementById('drapeChestVal');
+    const hem = document.getElementById('drapeHemVal');
+
+    if (val < 168) {
+        rec.innerText = currentDrapeBuild === 'broad' ? 'RECOMMENDED SIZE: M' : 'RECOMMENDED SIZE: S';
+        shoulder.innerText = '+2.8 in (Boxy)';
+        hem.innerText = 'Mid-Thigh Overhang';
+    } else if (val <= 180) {
+        rec.innerText = currentDrapeBuild === 'broad' ? 'RECOMMENDED SIZE: XL' : 'RECOMMENDED SIZE: L';
+        shoulder.innerText = '+3.5 in (True Drop)';
+        hem.innerText = 'Mid-Hip Level';
+    } else {
+        rec.innerText = currentDrapeBuild === 'broad' ? 'RECOMMENDED SIZE: XXL' : 'RECOMMENDED SIZE: XL';
+        shoulder.innerText = '+4.0 in (Deep Drape)';
+        hem.innerText = 'Waistline Boxy Fit';
+    }
+}
+</script>

@@ -88,16 +88,16 @@ def payment_verify(request):
                 pass
 
         if order:
-            # Check signature with Razorpay if available
             client = get_razorpay_client()
-            verified = True
-            if client and signature and payment_id:
+            verified = False
+            if client and signature and payment_id and rzp_order_id:
                 try:
                     client.utility.verify_payment_signature({
                         'razorpay_order_id': rzp_order_id,
                         'razorpay_payment_id': payment_id,
                         'razorpay_signature': signature
                     })
+                    verified = True
                 except Exception as e:
                     print(f"Razorpay Signature Warning: {e}")
                     verified = False

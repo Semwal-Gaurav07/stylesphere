@@ -121,7 +121,12 @@ def product_detail(request, id, slug):
 def cart_add(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
-    quantity = int(request.POST.get('quantity', 1))
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+        if quantity < 1:
+            quantity = 1
+    except (ValueError, TypeError):
+        quantity = 1
     size = request.POST.get('size', 'M')
     override = request.POST.get('override') == 'True'
     buy_now = request.POST.get('buy_now') == 'true'
@@ -258,6 +263,8 @@ def order_create(request):
                     profile.save()
 
                 from django.db.models import F
+                insufficient_stock = False
+
                 for item in cart:
                     product = item['product']
                     qty = item['quantity']
@@ -271,7 +278,9 @@ def order_create(request):
 
                     if not rows_updated:
                         messages.error(request, f'Sorry, "{product.name}" does not have enough inventory remaining ({qty} requested).')
-                        raise transaction.TransactionManagementError(f'Insufficient stock for {product.name}')
+                        insufficient_stock = True
+                        transaction.set_rollback(True)
+                        break
 
                     OrderItem.objects.create(
                         order=order,
@@ -280,6 +289,9 @@ def order_create(request):
                         quantity=qty,
                         size=item['size']
                     )
+
+                if insufficient_stock:
+                    return redirect('store:cart_detail')
 
                 cart.clear()
                 request.session['coupon_id'] = None
@@ -302,6 +314,8 @@ def order_invoice(request, order_id):
 
 @user_passes_test(lambda u: u.is_staff)
 def admin_analytics(request):
+    from django.contrib.auth.models import User
+    total_users = User.objects.count()
     total_orders = Order.objects.count()
     revenue_agg = OrderItem.objects.filter(order__paid=True).aggregate(
         rev=Sum(F('price') * F('quantity'))
@@ -315,6 +329,7 @@ def admin_analytics(request):
     top_cities = Order.objects.values('city').annotate(order_count=Count('id')).order_by('-order_count')[:5]
 
     return render(request, 'store/admin_analytics.html', {
+        'total_users': total_users,
         'total_orders': total_orders,
         'total_revenue': total_revenue,
         'paid_orders': paid_orders,
@@ -335,3 +350,66 @@ def privacy_policy(request):
 
 def terms_of_service(request):
     return render(request, 'store/policies/terms.html')
+
+
+def provenance_vault(request):
+    """
+    Digital Provenance Vault & Holographic Certificate of Authenticity.
+    """
+    awb = request.GET.get('awb', '').strip()
+    order = None
+    if awb:
+        order = Order.objects.filter(awb_code__iexact=awb).first() or                 Order.objects.filter(tracking_number__iexact=awb).first()
+        if not order and awb.isdigit():
+            order = Order.objects.filter(id=int(awb)).first()
+
+    if order:
+        cert_serial = f"ATELIER-{order.created.year}-{order.id:04d}"
+        cert_owner = f"{order.first_name} {order.last_name}"
+        cert_fabric = "240+ GSM Combed French Terry Cotton"
+        cert_awb = order.awb_code or f"SS-EXP-{order.id}"
+        cert_date = order.created.strftime('%d %B %Y')
+    else:
+        cert_serial = "ATELIER-2026-0042 // SER-01"
+        cert_owner = "Client Privilege Registered"
+        cert_fabric = "240+ GSM Bio-Washed French Terry"
+        cert_awb = awb or "SS-EXP-2026-ATELIER"
+        cert_date = datetime.now().strftime('%d %B %Y')
+
+    return render(request, 'store/vault/provenance.html', {
+        'search_query': awb,
+        'order': order,
+        'cert_serial': cert_serial,
+        'cert_owner': cert_owner,
+        'cert_fabric': cert_fabric,
+        'cert_awb': cert_awb,
+        'cert_date': cert_date,
+    })
+
+def midnight_vault(request):
+    """
+    The Midnight Vault: Exclusive password-protected and curfew-based VIP drops.
+    """
+    if request.GET.get('lock'):
+        request.session['vault_unlocked'] = False
+        return redirect('store:midnight_vault')
+
+    now_hour = datetime.now().hour
+    is_curfew = (now_hour >= 23 or now_hour < 1)
+    is_unlocked = request.session.get('vault_unlocked', False) or is_curfew
+
+    if request.method == 'POST':
+        passkey = request.POST.get('passkey', '').strip().upper()
+        if passkey in ['STYLE2026', 'ATELIER', 'VIP2026', 'VAULT20']:
+            request.session['vault_unlocked'] = True
+            is_unlocked = True
+            messages.success(request, 'VIP Atelier Access Granted. Welcome to the Vault.')
+        else:
+            messages.error(request, 'Invalid Atelier Passkey. Access Denied.')
+
+    vault_products = Product.objects.filter(available=True)[:6]
+
+    return render(request, 'store/vault/midnight_vault.html', {
+        'is_unlocked': is_unlocked,
+        'vault_products': vault_products
+    })

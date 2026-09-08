@@ -17,11 +17,11 @@
     </div>
 
     <!-- Top KPI Metric Cards (Matte Obsidian Layout) -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 mb-10">
         <div class="luxury-card rounded-xl p-5 border border-zinc-800/80 bg-[#111113]">
             <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Gross Revenue</span>
             <div class="text-2xl sm:text-3xl font-bold text-white font-sans mt-1">₹{{ total_revenue }}</div>
-            <span class="text-[11px] text-zinc-500 font-light mt-1 block">Live across all catalog drops</span>
+            <span class="text-[11px] text-zinc-500 font-light mt-1 block">Catalog drops</span>
         </div>
         <div class="luxury-card rounded-xl p-5 border border-zinc-800/80 bg-[#111113]">
             <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Total Orders</span>
@@ -29,14 +29,19 @@
             <span class="text-[11px] text-zinc-500 font-light mt-1 block">Orders recorded</span>
         </div>
         <div class="luxury-card rounded-xl p-5 border border-zinc-800/80 bg-[#111113]">
+            <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Registered Users</span>
+            <div class="text-2xl sm:text-3xl font-bold text-amber-400 font-sans mt-1">{{ total_users }}</div>
+            <span class="text-[11px] text-zinc-500 font-light mt-1 block">Active accounts</span>
+        </div>
+        <div class="luxury-card rounded-xl p-5 border border-zinc-800/80 bg-[#111113]">
             <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Paid Online</span>
             <div class="text-2xl sm:text-3xl font-bold text-emerald-400 font-sans mt-1">{{ paid_orders }}</div>
-            <span class="text-[11px] text-zinc-500 font-light mt-1 block">UPI & Card settlements</span>
+            <span class="text-[11px] text-zinc-500 font-light mt-1 block">Settled payments</span>
         </div>
         <div class="luxury-card rounded-xl p-5 border border-zinc-800/80 bg-[#111113]">
             <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Cash on Delivery</span>
             <div class="text-2xl sm:text-3xl font-bold text-zinc-300 font-sans mt-1">{{ cod_orders }}</div>
-            <span class="text-[11px] text-zinc-500 font-light mt-1 block">Pending courier collection</span>
+            <span class="text-[11px] text-zinc-500 font-light mt-1 block">Pending collection</span>
         </div>
     </div>
 

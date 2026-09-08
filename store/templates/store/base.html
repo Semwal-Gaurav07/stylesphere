@@ -286,12 +286,16 @@
                         </ul>
                     </div>
 
-                    <a href="#whoWeAre" class="hover:text-white transition-colors">
-                        About
+                    <a href="{% url 'store:provenance_vault' %}" class="hover:text-white transition-colors flex items-center gap-1 text-luxury-gold">
+                        <i class="bi bi-shield-check text-xs"></i> Provenance
                     </a>
 
-                    <a href="#howItsMade" class="hover:text-white transition-colors">
-                        Our values
+                    <a href="{% url 'store:midnight_vault' %}" class="hover:text-white transition-colors flex items-center gap-1 text-red-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span> Vault
+                    </a>
+
+                    <a href="#whoWeAre" class="hover:text-white transition-colors">
+                        About
                     </a>
 
                     <a href="#contactFooter" class="hover:text-white transition-colors">
@@ -302,6 +306,16 @@
                 <!-- Right: Utility Actions (Search, Wishlist, Bag, Account) -->
                 <div class="flex items-center gap-2 sm:gap-4">
                     
+                    <!-- Tactile Audio Branding Toggle (Web Audio API) -->
+                    <button type="button" 
+                            id="audioToggleBtn" 
+                            onclick="toggleAtelierAudio()" 
+                            class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[9px] font-mono uppercase tracking-wider text-zinc-400 hover:text-white transition-all"
+                            title="Toggle Atelier Sound Design">
+                        <span id="audioStatusDot" class="w-1.5 h-1.5 rounded-full bg-zinc-600"></span>
+                        <span id="audioStatusText">SFX: OFF</span>
+                    </button>
+
                     <!-- Search Toggle Button -->
                     <button type="button" onclick="toggleSearchBar()" class="p-2 text-zinc-400 hover:text-white transition-colors" title="Search Pieces">
                         <i class="bi bi-search text-base"></i>
@@ -719,6 +733,131 @@
             </a>
         {% endif %}
     </nav>
+
+
+<!-- ========================================================================= -->
+<!-- ATELIER TACTILE SOUND DESIGN (Web Audio API Synthesizer - 0 External MP3s) -->
+<!-- ========================================================================= -->
+<script>
+window.AtelierAudio = (function() {
+    let audioCtx = null;
+    let isEnabled = localStorage.getItem('atelier_sfx') === 'true';
+
+    function initCtx() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
+
+    function playClick() {
+        if (!isEnabled) return;
+        try {
+            initCtx();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(900, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.035);
+            gain.gain.setValueAtTime(0.09, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.035);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.035);
+        } catch(e) {}
+    }
+
+    function playWoosh() {
+        if (!isEnabled) return;
+        try {
+            initCtx();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(45, audioCtx.currentTime + 0.14);
+            gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.14);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.14);
+        } catch(e) {}
+    }
+
+    function playChime() {
+        if (!isEnabled) return;
+        try {
+            initCtx();
+            const now = audioCtx.currentTime;
+            [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now + (i * 0.04));
+                gain.gain.setValueAtTime(0.06, now + (i * 0.04));
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + (i * 0.04) + 0.4);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + (i * 0.04));
+                osc.stop(now + (i * 0.04) + 0.4);
+            });
+        } catch(e) {}
+    }
+
+    function toggle() {
+        isEnabled = !isEnabled;
+        localStorage.setItem('atelier_sfx', isEnabled);
+        updateUI();
+        if (isEnabled) {
+            initCtx();
+            playChime();
+        }
+    }
+
+    function updateUI() {
+        const dot = document.getElementById('audioStatusDot');
+        const txt = document.getElementById('audioStatusText');
+        if (dot && txt) {
+            if (isEnabled) {
+                dot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
+                txt.innerText = 'SFX: ON';
+                txt.classList.add('text-white');
+            } else {
+                dot.className = 'w-1.5 h-1.5 rounded-full bg-zinc-600';
+                txt.innerText = 'SFX: OFF';
+                txt.classList.remove('text-white');
+            }
+        }
+    }
+
+    // Attach acoustic feedback to size pills, buttons, and drawers
+    document.addEventListener('DOMContentLoaded', () => {
+        updateUI();
+        document.querySelectorAll('button, a, input[type="radio"]').forEach(el => {
+            el.addEventListener('click', () => {
+                if (el.id === 'audioToggleBtn') return;
+                playClick();
+            });
+        });
+    });
+
+    return {
+        click: playClick,
+        woosh: playWoosh,
+        chime: playChime,
+        toggle: toggle,
+        isEnabled: () => isEnabled
+    };
+})();
+
+function toggleAtelierAudio() {
+    window.AtelierAudio.toggle();
+}
+</script>
 
 </body>
 </html>

@@ -17,6 +17,9 @@ urlpatterns = [
     path('orders/create/', views.order_create, name='order_create'),
     path('orders/<int:order_id>/invoice/', views.order_invoice, name='order_invoice'),
     path('analytics/', views.admin_analytics, name='admin_analytics'),
+    path('provenance/', views.provenance_vault, name='provenance_vault'),
+    path('vault/', views.midnight_vault, name='midnight_vault'),
+
     # Compliance & Trust Policies
     path('policies/shipping/', views.shipping_policy, name='shipping_policy'),
     path('policies/returns/', views.returns_policy, name='returns_policy'),

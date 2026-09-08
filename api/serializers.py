@@ -64,6 +64,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'postal_code', 'city', 'paid', 'payment_method', 'status',
             'discount', 'awb_code', 'total_cost', 'items', 'created'
         ]
+        read_only_fields = ['user', 'paid', 'status', 'awb_code', 'total_cost', 'created']
 
 
 class WishlistSerializer(serializers.ModelSerializer):
