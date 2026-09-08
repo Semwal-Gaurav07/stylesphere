@@ -1,30 +1,9 @@
-# Python & Virtual Environments
-__pycache__/
-*.py[cod]
-*$py.class
-.venv/
-venv/
-env/
-
-# Django
-*.log
-local_settings.py
+*.sqlite3
 db.sqlite3
-db.sqlite3-journal
-/staticfiles/
-
-# Node / Frontend
-node_modules/
-dist/
-.cache/
-npm-debug.log*
-
-# Secrets
+__pycache__/
+*.pyc
 .env
-.env.*
-
-# OS & IDE
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
+.venv/
+env/
+venv/
+staticfiles/
