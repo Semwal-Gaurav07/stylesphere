@@ -9,6 +9,7 @@ from django.conf import settings
 from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
 from .models import Profile, PasswordResetOTP
 from store.models import Order
+from django.views.decorators.csrf import csrf_exempt
 
 def mask_email(val):
     if not val or '@' not in val:
@@ -43,6 +44,7 @@ def register(request):
         form = UserRegistrationForm()
     return render(request, 'accounts/register.html', {'form': form, 'next': next_url})
 
+@csrf_exempt
 def user_login(request):
     if request.user.is_authenticated:
         messages.info(request, f"You are currently signed in as '{request.user.username}'. Sign out below to access a different account.")
