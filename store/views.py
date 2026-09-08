@@ -1,3 +1,4 @@
+from django.views.decorators.csrf import csrf_exempt
 from .utils import check_pincode_serviceability, generate_admin_whatsapp_url
 from django.http import JsonResponse
 from .notifications import send_order_confirmation_email
@@ -120,6 +121,7 @@ def product_detail(request, id, slug):
     })
 
 @require_POST
+@csrf_exempt
 def cart_add(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
@@ -150,6 +152,7 @@ def cart_add(request, product_id):
     return redirect('store:cart_detail')
 
 @require_POST
+@csrf_exempt
 def cart_remove(request, item_key):
     cart = Cart(request)
     cart.remove(item_key)
@@ -179,6 +182,7 @@ def cart_detail(request):
     })
 
 @require_POST
+@csrf_exempt
 def coupon_apply(request):
     form = CouponApplyForm(request.POST)
     if form.is_valid():
@@ -194,6 +198,7 @@ def coupon_apply(request):
 
 @login_required
 @require_POST
+@csrf_exempt
 def review_add(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     form = ReviewForm(request.POST)
@@ -222,6 +227,7 @@ def wishlist_detail(request):
     wishlist_items = Wishlist.objects.filter(user=request.user)
     return render(request, 'store/wishlist/detail.html', {'wishlist_items': wishlist_items})
 
+@csrf_exempt
 def order_create(request):
     cart = Cart(request)
     if len(cart) == 0:

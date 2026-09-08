@@ -68,7 +68,7 @@
                 </div>
 
                 <!-- Django Registration Form -->
-                <form method="post" class="space-y-3.5" id="v5RegisterForm">
+                <form method="post" action="{% url 'accounts:register' %}" class="space-y-3.5" id="v5RegisterForm">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ next|default:'' }}">
 

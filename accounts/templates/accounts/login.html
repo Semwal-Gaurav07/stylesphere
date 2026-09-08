@@ -77,7 +77,7 @@
                 </div>
 
                 <!-- Django Authentication Form -->
-                <form method="post" class="space-y-4" id="v5LoginForm" onsubmit="handleV5Submit(event)">
+                <form method="post" action="{% url 'accounts:login' %}" class="space-y-4" id="v5LoginForm">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ next|default:'' }}">
 
@@ -127,10 +127,9 @@
                     <!-- Prominent Red Interactive CTA Button (code.xr style) -->
                     <button type="submit" 
                             id="v5SubmitBtn"
-                            class="w-full py-3.5 bg-red-600 hover:bg-red-500 active:scale-[0.98] text-white font-cta font-bold text-sm tracking-wider rounded-xl shadow-[0_0_25px_-5px_rgba(239,68,68,0.5)] hover:shadow-[0_0_35px_-5px_rgba(239,68,68,0.7)] transition-all duration-300 flex items-center justify-center gap-2 mt-3">
-                        <span id="btnText">SIGN IN</span>
-                        <i id="btnIcon" class="bi bi-arrow-right text-lg"></i>
-                        <span id="btnSpinner" class="loading loading-spinner loading-sm hidden"></span>
+                            class="w-full py-3.5 bg-red-600 hover:bg-red-500 active:scale-[0.98] text-white font-cta font-bold text-sm tracking-wider rounded-xl shadow-[0_0_25px_-5px_rgba(239,68,68,0.5)] hover:shadow-[0_0_35px_-5px_rgba(239,68,68,0.7)] transition-all duration-300 flex items-center justify-center gap-2 mt-3 cursor-pointer">
+                        <span>SIGN IN</span>
+                        <i class="bi bi-arrow-right text-lg"></i>
                     </button>
                 </form>
 

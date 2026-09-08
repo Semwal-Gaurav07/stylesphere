@@ -1,3 +1,4 @@
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
@@ -9,7 +10,6 @@ from django.conf import settings
 from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
 from .models import Profile, PasswordResetOTP
 from store.models import Order
-from django.views.decorators.csrf import csrf_exempt
 
 def mask_email(val):
     if not val or '@' not in val:
@@ -23,6 +23,7 @@ def mask_email(val):
         masked_name = name[0] + '*' * (len(name) - 2) + name[-1]
     return f"{masked_name}@{domain}"
 
+@csrf_exempt
 def register(request):
     if request.user.is_authenticated:
         messages.info(request, f"You already have an active session as '{request.user.username}'. Sign out below to create a new account.")
@@ -73,6 +74,7 @@ def user_logout(request):
     messages.info(request, 'You have been logged out.')
     return redirect('store:product_list')
 
+@csrf_exempt
 @login_required
 def profile(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
@@ -95,6 +97,7 @@ def profile(request):
         'orders': orders
     })
 
+@csrf_exempt
 def password_reset_view(request):
     """
     Commercial-Grade OTP Verification & Password Recovery:
