@@ -25,4 +25,5 @@ urlpatterns = [
     path('policies/returns/', views.returns_policy, name='returns_policy'),
     path('policies/privacy/', views.privacy_policy, name='privacy_policy'),
     path('policies/terms/', views.terms_of_service, name='terms_of_service'),
+    path('api/pincode/', views.check_pincode_view, name='check_pincode'),
 ]

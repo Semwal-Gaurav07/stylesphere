@@ -1,3 +1,4 @@
+import os
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -15,6 +16,12 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_stock_for_size(self, size):
+        variant = self.variants.filter(size=size).first()
+        if variant:
+            return variant.stock
+        return self.stock
 
     def get_absolute_url(self):
         return reverse('store:product_list_by_category', args=[self.slug])
@@ -61,6 +68,12 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_stock_for_size(self, size):
+        variant = self.variants.filter(size=size).first()
+        if variant:
+            return variant.stock
+        return self.stock
 
     def get_absolute_url(self):
         return reverse('store:product_detail', args=[self.id, self.slug])
@@ -206,6 +219,7 @@ class Order(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField()
+    phone_number = models.CharField(max_length=20, blank=True, default='')
     address = models.CharField(max_length=250)
     postal_code = models.CharField(max_length=20)
     city = models.CharField(max_length=100)
@@ -275,3 +289,22 @@ class Wishlist(models.Model):
 
     class Meta:
         unique_together = ('user', 'product')
+
+class ProductVariant(models.Model):
+    SIZE_CHOICES = (
+        ('S', 'Small (S)'),
+        ('M', 'Medium (M)'),
+        ('L', 'Large (L)'),
+        ('XL', 'Extra Large (XL)'),
+        ('XXL', 'Double Extra Large (XXL)'),
+    )
+    product = models.ForeignKey('Product', related_name='variants', on_delete=models.CASCADE)
+    size = models.CharField(max_length=10, choices=SIZE_CHOICES)
+    stock = models.PositiveIntegerField(default=10)
+
+    class Meta:
+        unique_together = ('product', 'size')
+        ordering = ['id']
+
+    def __str__(self):
+        return f"{self.product.name} [{self.size}] - Stock: {self.stock}"

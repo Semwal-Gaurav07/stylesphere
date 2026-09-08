@@ -18,7 +18,11 @@ urlpatterns = [
     path('api/', include('api.urls', namespace='api')),
 ]
 
+# In development, serve static and media via Django; in production WhiteNoise serves static
+if settings.DEBUG:
+    urlpatterns += [
+        re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
+    ]
 urlpatterns += [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
-    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
 ]

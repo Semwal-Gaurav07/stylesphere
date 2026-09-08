@@ -127,7 +127,52 @@ def payment_canceled(request):
 
 @csrf_exempt
 def webhook_handler(request):
-    """Server-side Webhook endpoint for live payment gateways."""
-    if request.method == 'POST':
-        return JsonResponse({'status': 'success', 'message': 'Webhook verified'})
-    return HttpResponse(status=405)
+    """
+    Server-side Webhook endpoint for live payment gateways (Razorpay).
+    Verifies cryptographic webhook signature and updates order status.
+    """
+    if request.method != 'POST':
+        return HttpResponse(status=405)
+
+    webhook_secret = getattr(settings, 'RAZORPAY_WEBHOOK_SECRET', '')
+    signature = request.META.get('HTTP_X_RAZORPAY_SIGNATURE', '')
+
+    if webhook_secret and signature:
+        import hmac
+        import hashlib
+        expected_sig = hmac.new(
+            webhook_secret.encode('utf-8'),
+            request.body,
+            hashlib.sha256
+        ).hexdigest()
+
+        if not hmac.compare_digest(expected_sig, signature):
+            return JsonResponse({'status': 'error', 'message': 'Invalid signature'}, status=400)
+
+    try:
+        import json
+        payload = json.loads(request.body.decode('utf-8'))
+        event = payload.get('event')
+
+        if event in ['payment.captured', 'order.paid']:
+            payment_entity = payload.get('payload', {}).get('payment', {}).get('entity', {})
+            rzp_order_id = payment_entity.get('order_id')
+            payment_id = payment_entity.get('id')
+
+            order = None
+            if rzp_order_id:
+                order = Order.objects.filter(awb_code__icontains=rzp_order_id).first()
+            if not order and 'notes' in payment_entity:
+                order_id = payment_entity['notes'].get('order_id')
+                if order_id:
+                    order = Order.objects.filter(id=order_id).first()
+
+            if order and not order.paid:
+                order.paid = True
+                order.payment_method = f"Razorpay Webhook ({payment_id or 'Verified'})"
+                order.save()
+                send_order_confirmation_email(order)
+
+        return JsonResponse({'status': 'success', 'message': 'Webhook processed'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)

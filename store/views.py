@@ -1,3 +1,5 @@
+from .utils import check_pincode_serviceability, generate_admin_whatsapp_url
+from django.http import JsonResponse
 from .notifications import send_order_confirmation_email
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
@@ -131,14 +133,15 @@ def cart_add(request, product_id):
     override = request.POST.get('override') == 'True'
     buy_now = request.POST.get('buy_now') == 'true'
 
-    # Inventory & Out-of-Stock Guard
-    if product.stock <= 0 or not product.available:
-        messages.error(request, f'Sorry, "{product.name}" is an archival edition and currently out of stock.')
+    # Inventory & Per-Size Variant Out-of-Stock Guard
+    size_stock = product.get_stock_for_size(size)
+    if size_stock <= 0 or not product.available:
+        messages.error(request, f'Sorry, size {size} of "{product.name}" is currently sold out.')
         return redirect(product.get_absolute_url())
 
-    if quantity > product.stock:
-        quantity = product.stock
-        messages.warning(request, f'Adjusted to maximum available atelier inventory ({product.stock} pieces).')
+    if quantity > size_stock:
+        quantity = size_stock
+        messages.warning(request, f'Adjusted to maximum available atelier inventory for size {size} ({size_stock} pieces).')
 
     cart.add(product=product, quantity=quantity, size=size, override_quantity=override)
 
@@ -233,6 +236,7 @@ def order_create(request):
         'first_name': request.user.first_name,
         'last_name': request.user.last_name,
         'email': request.user.email,
+        'phone_number': profile.phone_number,
         'address': profile.address,
         'city': profile.city,
         'postal_code': profile.postal_code,
@@ -260,7 +264,9 @@ def order_create(request):
                     profile.address = order.address
                     profile.city = order.city
                     profile.postal_code = order.postal_code
-                    profile.save()
+                if not profile.phone_number and order.phone_number:
+                    profile.phone_number = order.phone_number
+                profile.save()
 
                 from django.db.models import F
                 insufficient_stock = False
@@ -269,15 +275,24 @@ def order_create(request):
                     product = item['product']
                     qty = item['quantity']
 
-                    # Atomic stock decrement to prevent race conditions & overselling
-                    rows_updated = Product.objects.filter(
-                        id=product.id,
-                        stock__gte=qty,
-                        available=True
-                    ).update(stock=F('stock') - qty)
+                    # Atomic stock decrement: Deduct per-size variant stock if configured, else global stock
+                    size_variant = product.variants.filter(size=item['size']).first()
+                    if size_variant:
+                        rows_updated = product.variants.filter(
+                            id=size_variant.id,
+                            stock__gte=qty
+                        ).update(stock=F('stock') - qty)
+                        # Also sync global counter
+                        Product.objects.filter(id=product.id).update(stock=F('stock') - qty)
+                    else:
+                        rows_updated = Product.objects.filter(
+                            id=product.id,
+                            stock__gte=qty,
+                            available=True
+                        ).update(stock=F('stock') - qty)
 
                     if not rows_updated:
-                        messages.error(request, f'Sorry, "{product.name}" does not have enough inventory remaining ({qty} requested).')
+                        messages.error(request, f'Sorry, size {item["size"]} of "{product.name}" has insufficient inventory ({qty} requested).')
                         insufficient_stock = True
                         transaction.set_rollback(True)
                         break
@@ -413,3 +428,11 @@ def midnight_vault(request):
         'is_unlocked': is_unlocked,
         'vault_products': vault_products
     })
+
+def check_pincode_view(request):
+    """
+    API endpoint for checking delivery estimates and COD availability by Indian pincode.
+    """
+    pincode = request.GET.get('pincode', '')
+    data = check_pincode_serviceability(pincode)
+    return JsonResponse(data)
