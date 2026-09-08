@@ -23,8 +23,8 @@ def product_list(request, category_slug=None):
         Product.objects.all().update(available=True)
     category = None
     categories = Category.objects.all()
-    products = Product.objects.filter(available=True)
-    trending_products = Product.objects.filter(available=True)[:6]
+    products = Product.objects.filter(available=True).order_by('-created')
+    trending_products = Product.objects.filter(available=True).order_by('-created')[:6]
 
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
@@ -73,7 +73,7 @@ def product_list(request, category_slug=None):
         user_wishlist_ids = list(Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True))
 
     # 4 Unique Flagship Spotlight Editions for the Top Banner
-    spotlight_products = Product.objects.filter(available=True)[:4]
+    spotlight_products = Product.objects.filter(available=True).order_by('-created')[:4]
 
     return render(request, 'store/product/list.html', {
         'category': category,
@@ -422,7 +422,7 @@ def midnight_vault(request):
         else:
             messages.error(request, 'Invalid Atelier Passkey. Access Denied.')
 
-    vault_products = Product.objects.filter(available=True)[:6]
+    vault_products = Product.objects.filter(available=True).order_by('-created')[:6]
 
     return render(request, 'store/vault/midnight_vault.html', {
         'is_unlocked': is_unlocked,

@@ -52,7 +52,7 @@
         <!-- Product Gallery & Studio Inspection Controls -->
         {% with gallery=product.get_gallery_images %}
             {% if gallery|length > 1 %}
-                <div class="grid grid-cols-{{ gallery|length }} gap-3.5">
+                <div class="grid grid-cols-4 sm:grid-cols-5 gap-2.5 sm:gap-3.5">
                     {% for img_url in gallery %}
                         <button type="button" 
                                 onclick="switchGalleryImage('{{ img_url }}', this)" 

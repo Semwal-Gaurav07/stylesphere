@@ -23,6 +23,12 @@ class Category(models.Model):
             return variant.stock
         return self.stock
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
     def get_absolute_url(self):
         return reverse('store:product_list_by_category', args=[self.slug])
 
@@ -74,6 +80,22 @@ class Product(models.Model):
         if variant:
             return variant.stock
         return self.stock
+
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+        if is_new:
+            # Auto-generate standard S, M, L, XL, XXL size variants so admin doesn't have to manually configure them!
+            qty_per_size = max(1, self.stock // 5) if self.stock else 5
+            for size_code in ['S', 'M', 'L', 'XL', 'XXL']:
+                ProductVariant.objects.get_or_create(
+                    product=self,
+                    size=size_code,
+                    defaults={'stock': qty_per_size}
+                )
 
     def get_absolute_url(self):
         return reverse('store:product_detail', args=[self.id, self.slug])
@@ -146,28 +168,26 @@ class Product(models.Model):
         return single_image_map.get(self.slug, 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80')
 
     def get_gallery_images(self):
-        """Returns consistent image URLs for THIS product only.
-        Guarantees that the product's own primary image is always first,
-        and never includes mismatched images of different garments."""
-        primary = self.image_url
-        gallery = [primary] if primary else []
+        """Returns all uploaded & curated gallery photos for this piece (4-5 angles)."""
+        gallery = []
+        # Primary image first
+        if self.image:
+            try:
+                gallery.append(self.image.url)
+            except Exception:
+                pass
 
-        # If the product has uploaded file images in ProductImage, add them
-        uploaded_images = self.images.filter(image__isnull=False)
-        for img in uploaded_images:
+        # Additional uploaded gallery photos (Back view, Model shot, Close-up, etc.)
+        for img in self.images.all():
             u = img.get_url()
             if u and u not in gallery:
                 gallery.append(u)
 
-        # If no uploaded child images exist, but child ProductImages exist:
-        if len(gallery) <= 1:
-            for img in self.images.all():
-                u = img.get_url()
-                # If product already has an uploaded media file, ignore external URLs of other shirts
-                if self.image and u.startswith('http'):
-                    continue
-                if u and u not in gallery:
-                    gallery.append(u)
+        # Fallback if no images uploaded yet
+        if not gallery:
+            fallback = self.get_fallback_image()
+            if fallback:
+                gallery.append(fallback)
 
         return gallery
 
@@ -186,14 +206,13 @@ class ProductImage(models.Model):
         return f"{self.product.name} Image ({self.caption or 'Gallery'})"
 
     def get_url(self):
-        if self.image_url:
-            return self.image_url
         if self.image:
             try:
-                if self.image.storage.exists(self.image.name):
-                    return self.image.url
+                return self.image.url
             except Exception:
                 pass
+        if self.image_url:
+            return self.image_url
         return ""
 
 

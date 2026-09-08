@@ -12,22 +12,38 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class ProductVariantInline(admin.TabularInline):
     model = ProductVariant
-    extra = 5
+    extra = 0
     fields = ['size', 'stock']
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
-    extra = 3
-    fields = ['image', 'image_url', 'caption']
+    extra = 4  # 4 additional image slots (Total 5 with primary image)
+    fields = ['image', 'caption']
+    verbose_name = 'Additional Angle / Photo'
+    verbose_name_plural = 'Additional Gallery Photos (Upload 4 to 5 Angles Here)'
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'price', 'stock', 'gsm', 'print_type', 'fit_type', 'available', 'created']
-    list_filter = ['available', 'created', 'category', 'fit_type', 'print_type']
+    list_display = ['name', 'category', 'price', 'stock', 'available', 'created']
+    list_filter = ['available', 'category', 'created']
     list_editable = ['price', 'stock', 'available']
     prepopulated_fields = {'slug': ('name',)}
+    search_fields = ['name', 'description']
     inlines = [ProductVariantInline, ProductImageInline]
+    
+    fieldsets = (
+        ('1. Core Details (All you need to fill)', {
+            'fields': ('name', 'category', 'price', 'image')
+        }),
+        ('2. Inventory & Visibility', {
+            'fields': ('stock', 'available')
+        }),
+        ('3. Optional Atelier Specs (Already set to defaults)', {
+            'classes': ('collapse',),
+            'fields': ('slug', 'description', 'fit_type', 'gsm', 'print_type')
+        }),
+    )
 
 
 @admin.register(ProductImage)
