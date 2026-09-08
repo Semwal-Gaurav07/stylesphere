@@ -6,70 +6,45 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecommerce_project.settings')
 django.setup()
 
 from django.contrib.auth.models import User
-from store.models import Order, OrderItem, Wishlist, Review, Product, Category, Coupon
+from store.models import Order, Wishlist, Review
 from accounts.models import Profile
 
 def inspect_all_users():
-    users = User.objects.all()
+    users = User.objects.all().order_by('-date_joined')
+    count = users.count()
+
     print("=" * 65)
-    print(f"TOTAL REGISTERED USERS IN DATABASE: {users.count()}")
+    print(f"  TOTAL REGISTERED CLIENTS / USERS: {count}")
     print("=" * 65)
 
     if not users.exists():
-        print("No users found. Create an account via /accounts/register/ or createsuperuser.")
+        print("\nNo registered users found in the database yet.")
+        print("Users will appear here once they register via /accounts/register/")
         return
 
-    for u in users:
-        print(f"\nUSER: {u.username} (ID: {u.id})")
-        print(f"   • Name: {u.get_full_name() or 'Not set'}")
-        print(f"   • Email: {u.email or 'Not set'}")
-        print(f"   • Is Superuser: {u.is_superuser}")
-        print(f"   • Date Joined: {u.date_joined.strftime('%Y-%m-%d %H:%M:%S')}")
+    for idx, u in enumerate(users, 1):
+        print(f"\n[{idx}] USER: {u.username} (ID: {u.id})")
+        print(f"    • Full Name:    {u.get_full_name() or 'Not specified'}")
+        print(f"    • Email:        {u.email or 'Not specified'}")
+        print(f"    • Is Staff:     {u.is_staff}")
+        print(f"    • Date Joined:  {u.date_joined.strftime('%d %B %Y, %I:%M %p')}")
 
         # Profile Data
         profile = Profile.objects.filter(user=u).first()
         if profile:
-            print(f"   • Saved Shipping Address:")
-            print(f"     - Phone: {profile.phone_number or 'Not set'}")
-            print(f"     - Address: {profile.address or 'Not set'}")
-            print(f"     - City: {profile.city or 'Not set'}")
-            print(f"     - Pincode: {profile.postal_code or 'Not set'}")
-        else:
-            print(f"   • Saved Profile: None")
+            addr = profile.address or 'None'
+            city = profile.city or 'None'
+            pin = profile.postal_code or 'None'
+            phone = profile.phone_number or 'None'
+            print(f"    • Shipping Info: {addr}, {city} - {pin} (Phone: {phone})")
 
-        # Wishlist Items
-        wishlist_items = Wishlist.objects.filter(user=u)
-        print(f"   • Wishlist ({wishlist_items.count()} items):")
-        if wishlist_items.exists():
-            for w in wishlist_items:
-                print(f"     - {w.product.name} (₹{w.product.price})")
-        else:
-            print("     - (No items saved)")
+        # Stats
+        orders_count = Order.objects.filter(user=u).count()
+        wishlist_count = Wishlist.objects.filter(user=u).count()
+        reviews_count = Review.objects.filter(user=u).count()
+        print(f"    • Activity:     {orders_count} orders placed | {wishlist_count} wishlist items | {reviews_count} reviews")
 
-        # Orders & Items
-        orders = Order.objects.filter(user=u)
-        print(f"   • Orders Placed ({orders.count()} orders):")
-        if orders.exists():
-            for o in orders:
-                print(f"     Order #{o.id} | Date: {o.created.strftime('%Y-%m-%d %H:%M')} | Status: {o.status}")
-                print(f"        - Payment: {o.payment_method} | Paid: {'Yes' if o.paid else 'No (COD)'}")
-                print(f"        - Shipping to: {o.first_name} {o.last_name}, {o.address}, {o.city} - {o.postal_code}")
-                for item in o.items.all():
-                    print(f"        - Item: {item.quantity}x {item.product.name} (Size: {item.size}, Price: ₹{item.price})")
-                print(f"        - Total Cost: ₹{o.get_total_cost()}")
-        else:
-            print("     - (No orders placed)")
-
-        # Reviews
-        reviews = Review.objects.filter(user=u)
-        print(f"   • Customer Reviews ({reviews.count()} submitted):")
-        if reviews.exists():
-            for r in reviews:
-                print(f"     Review on {r.product.name}: {r.rating}/5 — \"{r.comment}\" ({r.created.strftime('%Y-%m-%d')})")
-        else:
-            print("     - (No reviews submitted)")
-
-        print("-" * 65)
+    print("\n" + "=" * 65)
 
 if __name__ == '__main__':
     inspect_all_users()

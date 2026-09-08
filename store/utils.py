@@ -10,13 +10,12 @@ def check_pincode_serviceability(pincode):
     if len(pincode) != 6 or not pincode.isdigit():
         return {
             'valid': False,
-            'message': 'Please enter a valid 6-digit Indian pincode.',
+            'message': 'Please enter a valid 6-digit Indian postal pincode.',
             'cod_available': False,
             'delivery_date': None,
             'courier': None
         }
 
-    # Major metro zones check (11=Delhi NCR, 40=Mumbai, 56=Bangalore, 60=Chennai, 70=Kolkata, 13=Haryana/Punjab)
     first_two = pincode[:2]
     if first_two in ['11', '12', '13', '14', '16', '20']:
         days = 2
@@ -31,7 +30,7 @@ def check_pincode_serviceability(pincode):
     est_date = (datetime.now() + timedelta(days=days)).strftime("%A, %b %d")
     return {
         'valid': True,
-        'message': f'Serviceable! Estimated delivery in {days} days.',
+        'message': f'Serviceable! Guaranteed dispatch via {courier}. Delivery by {est_date}.',
         'cod_available': True,
         'delivery_date': est_date,
         'courier': courier
@@ -40,14 +39,16 @@ def check_pincode_serviceability(pincode):
 def generate_admin_whatsapp_url(order):
     """
     Generates a WhatsApp notification link with full order details for the store admin.
+    Safe against missing phone numbers.
     """
     admin_number = '919781855165'
     items_list = "\n".join([f"• {item.product.name} ({item.size}) x {item.quantity} - ₹{item.get_cost()}" for item in order.items.all()])
-    
+    cust_phone = getattr(order, 'phone_number', '') or 'Not provided'
+
     msg = (
         f"🚨 *NEW ORDER ALERT - #{order.id}*\n\n"
         f"👤 *Customer:* {order.first_name} {order.last_name}\n"
-        f"📞 *Phone:* {order.phone_number or 'Not provided'}\n"
+        f"📞 *Phone:* {cust_phone}\n"
         f"📍 *Address:* {order.address}, {order.city} - {order.postal_code}\n"
         f"📦 *Items:*\n{items_list}\n\n"
         f"💰 *Total Payable:* ₹{order.get_total_cost()}\n"
