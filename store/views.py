@@ -317,8 +317,7 @@ def order_create(request):
                 cart.clear()
                 request.session['coupon_id'] = None
                 request.session['order_id'] = order.id
-                # Trigger transactional order receipt
-                send_order_confirmation_email(order)
+                # Customer proceeds to select payment method (COD or GPay)
                 return redirect('payment:process')
     else:
         form = OrderCreateForm(initial=initial_data)
@@ -337,6 +336,7 @@ def order_invoice(request, order_id):
 def admin_analytics(request):
     from django.contrib.auth.models import User
     total_users = User.objects.count()
+    all_users = User.objects.all().order_by('-date_joined')
     total_orders = Order.objects.count()
     revenue_agg = OrderItem.objects.filter(order__paid=True).aggregate(
         rev=Sum(F('price') * F('quantity'))
@@ -351,6 +351,7 @@ def admin_analytics(request):
 
     return render(request, 'store/admin_analytics.html', {
         'total_users': total_users,
+        'all_users': all_users,
         'total_orders': total_orders,
         'total_revenue': total_revenue,
         'paid_orders': paid_orders,

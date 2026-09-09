@@ -17,11 +17,6 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-    def get_stock_for_size(self, size):
-        variant = self.variants.filter(size=size).first()
-        if variant:
-            return variant.stock
-        return self.stock
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -75,11 +70,6 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-    def get_stock_for_size(self, size):
-        variant = self.variants.filter(size=size).first()
-        if variant:
-            return variant.stock
-        return self.stock
 
     def save(self, *args, **kwargs):
         is_new = self.pk is None

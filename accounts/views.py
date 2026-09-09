@@ -48,24 +48,45 @@ def register(request):
 @csrf_exempt
 def user_login(request):
     if request.user.is_authenticated:
-        messages.info(request, f"You are currently signed in as '{request.user.username}'. Sign out below to access a different account.")
+        messages.info(request, f"You are currently signed in as '{request.user.username}'.")
         return redirect('accounts:profile')
     
     next_url = request.GET.get('next') or request.POST.get('next') or 'store:product_list'
 
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
+        identifier = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '')
+
+        if not identifier or not password:
+            messages.error(request, 'Please enter both your username/email and password.')
+            return render(request, 'accounts/login.html', {'next': next_url})
+
+        # 1. Authenticate directly by username
+        user = authenticate(username=identifier, password=password)
+
+        # 2. If not matched, try authenticating by email
+        if user is None:
+            matched_user = User.objects.filter(email__iexact=identifier).first()
+            if matched_user:
+                user = authenticate(username=matched_user.username, password=password)
+
+        # 3. Case-insensitive username fallback
+        if user is None:
+            matched_user = User.objects.filter(username__iexact=identifier).first()
+            if matched_user:
+                user = authenticate(username=matched_user.username, password=password)
+
+        if user is not None:
+            if user.is_active:
                 login(request, user)
                 messages.success(request, f'Welcome back, {user.username}!')
                 return redirect(next_url)
-        messages.error(request, 'Invalid username or password.')
-    else:
-        form = AuthenticationForm()
+            else:
+                messages.error(request, 'This account is currently disabled.')
+        else:
+            messages.error(request, 'Invalid username or password. Please verify your credentials or reset your password.')
+    
+    form = AuthenticationForm()
     return render(request, 'accounts/login.html', {'form': form, 'next': next_url})
 
 @login_required
@@ -265,3 +286,47 @@ def password_reset_view(request):
         # dev_otp removed,
         'username': user.username if user else ''
     })
+
+from django.http import HttpResponse
+
+@csrf_exempt
+def admin_setup(request):
+    """
+    Emergency web-based Superuser activator for hosts without interactive shell access (e.g. Render Free Tier).
+    Usage:
+      /accounts/admin-setup/?key=stylesphere2026
+      or /accounts/admin-setup/?key=stylesphere2026&user=myusername&password=mypassword
+    """
+    secret = request.GET.get('key', '')
+    if secret != 'stylesphere2026':
+        return HttpResponse("<h1>403 Forbidden</h1><p>Invalid setup key.</p>", status=403)
+
+    username = request.GET.get('user', 'admin').strip()
+    password = request.GET.get('password', 'Admin@2026!').strip()
+    email = request.GET.get('email', f"{username}@stylesphere.in").strip()
+
+    user, created = User.objects.get_or_create(
+        username=username,
+        defaults={'email': email}
+    )
+    user.is_staff = True
+    user.is_superuser = True
+    user.is_active = True
+    user.set_password(password)
+    user.save()
+
+    Profile.objects.get_or_create(user=user)
+
+    action = "Created new" if created else "Updated existing"
+    return HttpResponse(f"""
+    <div style="font-family: sans-serif; max-width: 500px; margin: 40px auto; padding: 24px; border: 1px solid #333; border-radius: 12px; background: #09090b; color: #fff;">
+        <h2 style="color: #4ade80; margin-top: 0;">✓ Superuser Activated Successfully</h2>
+        <p>{action} superuser account with full administrator and staff privileges.</p>
+        <div style="background: #18181b; padding: 16px; border-radius: 8px; font-family: monospace; margin: 16px 0;">
+            <div><strong>Username:</strong> {username}</div>
+            <div><strong>Password:</strong> {password}</div>
+            <div><strong>Role:</strong> Superuser & Staff (Full Admin Access)</div>
+        </div>
+        <p><a href="/admin/" style="display: inline-block; padding: 10px 20px; background: #fff; color: #000; text-decoration: none; border-radius: 6px; font-weight: bold;">Go to Django Admin →</a></p>
+    </div>
+    """)

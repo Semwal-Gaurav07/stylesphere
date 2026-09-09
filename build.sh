@@ -11,3 +11,4 @@ python manage.py migrate --no-input || python manage.py migrate --fake store 000
 
 python manage.py seed_catalog || python seed_data.py || true
 python download_images.py || true
+python manage.py shell -c "import os; from django.contrib.auth.models import User; u = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'admin'); p = os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'Admin@2026!'); e = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@stylesphere.in'); User.objects.filter(username=u).exists() or User.objects.create_superuser(u, e, p)" || true

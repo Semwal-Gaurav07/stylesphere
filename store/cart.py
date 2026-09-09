@@ -93,6 +93,23 @@ class Cart:
                     pass
         return total.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
 
+    @property
+    def coupon(self):
+        coupon_id = self.session.get('coupon_id')
+        if coupon_id:
+            from .models import Coupon
+            return Coupon.objects.filter(id=coupon_id, active=True).first()
+        return None
+
+    def get_discount(self):
+        if self.coupon:
+            return (self.get_total_price() * (Decimal(str(self.coupon.discount_percent)) / Decimal('100'))).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        return Decimal('0.00')
+
+    def get_total_price_after_discount(self):
+        total = self.get_total_price() - self.get_discount()
+        return total.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+
     def get_free_shipping_needed(self):
         total = self.get_total_price()
         threshold = Decimal('999.00')
