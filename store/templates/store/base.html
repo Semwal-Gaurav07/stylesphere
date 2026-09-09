@@ -3,7 +3,7 @@
 <html lang="en" data-theme="dark" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="referrer" content="no-referrer">
     <title>{% block title %}STYLE SPHERE — Luxury Streetwear & Heavyweight Atelier{% endblock %}</title>
 
@@ -141,12 +141,13 @@
         /* Clean Luxury Card */
         .luxury-card {
             background: #111113;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: border-color 0.25s ease, background-color 0.25s ease;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
         }
         .luxury-card:hover {
-            border-color: rgba(255, 255, 255, 0.22);
+            border-color: rgba(212, 175, 55, 0.35);
             background: #141417;
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6);
         }
 
         /* Subtle Gold Shimmer Accent */
@@ -286,16 +287,12 @@
                         </ul>
                     </div>
 
-                    <a href="{% url 'store:provenance_vault' %}" class="hover:text-white transition-colors flex items-center gap-1 text-luxury-gold">
-                        <i class="bi bi-shield-check text-xs"></i> Provenance
-                    </a>
-
-                    <a href="{% url 'store:midnight_vault' %}" class="hover:text-white transition-colors flex items-center gap-1 text-red-400">
-                        <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span> Vault
-                    </a>
-
                     <a href="#whoWeAre" class="hover:text-white transition-colors">
                         About
+                    </a>
+
+                    <a href="#howItsMade" class="hover:text-white transition-colors">
+                        Our values
                     </a>
 
                     <a href="#contactFooter" class="hover:text-white transition-colors">
@@ -306,16 +303,6 @@
                 <!-- Right: Utility Actions (Search, Wishlist, Bag, Account) -->
                 <div class="flex items-center gap-2 sm:gap-4">
                     
-                    <!-- Tactile Audio Branding Toggle (Web Audio API) -->
-                    <button type="button" 
-                            id="audioToggleBtn" 
-                            onclick="toggleAtelierAudio()" 
-                            class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[9px] font-mono uppercase tracking-wider text-zinc-400 hover:text-white transition-all"
-                            title="Toggle Atelier Sound Design">
-                        <span id="audioStatusDot" class="w-1.5 h-1.5 rounded-full bg-zinc-600"></span>
-                        <span id="audioStatusText">SFX: OFF</span>
-                    </button>
-
                     <!-- Search Toggle Button -->
                     <button type="button" onclick="toggleSearchBar()" class="p-2 text-zinc-400 hover:text-white transition-colors" title="Search Pieces">
                         <i class="bi bi-search text-base"></i>
@@ -538,7 +525,7 @@
     </script>
 
     <!-- Main Content Area -->
-    <main class="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-28 md:pb-12">
         {% if messages %}
             <div class="mb-6 space-y-2">
                 {% for message in messages %}
@@ -573,7 +560,7 @@
                     </div>
                     <h4 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Encrypted Transactions</h4>
                     <p class="text-[11px] text-zinc-500 leading-relaxed">
-                        Protected end-to-end payments with Google Pay (GPay) and Doorstep Cash on Delivery (COD).
+                        Protected end-to-end payments with UPI, Major Credit Cards, NetBanking, and Doorstep Cash on Delivery (COD).
                     </p>
                 </div>
 
@@ -694,7 +681,7 @@
     </footer>
 
     <!-- Minimalist Mobile Bottom Nav Bar -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-zinc-900 flex justify-around items-center h-16">
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#09090b]/95 backdrop-blur-2xl border-t border-white/[0.08] flex justify-around items-center h-16 pb-[env(safe-area-inset-bottom,0px)] shadow-[0_-10px_25px_rgba(0,0,0,0.7)]">
         <button type="button" onclick="toggleMobileMenu()" class="flex flex-col items-center text-[10px] font-semibold tracking-wider uppercase text-zinc-400 hover:text-white transition-colors focus:outline-none">
             <i class="bi bi-grid text-base mb-0.5"></i>
             <span>Menu</span>
@@ -733,131 +720,6 @@
             </a>
         {% endif %}
     </nav>
-
-
-<!-- ========================================================================= -->
-<!-- ATELIER TACTILE SOUND DESIGN (Web Audio API Synthesizer - 0 External MP3s) -->
-<!-- ========================================================================= -->
-<script>
-window.AtelierAudio = (function() {
-    let audioCtx = null;
-    let isEnabled = localStorage.getItem('atelier_sfx') === 'true';
-
-    function initCtx() {
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
-    }
-
-    function playClick() {
-        if (!isEnabled) return;
-        try {
-            initCtx();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(900, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.035);
-            gain.gain.setValueAtTime(0.09, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.035);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.035);
-        } catch(e) {}
-    }
-
-    function playWoosh() {
-        if (!isEnabled) return;
-        try {
-            initCtx();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(140, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(45, audioCtx.currentTime + 0.14);
-            gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.14);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.14);
-        } catch(e) {}
-    }
-
-    function playChime() {
-        if (!isEnabled) return;
-        try {
-            initCtx();
-            const now = audioCtx.currentTime;
-            [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(freq, now + (i * 0.04));
-                gain.gain.setValueAtTime(0.06, now + (i * 0.04));
-                gain.gain.exponentialRampToValueAtTime(0.0001, now + (i * 0.04) + 0.4);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start(now + (i * 0.04));
-                osc.stop(now + (i * 0.04) + 0.4);
-            });
-        } catch(e) {}
-    }
-
-    function toggle() {
-        isEnabled = !isEnabled;
-        localStorage.setItem('atelier_sfx', isEnabled);
-        updateUI();
-        if (isEnabled) {
-            initCtx();
-            playChime();
-        }
-    }
-
-    function updateUI() {
-        const dot = document.getElementById('audioStatusDot');
-        const txt = document.getElementById('audioStatusText');
-        if (dot && txt) {
-            if (isEnabled) {
-                dot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
-                txt.innerText = 'SFX: ON';
-                txt.classList.add('text-white');
-            } else {
-                dot.className = 'w-1.5 h-1.5 rounded-full bg-zinc-600';
-                txt.innerText = 'SFX: OFF';
-                txt.classList.remove('text-white');
-            }
-        }
-    }
-
-    // Attach acoustic feedback to size pills, buttons, and drawers
-    document.addEventListener('DOMContentLoaded', () => {
-        updateUI();
-        document.querySelectorAll('button, a, input[type="radio"]').forEach(el => {
-            el.addEventListener('click', () => {
-                if (el.id === 'audioToggleBtn') return;
-                playClick();
-            });
-        });
-    });
-
-    return {
-        click: playClick,
-        woosh: playWoosh,
-        chime: playChime,
-        toggle: toggle,
-        isEnabled: () => isEnabled
-    };
-})();
-
-function toggleAtelierAudio() {
-    window.AtelierAudio.toggle();
-}
-</script>
 
 </body>
 </html>

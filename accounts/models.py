@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta
-import secrets
+import random
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -32,9 +32,8 @@ class PasswordResetOTP(models.Model):
     def create_otp(cls, user):
         # Invalidate previous unverified OTPs for this user
         cls.objects.filter(user=user, is_verified=False).delete()
-        # Cryptographically secure 6-digit OTP
-        code = f"{secrets.randbelow(900000) + 100000}"
+        code = f"{random.randint(100000, 999999)}"
         return cls.objects.create(user=user, otp_code=code)
 
     def __str__(self):
-        return f"OTP for {self.user.username} ({self.created_at.strftime('%Y-%m-%d %H:%M')})"
+        return f"OTP for {self.user.username} (Code: {self.otp_code})"

@@ -20,14 +20,9 @@ class UserRegistrationForm(forms.ModelForm):
 
     def clean_password_confirm(self):
         cd = self.cleaned_data
-        password = cd.get('password')
-        password_confirm = cd.get('password_confirm')
-        if password and password_confirm:
-            if password != password_confirm:
-                raise forms.ValidationError('Passwords do not match.')
-            from django.contrib.auth.password_validation import validate_password
-            validate_password(password)
-        return password_confirm
+        if cd.get('password') != cd.get('password_confirm'):
+            raise forms.ValidationError('Passwords do not match.')
+        return cd.get('password_confirm')
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:

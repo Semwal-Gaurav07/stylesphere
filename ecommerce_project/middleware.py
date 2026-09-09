@@ -1,12 +1,8 @@
-"""
-Project custom middleware.
-"""
-
-class CSRFOriginFixMiddleware:
+class CSRFNullOriginFixMiddleware:
     """
     Fixes 'Origin checking failed - null does not match any trusted origins'
-    when mobile users submit forms from Chrome on Android, iOS, or in-app WebViews
-    (WhatsApp, Instagram, Telegram) where the browser sends 'Origin: null' or omits it.
+    when mobile users submit forms from in-app browsers (WhatsApp, Instagram, Telegram WebViews)
+    or across reverse-proxy HTTPS protocol conversions on Render.
     """
     def __init__(self, get_response):
         self.get_response = get_response
@@ -19,20 +15,3 @@ class CSRFOriginFixMiddleware:
             scheme = 'https' if is_ssl else 'http'
             request.META['HTTP_ORIGIN'] = f"{scheme}://{host}"
         return self.get_response(request)
-
-# Alias for backward compatibility
-CSRFNullOriginFixMiddleware = CSRFOriginFixMiddleware
-
-class SecurityHeaderMiddleware:
-    """
-    Adds essential modern HTTP security headers to outgoing responses.
-    """
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        response = self.get_response(request)
-        response['X-Content-Type-Options'] = 'nosniff'
-        response['X-Frame-Options'] = 'DENY'
-        response['Referrer-Policy'] = 'strict-origin-when-cross-origin'
-        return response

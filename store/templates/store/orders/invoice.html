@@ -130,7 +130,7 @@
             <div style="width: 280px; font-size: 12px; line-height: 2;">
                 <div style="display: flex; justify-content: space-between;">
                     <span style="color: #71717a;">Subtotal:</span>
-                    <span class="font-mono">₹{{ order.get_subtotal_cost }}</span>
+                    <span class="font-mono">₹{{ order.get_total_cost }}</span>
                 </div>
                 {% if order.discount %}
                     <div style="display: flex; justify-content: space-between; color: #d97706;">

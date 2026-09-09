@@ -1,4 +1,3 @@
-import os
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -16,13 +15,6 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            from django.utils.text import slugify
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('store:product_list_by_category', args=[self.slug])
@@ -70,32 +62,8 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-
-    def save(self, *args, **kwargs):
-        is_new = self.pk is None
-        if not self.slug:
-            from django.utils.text import slugify
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-        if is_new:
-            # Auto-generate standard S, M, L, XL, XXL size variants so admin doesn't have to manually configure them!
-            qty_per_size = max(1, self.stock // 5) if self.stock else 5
-            for size_code in ['S', 'M', 'L', 'XL', 'XXL']:
-                ProductVariant.objects.get_or_create(
-                    product=self,
-                    size=size_code,
-                    defaults={'stock': qty_per_size}
-                )
-
     def get_absolute_url(self):
         return reverse('store:product_detail', args=[self.id, self.slug])
-
-    def get_stock_for_size(self, size):
-        """Returns available inventory for a specific size variant, falling back to global stock."""
-        variant = self.variants.filter(size=size).first()
-        if variant:
-            return variant.stock
-        return self.stock
 
     def get_average_rating(self):
         reviews = self.reviews.all()
@@ -165,26 +133,28 @@ class Product(models.Model):
         return single_image_map.get(self.slug, 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80')
 
     def get_gallery_images(self):
-        """Returns all uploaded & curated gallery photos for this piece (4-5 angles)."""
-        gallery = []
-        # Primary image first
-        if self.image:
-            try:
-                gallery.append(self.image.url)
-            except Exception:
-                pass
+        """Returns consistent image URLs for THIS product only.
+        Guarantees that the product's own primary image is always first,
+        and never includes mismatched images of different garments."""
+        primary = self.image_url
+        gallery = [primary] if primary else []
 
-        # Additional uploaded gallery photos (Back view, Model shot, Close-up, etc.)
-        for img in self.images.all():
+        # If the product has uploaded file images in ProductImage, add them
+        uploaded_images = self.images.filter(image__isnull=False)
+        for img in uploaded_images:
             u = img.get_url()
             if u and u not in gallery:
                 gallery.append(u)
 
-        # Fallback if no images uploaded yet
-        if not gallery:
-            fallback = self.get_fallback_image()
-            if fallback:
-                gallery.append(fallback)
+        # If no uploaded child images exist, but child ProductImages exist:
+        if len(gallery) <= 1:
+            for img in self.images.all():
+                u = img.get_url()
+                # If product already has an uploaded media file, ignore external URLs of other shirts
+                if self.image and u.startswith('http'):
+                    continue
+                if u and u not in gallery:
+                    gallery.append(u)
 
         return gallery
 
@@ -196,6 +166,19 @@ class ProductImage(models.Model):
     caption = models.CharField(max_length=150, blank=True, help_text='e.g. Front View, Back Print, Model Shot, Detail')
     created = models.DateTimeField(auto_now_add=True)
 
+    def get_url(self):
+        if self.image_url:
+            return self.image_url
+        if self.image:
+            try:
+                return self.image.url
+            except Exception:
+                pass
+        return ""
+
+    def __str__(self):
+        return f"{self.product.name} - {self.caption or 'Image'}" 
+
     class Meta:
         ordering = ['id']
 
@@ -205,41 +188,20 @@ class ProductImage(models.Model):
     def get_url(self):
         if self.image:
             try:
-                return self.image.url
+                if self.image.storage.exists(self.image.name):
+                    return self.image.url
             except Exception:
                 pass
-        if self.image_url:
-            return self.image_url
-        return ""
+        return self.image_url
 
 
 class Coupon(models.Model):
     code = models.CharField(max_length=50, unique=True)
     discount_percent = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(100)])
     active = models.BooleanField(default=True)
-    min_purchase = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
-    max_uses = models.PositiveIntegerField(default=500)
-    used_count = models.PositiveIntegerField(default=0)
-    valid_from = models.DateTimeField(null=True, blank=True)
-    valid_to = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.code} ({self.discount_percent}% Off)'
-
-    def is_valid(self, subtotal=Decimal('0.00')):
-        from django.utils import timezone
-        now = timezone.now()
-        if not self.active:
-            return False, 'This promo code is inactive.'
-        if self.valid_from and now < self.valid_from:
-            return False, 'This promo code is not active yet.'
-        if self.valid_to and now > self.valid_to:
-            return False, 'This promo code has expired.'
-        if self.used_count >= self.max_uses:
-            return False, 'This promo code has reached its usage limit.'
-        if subtotal and subtotal < self.min_purchase:
-            return False, f'Minimum purchase of ₹{self.min_purchase} required.'
-        return True, 'Valid'
 
 
 class Order(models.Model):
@@ -255,7 +217,6 @@ class Order(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField()
-    phone_number = models.CharField(max_length=20, blank=True, default='')
     address = models.CharField(max_length=250)
     postal_code = models.CharField(max_length=20)
     city = models.CharField(max_length=100)
@@ -325,22 +286,3 @@ class Wishlist(models.Model):
 
     class Meta:
         unique_together = ('user', 'product')
-
-class ProductVariant(models.Model):
-    SIZE_CHOICES = (
-        ('S', 'Small (S)'),
-        ('M', 'Medium (M)'),
-        ('L', 'Large (L)'),
-        ('XL', 'Extra Large (XL)'),
-        ('XXL', 'Double Extra Large (XXL)'),
-    )
-    product = models.ForeignKey('Product', related_name='variants', on_delete=models.CASCADE)
-    size = models.CharField(max_length=10, choices=SIZE_CHOICES)
-    stock = models.PositiveIntegerField(default=10)
-
-    class Meta:
-        unique_together = ('product', 'size')
-        ordering = ['id']
-
-    def __str__(self):
-        return f"{self.product.name} [{self.size}] - Stock: {self.stock}"
