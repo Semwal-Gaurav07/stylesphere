@@ -90,6 +90,13 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('store:product_detail', args=[self.id, self.slug])
 
+    def get_stock_for_size(self, size):
+        """Returns available inventory for a specific size variant, falling back to global stock."""
+        variant = self.variants.filter(size=size).first()
+        if variant:
+            return variant.stock
+        return self.stock
+
     def get_average_rating(self):
         reviews = self.reviews.all()
         if reviews.exists():
@@ -210,9 +217,29 @@ class Coupon(models.Model):
     code = models.CharField(max_length=50, unique=True)
     discount_percent = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(100)])
     active = models.BooleanField(default=True)
+    min_purchase = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
+    max_uses = models.PositiveIntegerField(default=500)
+    used_count = models.PositiveIntegerField(default=0)
+    valid_from = models.DateTimeField(null=True, blank=True)
+    valid_to = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.code} ({self.discount_percent}% Off)'
+
+    def is_valid(self, subtotal=Decimal('0.00')):
+        from django.utils import timezone
+        now = timezone.now()
+        if not self.active:
+            return False, 'This promo code is inactive.'
+        if self.valid_from and now < self.valid_from:
+            return False, 'This promo code is not active yet.'
+        if self.valid_to and now > self.valid_to:
+            return False, 'This promo code has expired.'
+        if self.used_count >= self.max_uses:
+            return False, 'This promo code has reached its usage limit.'
+        if subtotal and subtotal < self.min_purchase:
+            return False, f'Minimum purchase of ₹{self.min_purchase} required.'
+        return True, 'Valid'
 
 
 class Order(models.Model):

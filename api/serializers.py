@@ -69,9 +69,9 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'user', 'first_name', 'last_name', 'email', 'phone_number', 'address',
             'postal_code', 'city', 'paid', 'payment_method', 'status',
-            'discount', 'awb_code', 'total_cost', 'items', 'order_items', 'created'
+            'discount', 'awb_code', 'tracking_number', 'total_cost', 'items', 'order_items', 'created'
         ]
-        read_only_fields = ['user', 'paid', 'status', 'awb_code', 'total_cost', 'created']
+        read_only_fields = ['user', 'paid', 'status', 'awb_code', 'tracking_number', 'total_cost', 'created']
 
     def create(self, validated_data):
         items_data = validated_data.pop('order_items', [])

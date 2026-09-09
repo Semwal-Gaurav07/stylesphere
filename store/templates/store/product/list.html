@@ -92,7 +92,7 @@
             </h2>
         </div>
         <span class="text-xs text-zinc-500 font-mono">
-            {{ products.count|default:"12" }} Editions Catalogued
+            {{ page_obj.paginator.count|default:products|length }} Editions Catalogued
         </span>
     </div>
 
@@ -216,8 +216,76 @@
                 Reset Filters
             </a>
         </div>
+
+{% if page_obj.has_other_pages %}
+    <!-- Luxury Archival Pagination Controller -->
+    <div class="flex flex-wrap items-center justify-center gap-2 my-12 font-mono text-xs">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}{% if rating_filter %}&rating={{ rating_filter }}{% endif %}{% if print_filter %}&print_type={{ print_filter }}{% endif %}{% if fit_filter %}&fit_type={{ fit_filter }}{% endif %}" 
+               class="px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                <i class="bi bi-arrow-left"></i> Previous
+            </a>
+        {% endif %}
+
+        <div class="flex items-center gap-1 px-2">
+            {% for p in page_obj.paginator.page_range %}
+                {% if p == page_obj.number %}
+                    <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-white text-black font-bold shadow-md">
+                        {{ p }}
+                    </span>
+                {% elif p > page_obj.number|add:"-3" and p < page_obj.number|add:"3" %}
+                    <a href="?page={{ p }}{% if query %}&q={{ query }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}{% if rating_filter %}&rating={{ rating_filter }}{% endif %}{% if print_filter %}&print_type={{ print_filter }}{% endif %}{% if fit_filter %}&fit_type={{ fit_filter }}{% endif %}" 
+                       class="w-9 h-9 flex items-center justify-center rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-colors">
+                        {{ p }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}{% if rating_filter %}&rating={{ rating_filter }}{% endif %}{% if print_filter %}&print_type={{ print_filter }}{% endif %}{% if fit_filter %}&fit_type={{ fit_filter }}{% endif %}" 
+               class="px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                Next <i class="bi bi-arrow-right"></i>
+            </a>
+        {% endif %}
+    </div>
+{% endif %}
     {% endfor %}
 </div>
+
+{% if page_obj.has_other_pages %}
+    <!-- Luxury Archival Pagination Controller -->
+    <div class="flex flex-wrap items-center justify-center gap-2 my-12 font-mono text-xs">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}{% if rating_filter %}&rating={{ rating_filter }}{% endif %}{% if print_filter %}&print_type={{ print_filter }}{% endif %}{% if fit_filter %}&fit_type={{ fit_filter }}{% endif %}" 
+               class="px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                <i class="bi bi-arrow-left"></i> Previous
+            </a>
+        {% endif %}
+
+        <div class="flex items-center gap-1 px-2">
+            {% for p in page_obj.paginator.page_range %}
+                {% if p == page_obj.number %}
+                    <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-white text-black font-bold shadow-md">
+                        {{ p }}
+                    </span>
+                {% elif p > page_obj.number|add:"-3" and p < page_obj.number|add:"3" %}
+                    <a href="?page={{ p }}{% if query %}&q={{ query }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}{% if rating_filter %}&rating={{ rating_filter }}{% endif %}{% if print_filter %}&print_type={{ print_filter }}{% endif %}{% if fit_filter %}&fit_type={{ fit_filter }}{% endif %}" 
+                       class="w-9 h-9 flex items-center justify-center rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-colors">
+                        {{ p }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}{% if rating_filter %}&rating={{ rating_filter }}{% endif %}{% if print_filter %}&print_type={{ print_filter }}{% endif %}{% if fit_filter %}&fit_type={{ fit_filter }}{% endif %}" 
+               class="px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                Next <i class="bi bi-arrow-right"></i>
+            </a>
+        {% endif %}
+    </div>
+{% endif %}
 
 <!-- ================================================================= -->
 <!-- SECTION 5: CRAFTSMANSHIP & TEXTILE MANIFESTO                     -->

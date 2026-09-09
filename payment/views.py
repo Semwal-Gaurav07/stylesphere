@@ -56,15 +56,17 @@ def payment_process(request):
 
         elif payment_type in ['gpay', 'upi']:
             utr_number = request.POST.get('utr_number', '').strip()
-            order.paid = True
+            order.paid = False
             if utr_number:
-                order.payment_method = f"Google Pay (GPay) [UTR: {utr_number}]"
+                order.payment_method = f"Google Pay (GPay) [UTR: {utr_number} - Pending Verification]"
+                order.status = 'Processing'
+                messages.info(request, f'UTR {utr_number} recorded. Order placed and will be finalized once payment is confirmed.')
             else:
-                order.payment_method = "Google Pay (GPay)"
-            order.status = 'Placed'
+                order.payment_method = "Google Pay (GPay) [Pending Collection]"
+                order.status = 'Placed'
+                messages.info(request, 'Order placed. Please finalize your UPI payment to complete dispatch.')
             order.save()
             send_order_confirmation_email(order)
-            messages.success(request, 'Google Pay payment confirmed! Your order has been placed.')
             return redirect('payment:done')
 
         else:
@@ -78,11 +80,9 @@ def payment_process(request):
         'amount_in_paise': amount_in_paise
     })
 
-@csrf_exempt
 def payment_verify(request):
     """
-    Handles Razorpay Google Pay / UPI checkout callback verification.
-    Card payments are strictly disabled in checkout options.
+    Handles Razorpay checkout callback verification with strict cryptographic validation.
     """
     if request.method == 'POST':
         order_id = request.session.get('order_id')
@@ -114,22 +114,21 @@ def payment_verify(request):
                     })
                     verified = True
                 except Exception as e:
-                    print(f"Razorpay Signature Warning: {e}")
+                    print(f"Razorpay Signature Verification Failed: {e}")
                     verified = False
             else:
-                # Simulation / Test environment fallback
-                verified = True
+                verified = False
 
             if verified:
                 order.paid = True
-                order.payment_method = f"Google Pay (GPay Verified: {payment_id or 'Online'})"
+                order.payment_method = f"Razorpay Verified (Payment ID: {payment_id})"
                 order.status = 'Placed'
                 order.save()
                 send_order_confirmation_email(order)
-                messages.success(request, 'Google Pay payment verified successfully! Your order has been placed.')
+                messages.success(request, 'Payment verified successfully! Your order has been placed.')
                 return redirect('payment:done')
             else:
-                messages.error(request, 'Payment verification failed. Please try again or use Cash on Delivery.')
+                messages.error(request, 'Payment signature verification failed. Please try again or use Cash on Delivery.')
                 return redirect('payment:process')
 
     return redirect('payment:process')
@@ -156,7 +155,9 @@ def webhook_handler(request):
     webhook_secret = getattr(settings, 'RAZORPAY_WEBHOOK_SECRET', '')
     signature = request.META.get('HTTP_X_RAZORPAY_SIGNATURE', '')
 
-    if webhook_secret and signature:
+    if webhook_secret:
+        if not signature:
+            return JsonResponse({'status': 'error', 'message': 'Missing signature header'}, status=400)
         import hmac
         import hashlib
         expected_sig = hmac.new(

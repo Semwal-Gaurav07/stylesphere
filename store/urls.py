@@ -16,6 +16,7 @@ urlpatterns = [
     path('wishlist/toggle/<int:product_id>/', views.wishlist_toggle, name='wishlist_toggle'),
     path('orders/create/', views.order_create, name='order_create'),
     path('orders/<int:order_id>/invoice/', views.order_invoice, name='order_invoice'),
+    path('orders/<int:order_id>/cancel/', views.order_cancel, name='order_cancel'),
     path('analytics/', views.admin_analytics, name='admin_analytics'),
     path('provenance/', views.provenance_vault, name='provenance_vault'),
     path('vault/', views.midnight_vault, name='midnight_vault'),

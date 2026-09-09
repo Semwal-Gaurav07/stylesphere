@@ -1,7 +1,13 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.db import connection
 
 def health_check(request):
-    return HttpResponse("OK", status=200)
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+        return JsonResponse({"status": "healthy", "database": "connected"}, status=200)
+    except Exception as e:
+        return JsonResponse({"status": "degraded", "error": str(e)}, status=500)
 
 from django.contrib import admin
 from django.urls import path, include, re_path
@@ -18,7 +24,7 @@ urlpatterns = [
     path('api/', include('api.urls', namespace='api')),
 ]
 
-# In development, serve static and media via Django; in production WhiteNoise serves static
+# Serve static/media
 if settings.DEBUG:
     urlpatterns += [
         re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),

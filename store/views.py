@@ -1,4 +1,3 @@
-from django.views.decorators.csrf import csrf_exempt
 from .utils import check_pincode_serviceability, generate_admin_whatsapp_url
 from django.http import JsonResponse
 from .notifications import send_order_confirmation_email
@@ -6,7 +5,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-from django.db.models import Q, Sum, Count
+from django.db.models import Q, Sum, Count, Avg
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import transaction
 from decimal import Decimal
 from datetime import datetime, timedelta
@@ -17,15 +17,10 @@ from .cart import Cart
 from .forms import CartAddProductForm, OrderCreateForm, CouponApplyForm, ReviewForm
 
 def product_list(request, category_slug=None):
-    # Ensure catalog is populated via  on build
-
-    # Ensure all products are marked available so they are never hidden
-    if Product.objects.filter(available=True).count() == 0 and Product.objects.exists():
-        Product.objects.all().update(available=True)
     category = None
     categories = Category.objects.all()
-    products = Product.objects.filter(available=True).order_by('-created')
-    trending_products = Product.objects.filter(available=True).order_by('-created')[:6]
+    products = Product.objects.filter(available=True).select_related('category').prefetch_related('images', 'variants', 'reviews').order_by('-created')
+    trending_products = Product.objects.filter(available=True).select_related('category').prefetch_related('images')[:6]
 
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
@@ -73,19 +68,41 @@ def product_list(request, category_slug=None):
     if request.user.is_authenticated:
         user_wishlist_ids = list(Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True))
 
+    # Annotate with average user rating for rating filter & ranking
+    products = products.annotate(avg_rating=Avg('reviews__rating'))
+
+    rating_filter = request.GET.get('rating')
+    if rating_filter:
+        try:
+            products = products.filter(avg_rating__gte=float(rating_filter))
+        except (ValueError, TypeError):
+            pass
+
     # 4 Unique Flagship Spotlight Editions for the Top Banner
     spotlight_products = Product.objects.filter(available=True).order_by('-created')[:4]
+
+    # Pagination: 9 products per page (matches clean 3x3 layout)
+    paginator = Paginator(products, 9)
+    page_number = request.GET.get('page', 1)
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
 
     return render(request, 'store/product/list.html', {
         'category': category,
         'categories': categories,
-        'products': products,
+        'products': page_obj,
+        'page_obj': page_obj,
         'trending_products': trending_products,
         'spotlight_products': spotlight_products,
         'query': query,
         'min_price': min_price,
         'max_price': max_price,
         'sort': sort,
+        'rating_filter': rating_filter,
         'print_filter': print_filter,
         'fit_filter': fit_filter,
         'user_wishlist_ids': user_wishlist_ids
@@ -121,7 +138,6 @@ def product_detail(request, id, slug):
     })
 
 @require_POST
-@csrf_exempt
 def cart_add(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
@@ -152,7 +168,6 @@ def cart_add(request, product_id):
     return redirect('store:cart_detail')
 
 @require_POST
-@csrf_exempt
 def cart_remove(request, item_key):
     cart = Cart(request)
     cart.remove(item_key)
@@ -182,23 +197,28 @@ def cart_detail(request):
     })
 
 @require_POST
-@csrf_exempt
 def coupon_apply(request):
     form = CouponApplyForm(request.POST)
     if form.is_valid():
         code = form.cleaned_data['code'].strip().upper()
-        try:
-            coupon = Coupon.objects.get(code__iexact=code, active=True)
-            request.session['coupon_id'] = coupon.id
-            messages.success(request, f'Coupon "{coupon.code}" applied! You get {coupon.discount_percent}% off your tee order.')
-        except Coupon.DoesNotExist:
+        cart = Cart(request)
+        cart_total = cart.get_total_price()
+        coupon = Coupon.objects.filter(code__iexact=code).first()
+        if coupon:
+            is_valid, msg = coupon.is_valid(cart_total)
+            if is_valid:
+                request.session['coupon_id'] = coupon.id
+                messages.success(request, f'Coupon "{coupon.code}" applied! You get {coupon.discount_percent}% off your order.')
+            else:
+                request.session['coupon_id'] = None
+                messages.error(request, msg)
+        else:
             request.session['coupon_id'] = None
             messages.error(request, 'Invalid or expired promo code.')
     return redirect('store:cart_detail')
 
 @login_required
 @require_POST
-@csrf_exempt
 def review_add(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     form = ReviewForm(request.POST)
@@ -227,7 +247,6 @@ def wishlist_detail(request):
     wishlist_items = Wishlist.objects.filter(user=request.user)
     return render(request, 'store/wishlist/detail.html', {'wishlist_items': wishlist_items})
 
-@csrf_exempt
 def order_create(request):
     cart = Cart(request)
     if len(cart) == 0:
@@ -251,9 +270,11 @@ def order_create(request):
     coupon_id = request.session.get('coupon_id')
     discount = 0
     if coupon_id:
-        coupon = Coupon.objects.filter(id=coupon_id).first()
+        coupon = Coupon.objects.filter(id=coupon_id, active=True).first()
         if coupon:
             discount = coupon.discount_percent
+        else:
+            request.session['coupon_id'] = None
 
     if request.method == 'POST':
         form = OrderCreateForm(request.POST)
@@ -329,7 +350,10 @@ def order_create(request):
 
 @login_required
 def order_invoice(request, order_id):
-    order = get_object_or_404(Order, id=order_id, user=request.user)
+    if request.user.is_staff:
+        order = get_object_or_404(Order, id=order_id)
+    else:
+        order = get_object_or_404(Order, id=order_id, user=request.user)
     return render(request, 'store/orders/invoice.html', {'order': order})
 
 @user_passes_test(lambda u: u.is_staff)
@@ -387,7 +411,14 @@ def provenance_vault(request):
 
     if order:
         cert_serial = f"ATELIER-{order.created.year}-{order.id:04d}"
-        cert_owner = f"{order.first_name} {order.last_name}"
+        if request.user.is_authenticated and (request.user.is_staff or request.user == order.user):
+            cert_owner = f"{order.first_name} {order.last_name}"
+        else:
+            fn = order.first_name
+            ln = order.last_name
+            masked_fn = (fn[0] + "*" * (len(fn) - 1)) if len(fn) > 1 else (fn + "*")
+            masked_ln = (ln[0] + "*" * (len(ln) - 1)) if len(ln) > 1 else (ln + "*")
+            cert_owner = f"{masked_fn} {masked_ln} (Verified Client)"
         cert_fabric = "240+ GSM Combed French Terry Cotton"
         cert_awb = order.awb_code or f"SS-EXP-{order.id}"
         cert_date = order.created.strftime('%d %B %Y')
@@ -416,7 +447,9 @@ def midnight_vault(request):
         request.session['vault_unlocked'] = False
         return redirect('store:midnight_vault')
 
-    now_hour = datetime.now().hour
+    from django.utils import timezone
+    local_now = timezone.localtime(timezone.now())
+    now_hour = local_now.hour
     is_curfew = (now_hour >= 23 or now_hour < 1)
     is_unlocked = request.session.get('vault_unlocked', False) or is_curfew
 
@@ -443,3 +476,40 @@ def check_pincode_view(request):
     pincode = request.GET.get('pincode', '')
     data = check_pincode_serviceability(pincode)
     return JsonResponse(data)
+
+
+@login_required
+@require_POST
+def order_cancel(request, order_id):
+    """
+    Allows clients or staff to cancel placed/processing orders and safely restore inventory.
+    """
+    if request.user.is_staff:
+        order = get_object_or_404(Order, id=order_id)
+    else:
+        order = get_object_or_404(Order, id=order_id, user=request.user)
+
+    if order.status in ['Shipped', 'Delivered']:
+        messages.error(request, f'Order #{order.id} cannot be cancelled because it has already been {order.status.lower()}.')
+        return redirect('accounts:profile')
+
+    if order.status == 'Cancelled':
+        messages.info(request, f'Order #{order.id} is already cancelled.')
+        return redirect('accounts:profile')
+
+    from django.db.models import F
+    with transaction.atomic():
+        # Restore stock for each item
+        for item in order.items.all():
+            variant = item.product.variants.filter(size=item.size).first()
+            if variant:
+                variant.stock = F('stock') + item.quantity
+                variant.save()
+            Product.objects.filter(id=item.product.id).update(stock=F('stock') + item.quantity)
+            Product.objects.filter(id=item.product.id, available=False).update(available=True)
+
+        order.status = 'Cancelled'
+        order.save()
+
+    messages.success(request, f'Order #{order.id} has been cancelled successfully, and reserved inventory was returned.')
+    return redirect('accounts:profile')

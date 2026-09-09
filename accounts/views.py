@@ -1,4 +1,3 @@
-from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
@@ -23,7 +22,6 @@ def mask_email(val):
         masked_name = name[0] + '*' * (len(name) - 2) + name[-1]
     return f"{masked_name}@{domain}"
 
-@csrf_exempt
 def register(request):
     if request.user.is_authenticated:
         messages.info(request, f"You already have an active session as '{request.user.username}'. Sign out below to create a new account.")
@@ -45,7 +43,6 @@ def register(request):
         form = UserRegistrationForm()
     return render(request, 'accounts/register.html', {'form': form, 'next': next_url})
 
-@csrf_exempt
 def user_login(request):
     if request.user.is_authenticated:
         messages.info(request, f"You are currently signed in as '{request.user.username}'.")
@@ -95,7 +92,6 @@ def user_logout(request):
     messages.info(request, 'You have been logged out.')
     return redirect('store:product_list')
 
-@csrf_exempt
 @login_required
 def profile(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
@@ -118,7 +114,6 @@ def profile(request):
         'orders': orders
     })
 
-@csrf_exempt
 def password_reset_view(request):
     """
     User-Centric Email & OTP Password Reset Flow:
@@ -354,8 +349,14 @@ def password_reset_view(request):
                 messages.error(request, 'Passwords do not match. Please ensure both passwords are identical.')
                 return render(request, 'accounts/password_reset.html', {'step': 3, 'username': user.username})
 
-            if len(new_pass) < 6:
-                messages.error(request, 'Password must be at least 6 characters long.')
+            from django.contrib.auth.password_validation import validate_password
+            from django.core.exceptions import ValidationError
+
+            try:
+                validate_password(new_pass, user=user)
+            except ValidationError as e:
+                for error_msg in e.messages:
+                    messages.error(request, error_msg)
                 return render(request, 'accounts/password_reset.html', {'step': 3, 'username': user.username})
 
             # Save new hashed password
@@ -381,44 +382,3 @@ def password_reset_view(request):
         'dev_otp': dev_otp,
         'username': user.username if user else ''
     })
-
-from django.http import HttpResponse
-
-@csrf_exempt
-def admin_setup(request):
-    """
-    Web-based Superuser activator.
-    Usage:
-      /accounts/admin-setup/?key=stylesphere2026
-    """
-    secret = request.GET.get('key', '')
-    if secret != 'stylesphere2026':
-        return HttpResponse("<h1>403 Forbidden</h1><p>Invalid setup key.</p>", status=403)
-
-    username = request.GET.get('user', 'admin').strip()
-    password = request.GET.get('password', 'Admin@2026!').strip()
-    email = request.GET.get('email', f"{username}@stylesphere.in").strip()
-
-    user, created = User.objects.get_or_create(
-        username=username,
-        defaults={'email': email}
-    )
-    user.is_staff = True
-    user.is_superuser = True
-    user.is_active = True
-    user.set_password(password)
-    user.save()
-
-    Profile.objects.get_or_create(user=user)
-
-    return HttpResponse(f"""
-    <div style="font-family: sans-serif; padding: 40px; text-align: center; background: #09090b; color: white; min-height: 100vh;">
-        <h1 style="color: #22c55e;">Superuser Activated Successfully</h1>
-        <p><strong>Username:</strong> {username}</p>
-        <p><strong>Password:</strong> {password}</p>
-        <p><strong>Email:</strong> {email}</p>
-        <div style="margin-top: 20px;">
-            <a href="/admin/" style="background: white; color: black; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold;">Open Django Admin →</a>
-        </div>
-    </div>
-    """)
