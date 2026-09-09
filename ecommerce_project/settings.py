@@ -8,6 +8,19 @@ except ImportError:
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Automatically load .env file if present
+env_file = BASE_DIR / '.env'
+if env_file.exists():
+    with open(env_file, 'r', encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith('#') and '=' in line:
+                key, val = line.split('=', 1)
+                key = key.strip()
+                val = val.strip().strip('"').strip("'")
+                if key not in os.environ:
+                    os.environ[key] = val
+
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-stylesphere-production-ready-secret-key-2026')
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
@@ -142,14 +155,25 @@ REST_FRAMEWORK = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Email Settings (Defaults to console backend in dev to prevent connection errors)
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+# Production Gmail / SMTP Email Settings
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '').strip()
+# Auto-strip any spaces from Google App Passwords (e.g. 'abcd efgh ijkl mnop' -> 'abcdefghijklmnop')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '').strip().replace(' ', '')
+
+if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD:
+    EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+else:
+    EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'Style Sphere Atelier <noreply@stylesphere.com>')
+EMAIL_TIMEOUT = 10  # 10s timeout to avoid hanging on slow network
+DEFAULT_FROM_EMAIL = os.getenv(
+    'DEFAULT_FROM_EMAIL',
+    f'Style Sphere Atelier <{EMAIL_HOST_USER}>' if EMAIL_HOST_USER else 'Style Sphere Atelier <noreply@stylesphere.com>'
+)
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 # Razorpay Payment Gateway Settings (Test keys by default; override in .env for production)
 RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', 'rzp_test_stylesphere2026')
