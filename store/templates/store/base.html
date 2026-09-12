@@ -3,7 +3,7 @@
 <html lang="en" data-theme="dark" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="referrer" content="no-referrer">
     <title>{% block title %}STYLE SPHERE — Luxury Streetwear & Heavyweight Atelier{% endblock %}</title>
 
@@ -141,13 +141,12 @@
         /* Clean Luxury Card */
         .luxury-card {
             background: #111113;
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: border-color 0.25s ease, background-color 0.25s ease;
         }
         .luxury-card:hover {
-            border-color: rgba(212, 175, 55, 0.35);
+            border-color: rgba(255, 255, 255, 0.22);
             background: #141417;
-            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6);
         }
 
         /* Subtle Gold Shimmer Accent */
@@ -163,7 +162,7 @@
         ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
     
-        /* Mobile Instagram Story Bubbles */
+        /* Mobile Instagram Story Bubbles (As Before) */
         .cat-bubble-container {
             display: flex;
             gap: 16px;
@@ -217,17 +216,18 @@
         .cat-bubble.active .cat-bubble-text {
             color: #ffffff;
         }
+
     </style>
 </head>
 <body class="bg-luxury-black text-luxury-platinum antialiased min-h-screen flex flex-col justify-between selection:bg-luxury-gold selection:text-black pb-16 md:pb-0">
 
     <!-- Minimalist Luxury Top Notification Strip -->
-    <div class="bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 text-zinc-200 text-xs sm:text-sm py-2.5 px-4 font-semibold text-center border-b border-white/5 tracking-wider uppercase">
+    <div class="bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 text-zinc-200 text-xs sm:text-sm py-2.5 px-4 font-semibold text-center border-b border-white/5 font-medium tracking-wider uppercase">
         <span class="inline-block w-1.5 h-1.5 rounded-full bg-luxury-gold mr-2 animate-pulse"></span>
         Complimentary Insured Shipping Across India on Orders Above ₹999 • Atelier Code <strong class="text-luxury-gold font-bold">FIRST10</strong>
     </div>
 
-    <!-- Header Navigation (Simple, Intuitive & Luxury) -->
+        <!-- Header Navigation (Simple, Intuitive & Luxury) -->
     <header class="sticky top-0 z-40 luxury-nav transition-all duration-300">
         <div class="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 sm:h-20">
@@ -240,7 +240,7 @@
                 </div>
 
                 <!-- Brand Logo: Official Atelier Icon & Luxury Typography -->
-                <div class="flex items-center flex-shrink-0">
+                <div class="flex items-center">
                     <a href="{% url 'store:product_list' %}" class="flex items-center group gap-2.5">
                         <img src="{% static 'images/stylesphere_icon.png' %}" 
                              alt="Style Sphere Atelier Icon" 
@@ -257,8 +257,9 @@
                     </a>
                 </div>
 
-                <!-- Desktop Center: Navigation Links -->
+                <!-- Desktop Center: Simple, Clear Navigation Links (Large & Readable) -->
                 <nav class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-300">
+                    <!-- Shop ▾ (Matching Video) -->
                     <div class="dropdown dropdown-hover">
                         <label tabindex="0" class="cursor-pointer hover:text-white transition-colors flex items-center gap-1.5 py-2">
                             <span>Shop</span>
@@ -285,12 +286,16 @@
                         </ul>
                     </div>
 
-                    <a href="#whoWeAre" class="hover:text-white transition-colors">
-                        About
+                    <a href="{% url 'store:provenance_vault' %}" class="hover:text-white transition-colors flex items-center gap-1 text-luxury-gold">
+                        <i class="bi bi-shield-check text-xs"></i> Provenance
                     </a>
 
-                    <a href="#howItsMade" class="hover:text-white transition-colors">
-                        Our values
+                    <a href="{% url 'store:midnight_vault' %}" class="hover:text-white transition-colors flex items-center gap-1 text-red-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span> Vault
+                    </a>
+
+                    <a href="#whoWeAre" class="hover:text-white transition-colors">
+                        About
                     </a>
 
                     <a href="#contactFooter" class="hover:text-white transition-colors">
@@ -298,15 +303,25 @@
                     </a>
                 </nav>
 
-                <!-- Right: Utility Actions (Search, Wishlist, Bag, Account / Auth) -->
-                <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-shrink-0">
+                <!-- Right: Utility Actions (Search, Wishlist, Bag, Account) -->
+                <div class="flex items-center gap-2 sm:gap-4">
                     
+                    <!-- Tactile Audio Branding Toggle (Web Audio API) -->
+                    <button type="button" 
+                            id="audioToggleBtn" 
+                            onclick="toggleAtelierAudio()" 
+                            class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[9px] font-mono uppercase tracking-wider text-zinc-400 hover:text-white transition-all"
+                            title="Toggle Atelier Sound Design">
+                        <span id="audioStatusDot" class="w-1.5 h-1.5 rounded-full bg-zinc-600"></span>
+                        <span id="audioStatusText">SFX: OFF</span>
+                    </button>
+
                     <!-- Search Toggle Button -->
                     <button type="button" onclick="toggleSearchBar()" class="p-2 text-zinc-400 hover:text-white transition-colors" title="Search Pieces">
                         <i class="bi bi-search text-base"></i>
                     </button>
 
-                    <!-- Wishlist (Desktop & Tablet) -->
+                    <!-- Wishlist (Desktop) -->
                     <a href="{% url 'store:wishlist_detail' %}" class="hidden sm:flex relative p-2 text-zinc-400 hover:text-white transition-colors" title="Saved Collection">
                         <i class="bi bi-heart text-base"></i>
                         {% if user.is_authenticated and user.wishlist.count > 0 %}
@@ -326,64 +341,7 @@
                         {% endwith %}
                     </a>
 
-                    <!-- Subtle Luxury Divider -->
-                    <div class="h-5 w-px bg-white/10 hidden sm:block"></div>
-
-                    <!-- Laptop / Desktop Account & Auth Section (Guaranteed Visible on all Laptops) -->
-                    <div class="hidden sm:flex items-center gap-2.5">
-                        {% if user.is_authenticated %}
-                            <!-- Logged In: Prominent Profile Logo & Status Badge -->
-                            <div class="dropdown dropdown-end">
-                                <label tabindex="0" class="cursor-pointer py-1.5 px-3 sm:px-4 rounded-xl bg-zinc-900 border border-zinc-700 hover:border-luxury-gold/50 text-sm font-semibold text-white flex items-center gap-2.5 transition-all shadow-md">
-                                    <div class="relative">
-                                        <i class="bi bi-person-circle text-xl text-luxury-gold"></i>
-                                        <span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 border border-black"></span>
-                                    </div>
-                                    <div class="flex flex-col text-left">
-                                        <span class="text-[9px] font-mono text-zinc-400 uppercase tracking-wider leading-none">Member</span>
-                                        <span class="text-xs font-bold text-white leading-tight truncate max-w-[110px]">{{ user.first_name|default:user.username }}</span>
-                                    </div>
-                                    <i class="bi bi-chevron-down text-[10px] text-zinc-400 ml-0.5"></i>
-                                </label>
-                                <ul tabindex="0" class="dropdown-content z-50 menu p-3 shadow-2xl bg-zinc-950 border border-zinc-800 rounded-2xl w-64 mt-2 text-sm divide-y divide-zinc-900">
-                                    <li class="px-3 py-2 text-zinc-400 font-mono text-xs uppercase">
-                                        Signed In: <strong class="text-white">{{ user.username }}</strong>
-                                    </li>
-                                    <li><a href="{% url 'accounts:profile' %}" class="py-2.5 text-zinc-200 hover:text-white font-medium"><i class="bi bi-box-seam text-base text-luxury-gold"></i> My Orders & Live Tracking</a></li>
-                                    <li><a href="{% url 'store:wishlist_detail' %}" class="py-2.5 text-zinc-200 hover:text-white font-medium"><i class="bi bi-heart text-base"></i> Saved Pieces (Wishlist)</a></li>
-                                    {% if user.is_staff %}
-                                        <li><a href="{% url 'store:admin_analytics' %}" class="py-2.5 text-zinc-200 hover:text-white font-medium"><i class="bi bi-graph-up-arrow text-emerald-400 text-base"></i> Executive Analytics</a></li>
-                                    {% endif %}
-                                    <li><a href="{% url 'accounts:logout' %}" class="py-2.5 text-rose-400 hover:text-rose-300 font-medium"><i class="bi bi-box-arrow-right text-base"></i> Sign Out</a></li>
-                                </ul>
-                            </div>
-                        {% else %}
-                            <!-- Logged Out: Dedicated Account Icon + Login & Sign Up Buttons -->
-                            <div class="dropdown dropdown-end">
-                                <label tabindex="0" class="cursor-pointer p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-900 border border-transparent hover:border-zinc-800 transition-all flex items-center" title="Client Account">
-                                    <i class="bi bi-person-circle text-xl text-zinc-300 hover:text-white"></i>
-                                </label>
-                                <ul tabindex="0" class="dropdown-content z-50 menu p-3 shadow-2xl bg-zinc-950 border border-zinc-800 rounded-2xl w-56 mt-2 text-xs divide-y divide-zinc-900">
-                                    <li class="px-3 py-2 text-zinc-400 font-mono text-[10px] uppercase tracking-wider">
-                                        Atelier Membership
-                                    </li>
-                                    <li><a href="{% url 'accounts:login' %}" class="py-2.5 text-white font-semibold flex items-center gap-2"><i class="bi bi-box-arrow-in-right text-luxury-gold"></i> Sign In to Account</a></li>
-                                    <li><a href="{% url 'accounts:register' %}" class="py-2.5 text-white font-semibold flex items-center gap-2"><i class="bi bi-person-plus text-luxury-gold"></i> Register New Client</a></li>
-                                </ul>
-                            </div>
-
-                            <a href="{% url 'accounts:login' %}" class="py-1.5 px-3.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-xs font-semibold text-zinc-200 hover:text-white flex items-center gap-1.5 transition-all shadow-sm">
-                                <i class="bi bi-box-arrow-in-right text-xs"></i>
-                                <span>Sign In</span>
-                            </a>
-                            <a href="{% url 'accounts:register' %}" class="py-1.5 px-4 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md transition-all">
-                                <i class="bi bi-person-plus text-xs"></i>
-                                <span>Sign Up</span>
-                            </a>
-                        {% endif %}
-                    </div>
-
-                    <!-- Mobile Screen Quick Button (< 640px) -->
+                                        <!-- Mobile Direct Profile / Sign-in Quick Button -->
                     <div class="flex sm:hidden items-center">
                         {% if user.is_authenticated %}
                             <a href="{% url 'accounts:profile' %}" class="px-3 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-white flex items-center gap-1.5 text-xs font-bold" title="My Profile">
@@ -392,12 +350,49 @@
                             </a>
                         {% else %}
                             <a href="{% url 'accounts:login' %}" class="px-3 py-1.5 rounded-xl bg-white text-black flex items-center gap-1.5 text-xs font-bold shadow-sm" title="Sign In">
-                                <i class="bi bi-person-circle text-sm"></i>
+                                <i class="bi bi-box-arrow-in-right text-sm"></i>
                                 <span>Login</span>
                             </a>
                         {% endif %}
                     </div>
 
+                    <!-- Laptop / Desktop: Highly Visible Sign In, Sign Up & Profile Logo -->
+                    <div class="hidden sm:flex items-center gap-3">
+                        {% if user.is_authenticated %}
+                            <!-- Logged In: Prominent Profile Logo & Status Badge -->
+                            <div class="dropdown dropdown-end">
+                                <label tabindex="0" class="cursor-pointer py-2 px-4 rounded-xl bg-zinc-900 border border-zinc-700 text-sm font-semibold text-white flex items-center gap-2.5 hover:bg-zinc-800 hover:border-zinc-500 transition-all shadow-md">
+                                    <i class="bi bi-person-circle text-xl text-emerald-400"></i>
+                                    <div class="flex flex-col text-left">
+                                        <span class="text-xs text-zinc-400 leading-none">Atelier Member</span>
+                                        <span class="text-sm font-bold text-white leading-tight truncate max-w-[120px]">{{ user.first_name|default:user.username }}</span>
+                                    </div>
+                                    <i class="bi bi-chevron-down text-xs text-zinc-400 ml-1"></i>
+                                </label>
+                                <ul tabindex="0" class="dropdown-content z-50 menu p-3 shadow-2xl bg-zinc-950 border border-zinc-800 rounded-2xl w-64 mt-2 text-sm divide-y divide-zinc-900">
+                                    <li class="px-3 py-2 text-zinc-400 font-mono text-xs uppercase">
+                                        Active Account: <strong class="text-white">{{ user.username }}</strong>
+                                    </li>
+                                    <li><a href="{% url 'accounts:profile' %}" class="py-3 text-zinc-200 hover:text-white font-medium"><i class="bi bi-box-seam text-base"></i> My Orders & Live Tracking</a></li>
+                                    <li><a href="{% url 'store:wishlist_detail' %}" class="py-3 text-zinc-200 hover:text-white font-medium"><i class="bi bi-heart text-base"></i> Saved Pieces (Wishlist)</a></li>
+                                    {% if user.is_staff %}
+                                        <li><a href="{% url 'store:admin_analytics' %}" class="py-3 text-zinc-200 hover:text-white font-medium"><i class="bi bi-graph-up-arrow text-emerald-400 text-base"></i> Executive Analytics</a></li>
+                                    {% endif %}
+                                    <li><a href="{% url 'accounts:logout' %}" class="py-3 text-rose-400 hover:text-rose-300 font-medium"><i class="bi bi-box-arrow-right text-base"></i> Sign Out</a></li>
+                                </ul>
+                            </div>
+                        {% else %}
+                            <!-- Not Logged In: Prominent Sign In & Sign Up Buttons with Icons -->
+                            <a href="{% url 'accounts:login' %}" class="py-2 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-sm font-semibold text-zinc-200 hover:text-white flex items-center gap-2 transition-all">
+                                <i class="bi bi-box-arrow-in-right text-base"></i>
+                                <span>Sign In</span>
+                            </a>
+                            <a href="{% url 'accounts:register' %}" class="py-2 px-5 rounded-xl bg-white hover:bg-zinc-200 text-black text-sm font-bold uppercase tracking-wider flex items-center gap-2 shadow-lg transition-all">
+                                <i class="bi bi-person-plus text-base"></i>
+                                <span>Sign Up</span>
+                            </a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
@@ -421,9 +416,9 @@
     </header>
 
     <!-- Slide-Out Mobile Navigation Drawer -->
-    <div id="mobileDrawerBackdrop" onclick="toggleMobileMenu()" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm transition-opacity duration-300 md:hidden" style="display: none;"></div>
+    <div id="mobileDrawerBackdrop" onclick="toggleMobileMenu()" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm transition-opacity duration-300 md:hidden"></div>
 
-    <aside id="mobileNavDrawer" class="fixed top-0 left-0 bottom-0 w-72 z-50 bg-zinc-950 border-r border-zinc-800 p-6 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden shadow-2xl overflow-y-auto" style="transform: translateX(-100%);">
+    <aside id="mobileNavDrawer" class="fixed top-0 left-0 bottom-0 w-72 z-50 bg-zinc-950 border-r border-zinc-800 p-6 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden shadow-2xl overflow-y-auto">
         <div class="space-y-6">
             <!-- Drawer Header -->
             <div class="flex items-center justify-between border-b border-zinc-900 pb-4">
@@ -543,7 +538,7 @@
     </script>
 
     <!-- Main Content Area -->
-    <main class="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-28 md:pb-12">
+    <main class="flex-1 max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {% if messages %}
             <div class="mb-6 space-y-2">
                 {% for message in messages %}
@@ -578,7 +573,7 @@
                     </div>
                     <h4 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Encrypted Transactions</h4>
                     <p class="text-[11px] text-zinc-500 leading-relaxed">
-                        Protected end-to-end payments with UPI, Major Credit Cards, NetBanking, and Doorstep Cash on Delivery (COD).
+                        Protected end-to-end payments with Google Pay (GPay) and Doorstep Cash on Delivery (COD).
                     </p>
                 </div>
 
@@ -610,7 +605,7 @@
     <footer class="bg-[#0b0b0e] text-zinc-400 border-t border-zinc-800 py-16" id="contactFooter">
         <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
             
-            <!-- Tier 1: Split Top Row (About us on Left + Email address newsletter on Right) -->
+            <!-- Tier 1: Split Top Row (About us on Left + Email address newsletter on Right, matching video) -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 pb-12 border-b border-zinc-800/80" id="aboutUsSection">
                 
                 <!-- Left: About us -->
@@ -643,7 +638,7 @@
 
             </div>
 
-            <!-- Tier 2: 4 Clean Columns (Address, Contact us, Follow, Info) -->
+            <!-- Tier 2: 4 Clean Columns matching video (Address, Contact us, Follow, Info) -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-xs font-light">
                 
                 <!-- Column 1: Address -->
@@ -699,7 +694,7 @@
     </footer>
 
     <!-- Minimalist Mobile Bottom Nav Bar -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#09090b]/95 backdrop-blur-2xl border-t border-white/[0.08] flex justify-around items-center h-16 pb-[env(safe-area-inset-bottom,0px)] shadow-[0_-10px_25px_rgba(0,0,0,0.7)]">
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-zinc-900 flex justify-around items-center h-16">
         <button type="button" onclick="toggleMobileMenu()" class="flex flex-col items-center text-[10px] font-semibold tracking-wider uppercase text-zinc-400 hover:text-white transition-colors focus:outline-none">
             <i class="bi bi-grid text-base mb-0.5"></i>
             <span>Menu</span>
@@ -738,6 +733,131 @@
             </a>
         {% endif %}
     </nav>
+
+
+<!-- ========================================================================= -->
+<!-- ATELIER TACTILE SOUND DESIGN (Web Audio API Synthesizer - 0 External MP3s) -->
+<!-- ========================================================================= -->
+<script>
+window.AtelierAudio = (function() {
+    let audioCtx = null;
+    let isEnabled = localStorage.getItem('atelier_sfx') === 'true';
+
+    function initCtx() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
+
+    function playClick() {
+        if (!isEnabled) return;
+        try {
+            initCtx();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(900, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.035);
+            gain.gain.setValueAtTime(0.09, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.035);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.035);
+        } catch(e) {}
+    }
+
+    function playWoosh() {
+        if (!isEnabled) return;
+        try {
+            initCtx();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(45, audioCtx.currentTime + 0.14);
+            gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.14);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.14);
+        } catch(e) {}
+    }
+
+    function playChime() {
+        if (!isEnabled) return;
+        try {
+            initCtx();
+            const now = audioCtx.currentTime;
+            [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now + (i * 0.04));
+                gain.gain.setValueAtTime(0.06, now + (i * 0.04));
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + (i * 0.04) + 0.4);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + (i * 0.04));
+                osc.stop(now + (i * 0.04) + 0.4);
+            });
+        } catch(e) {}
+    }
+
+    function toggle() {
+        isEnabled = !isEnabled;
+        localStorage.setItem('atelier_sfx', isEnabled);
+        updateUI();
+        if (isEnabled) {
+            initCtx();
+            playChime();
+        }
+    }
+
+    function updateUI() {
+        const dot = document.getElementById('audioStatusDot');
+        const txt = document.getElementById('audioStatusText');
+        if (dot && txt) {
+            if (isEnabled) {
+                dot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
+                txt.innerText = 'SFX: ON';
+                txt.classList.add('text-white');
+            } else {
+                dot.className = 'w-1.5 h-1.5 rounded-full bg-zinc-600';
+                txt.innerText = 'SFX: OFF';
+                txt.classList.remove('text-white');
+            }
+        }
+    }
+
+    // Attach acoustic feedback to size pills, buttons, and drawers
+    document.addEventListener('DOMContentLoaded', () => {
+        updateUI();
+        document.querySelectorAll('button, a, input[type="radio"]').forEach(el => {
+            el.addEventListener('click', () => {
+                if (el.id === 'audioToggleBtn') return;
+                playClick();
+            });
+        });
+    });
+
+    return {
+        click: playClick,
+        woosh: playWoosh,
+        chime: playChime,
+        toggle: toggle,
+        isEnabled: () => isEnabled
+    };
+})();
+
+function toggleAtelierAudio() {
+    window.AtelierAudio.toggle();
+}
+</script>
 
 </body>
 </html>

@@ -1,3 +1,4 @@
+from django.conf import settings
 import urllib.parse
 from datetime import datetime, timedelta
 
@@ -41,7 +42,7 @@ def generate_admin_whatsapp_url(order):
     Generates a WhatsApp notification link with full order details for the store admin.
     Safe against missing phone numbers.
     """
-    admin_number = '919781855165'
+    admin_number = getattr(settings, 'ADMIN_WHATSAPP_NUMBER', '919781855165')
     items_list = "\n".join([f"• {item.product.name} ({item.size}) x {item.quantity} - ₹{item.get_cost()}" for item in order.items.all()])
     cust_phone = getattr(order, 'phone_number', '') or 'Not provided'
 

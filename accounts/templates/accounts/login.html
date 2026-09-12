@@ -1,108 +1,106 @@
 {% extends "store/base.html" %}
 
-{% block title %}Client Sign In — Style Sphere Atelier{% endblock %}
+{% block title %}Sign In - Style Sphere{% endblock %}
 
 {% block content %}
-<div class="relative min-h-[80vh] flex items-center justify-center py-6 sm:py-12 px-4">
+<div class="relative min-h-[80vh] flex items-center justify-center py-6 sm:py-10 px-4">
     
-    <!-- Background: Subtle Luxury Amber & Gold Ambient Glow (No Harsh Neons) -->
+    <!-- Background: Glowing Red Circuit-like Network Grid & Ambient Laser Orbs -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-luxury-gold/5 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-zinc-800/20 rounded-full blur-3xl"></div>
-        <div class="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:28px_28px]"></div>
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-red-600/15 rounded-full blur-3xl animate-pulseGlow"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-rose-600/15 rounded-full blur-3xl animate-pulseGlow" style="animation-delay: 2s;"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(#ef4444_1px,transparent_1px)] [background-size:32px_32px] opacity-15"></div>
     </div>
 
-    <!-- Main Atelier Login Container (2-Column Split Layout) -->
-    <div class="relative z-10 max-w-4xl w-full grid grid-cols-1 lg:grid-cols-12 rounded-3xl overflow-hidden bg-[#111114]/90 backdrop-blur-2xl border border-white/[0.08] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.85)]">
+    <!-- Main V5 Login Container (2-Column Split Layout) -->
+    <div class="relative z-10 max-w-4xl w-full grid grid-cols-1 lg:grid-cols-12 rounded-3xl overflow-hidden bg-zinc-950/80 backdrop-blur-2xl border border-zinc-800 shadow-[0_0_50px_-12px_rgba(239,68,68,0.25)]">
         
-        <!-- Left Column: Atelier Statement & Client Privileges -->
-        <div class="lg:col-span-5 p-8 sm:p-10 flex flex-col justify-between bg-gradient-to-br from-[#16161a] via-[#0e0e11] to-[#09090b] border-b lg:border-b-0 lg:border-r border-white/[0.08] relative overflow-hidden">
-            <!-- Subtle Gold Hairline Rings -->
-            <div class="absolute -top-12 -right-12 w-48 h-48 border border-luxury-gold/10 rounded-full pointer-events-none"></div>
-            <div class="absolute -bottom-12 -left-12 w-48 h-48 border border-white/5 rounded-full pointer-events-none"></div>
+        <!-- Left Column: Welcome Message & Circuit Glow Card -->
+        <div class="lg:col-span-5 p-8 sm:p-10 flex flex-col justify-between bg-gradient-to-br from-zinc-900/90 via-black to-zinc-950/90 border-b lg:border-b-0 lg:border-r border-zinc-800 relative overflow-hidden">
+            <!-- Red Circuit Accent Lines -->
+            <div class="absolute -top-10 -right-10 w-40 h-40 border border-red-500/20 rounded-full pointer-events-none"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 border border-red-500/20 rounded-full pointer-events-none"></div>
 
             <div class="space-y-4 relative z-10">
-                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-zinc-900/90 border border-luxury-gold/30 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.2em]">
-                    <span class="w-1.5 h-1.5 rounded-full bg-luxury-gold animate-pulse"></span>
-                    ATELIER // CLIENT PASS
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-red-950/60 border border-red-500/30 text-red-400 text-xs font-cta uppercase tracking-widest">
+                    <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                    SECURITY V5 // AUTH
                 </div>
 
-                <h2 class="text-2xl sm:text-4xl font-luxury font-bold text-white tracking-tight leading-tight">
-                    WELCOME TO <br>
-                    <span class="text-zinc-400 font-light">THE ATELIER.</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white font-heading tracking-tight leading-tight">
+                    HELLO, <span class="bg-gradient-to-r from-red-500 via-rose-500 to-amber-400 bg-clip-text text-transparent">FRIEND!</span>
                 </h2>
-                <p class="text-xs text-zinc-400 leading-relaxed font-light">
-                    Access limited 240+ GSM French Terry releases, track bespoke courier dispatches, and manage your private archive.
+                <p class="text-xs text-zinc-400 leading-relaxed">
+                    Enter your personal details to start your journey with us and access exclusive streetwear drops.
                 </p>
             </div>
 
-            <!-- Curated Privileges List -->
+            <!-- Features Showcase List -->
             <div class="space-y-3 my-8 relative z-10">
-                <div class="flex items-center gap-3 p-3 rounded-2xl bg-zinc-950/60 border border-white/5">
-                    <div class="w-8 h-8 rounded-xl bg-luxury-gold/10 text-luxury-gold flex items-center justify-center text-xs flex-shrink-0 font-bold">
-                        <i class="bi bi-gem"></i>
+                <div class="flex items-center gap-3 p-3 rounded-2xl bg-zinc-900/60 border border-zinc-800/80">
+                    <div class="w-8 h-8 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center text-sm flex-shrink-0 font-bold">
+                        ⚡
                     </div>
-                    <span class="text-xs font-medium text-zinc-300">Archival Series Priority & Reserved Drops</span>
+                    <span class="text-xs font-semibold text-zinc-300">Smooth Micro-Interactions & Fast Auth</span>
                 </div>
-                <div class="flex items-center gap-3 p-3 rounded-2xl bg-zinc-950/60 border border-white/5">
-                    <div class="w-8 h-8 rounded-xl bg-luxury-gold/10 text-luxury-gold flex items-center justify-center text-xs flex-shrink-0 font-bold">
-                        <i class="bi bi-shield-check"></i>
+                <div class="flex items-center gap-3 p-3 rounded-2xl bg-zinc-900/60 border border-zinc-800/80">
+                    <div class="w-8 h-8 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center text-sm flex-shrink-0 font-bold">
+                        🔒
                     </div>
-                    <span class="text-xs font-medium text-zinc-300">Tamper-Evident Insured Courier Dispatch</span>
+                    <span class="text-xs font-semibold text-zinc-300">End-to-End Encrypted Authentication</span>
                 </div>
-                <div class="flex items-center gap-3 p-3 rounded-2xl bg-zinc-950/60 border border-white/5">
-                    <div class="w-8 h-8 rounded-xl bg-luxury-gold/10 text-luxury-gold flex items-center justify-center text-xs flex-shrink-0 font-bold">
-                        <i class="bi bi-tag"></i>
+                <div class="flex items-center gap-3 p-3 rounded-2xl bg-zinc-900/60 border border-zinc-800/80">
+                    <div class="w-8 h-8 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center text-sm flex-shrink-0 font-bold">
+                        ★
                     </div>
-                    <span class="text-xs font-medium text-zinc-300">10% Welcome Privilege With Code <strong class="text-white font-mono">FIRST10</strong></span>
+                    <span class="text-xs font-semibold text-zinc-300">10% Welcome Discount With Code FIRST10</span>
                 </div>
             </div>
 
             <!-- Left Footer Link Switcher -->
-            <div class="pt-4 border-t border-white/[0.08] relative z-10 flex items-center justify-between text-xs text-zinc-400">
-                <span>New client?</span>
-                <a href="{% url 'accounts:register' %}{% if next %}?next={{ next }}{% endif %}" class="text-luxury-gold hover:underline font-semibold tracking-wider uppercase text-[11px]">
+            <div class="pt-4 border-t border-zinc-800/80 relative z-10 flex items-center justify-between text-xs text-zinc-500">
+                <span>New here?</span>
+                <a href="{% url 'accounts:register' %}{% if next %}?next={{ next }}{% endif %}" class="text-red-400 hover:text-red-300 font-bold underline">
                     Create Account →
                 </a>
             </div>
         </div>
 
-        <!-- Right Column: Minimalist Luxury Sign-In Form -->
-        <div class="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-center bg-[#111114]/50 backdrop-blur-xl">
+        <!-- Right Column: Interactive Form Container -->
+        <div class="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-center bg-zinc-900/40 backdrop-blur-xl">
             <div class="max-w-sm mx-auto w-full space-y-6">
                 
                 <!-- Form Header -->
                 <div>
-                    <span class="text-[9px] font-mono tracking-[0.25em] text-zinc-500 uppercase block">AUTHENTICATION</span>
-                    <h3 class="text-2xl font-luxury font-bold text-white tracking-wide mt-1">Client Sign In</h3>
-                    <p class="text-xs text-zinc-400 mt-1 font-light">Please enter your verified credentials below.</p>
+                    <h3 class="text-2xl font-black text-white font-heading tracking-tight">Sign In</h3>
+                    <p class="text-xs text-zinc-400 mt-1">Please enter your username and password.</p>
                 </div>
 
                 <!-- Django Authentication Form -->
-                <form method="post" class="space-y-4" id="v5LoginForm" onsubmit="handleV5Submit(event)">
+                <form method="post" action="{% url 'accounts:login' %}" class="space-y-4" id="v5LoginForm">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ next|default:'' }}">
 
-                    <!-- Username Input -->
+                    <!-- Username Input with Left-Aligned Icon -->
                     <div>
-                        <label class="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block mb-1.5">Username or Email</label>
+                        <label class="text-xs font-bold text-zinc-300 block mb-1.5">Username or Email</label>
                         <div class="relative">
                             <input type="text" 
                                    name="username" 
                                    id="v5Username"
                                    required 
                                    autofocus 
-                                   placeholder="Enter username" 
-                                   class="w-full px-4 py-3 pl-11 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-luxury-gold focus:ring-1 focus:ring-luxury-gold/20 transition-all">
-                            <i class="bi bi-person absolute left-4 top-3 text-zinc-500 text-sm"></i>
+                                   placeholder="Enter your username" 
+                                   class="w-full px-4 py-3 pl-11 rounded-xl bg-zinc-950/90 border border-zinc-800 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-300">
+                            <i class="bi bi-person absolute left-4 top-3.5 text-zinc-500 text-base"></i>
                         </div>
                     </div>
 
-                    <!-- Password Input with Eye Toggle -->
+                    <!-- Password Input with Lock Icon and Interactive Eye Toggle -->
                     <div>
                         <div class="flex justify-between items-center mb-1.5">
-                            <label class="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Password</label>
-                            <a href="{% url 'accounts:password_reset' %}" class="text-[11px] text-zinc-400 hover:text-luxury-gold transition-colors font-medium">Forgot password?</a>
+                            <label class="text-xs font-bold text-zinc-300">Password</label>
+                            <a href="{% url 'accounts:password_reset' %}" class="text-[11px] text-zinc-400 hover:text-red-400 transition-colors font-medium">Forgot password?</a>
                         </div>
                         <div class="relative">
                             <input type="password" 
@@ -110,37 +108,36 @@
                                    id="v5Password"
                                    required 
                                    placeholder="••••••••••••" 
-                                   class="w-full px-4 py-3 pl-11 pr-11 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-luxury-gold focus:ring-1 focus:ring-luxury-gold/20 transition-all">
-                            <i class="bi bi-lock absolute left-4 top-3 text-zinc-500 text-sm"></i>
-                            <button type="button" onclick="toggleV5Password()" class="absolute right-4 top-3 text-zinc-500 hover:text-white transition-colors" title="Toggle password visibility">
-                                <i id="v5EyeIcon" class="bi bi-eye-slash text-sm"></i>
+                                   class="w-full px-4 py-3 pl-11 pr-11 rounded-xl bg-zinc-950/90 border border-zinc-800 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-300">
+                            <i class="bi bi-lock absolute left-4 top-3.5 text-zinc-500 text-base"></i>
+                            <button type="button" onclick="toggleV5Password()" class="absolute right-4 top-3.5 text-zinc-500 hover:text-white transition-colors" title="Toggle password visibility">
+                                <i id="v5EyeIcon" class="bi bi-eye-slash text-base"></i>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Remember Device -->
+                    <!-- Remember Me Checkbox -->
                     <div class="flex items-center justify-between text-xs text-zinc-400 pt-1">
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" name="remember" checked class="checkbox checkbox-xs rounded border-zinc-700 checked:bg-luxury-gold checked:border-luxury-gold">
-                            <span class="text-[11px]">Remember this device</span>
+                            <input type="checkbox" name="remember" checked class="checkbox checkbox-xs checkbox-error rounded">
+                            <span>Remember this device</span>
                         </label>
                     </div>
 
-                    <!-- Elegant White Luxury CTA Button -->
+                    <!-- Prominent Red Interactive CTA Button (code.xr style) -->
                     <button type="submit" 
                             id="v5SubmitBtn"
-                            class="w-full py-3.5 bg-white hover:bg-zinc-200 active:scale-[0.98] text-black font-semibold text-xs tracking-[0.2em] uppercase rounded-xl shadow-xl transition-all duration-300 flex items-center justify-center gap-2 mt-3">
-                        <span id="btnText">SIGN IN</span>
-                        <i id="btnIcon" class="bi bi-arrow-right text-base"></i>
-                        <span id="btnSpinner" class="loading loading-spinner loading-sm hidden"></span>
+                            class="w-full py-3.5 bg-red-600 hover:bg-red-500 active:scale-[0.98] text-white font-cta font-bold text-sm tracking-wider rounded-xl shadow-[0_0_25px_-5px_rgba(239,68,68,0.5)] hover:shadow-[0_0_35px_-5px_rgba(239,68,68,0.7)] transition-all duration-300 flex items-center justify-center gap-2 mt-3 cursor-pointer">
+                        <span>SIGN IN</span>
+                        <i class="bi bi-arrow-right text-lg"></i>
                     </button>
                 </form>
 
                 <!-- Footer Link -->
                 <p class="text-center text-xs text-zinc-400 pt-3">
                     Don't have an account? 
-                    <a href="{% url 'accounts:register' %}{% if next %}?next={{ next }}{% endif %}" class="text-luxury-gold font-medium hover:underline ml-1">
-                        Create Account
+                    <a href="{% url 'accounts:register' %}{% if next %}?next={{ next }}{% endif %}" class="text-red-400 font-bold hover:underline ml-1">
+                        Sign Up
                     </a>
                 </p>
 
@@ -156,10 +153,10 @@
         const eyeIcon = document.getElementById('v5EyeIcon');
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';
-            eyeIcon.className = 'bi bi-eye text-luxury-gold text-sm';
+            eyeIcon.className = 'bi bi-eye text-red-400 text-base';
         } else {
             passwordInput.type = 'password';
-            eyeIcon.className = 'bi bi-eye-slash text-zinc-500 text-sm';
+            eyeIcon.className = 'bi bi-eye-slash text-zinc-500 text-base';
         }
     }
 
@@ -169,12 +166,15 @@
         const btnIcon = document.getElementById('btnIcon');
         const btnSpinner = document.getElementById('btnSpinner');
 
-        btnText.innerText = "AUTHENTICATING...";
-        btnIcon.classList.add('hidden');
-        btnSpinner.classList.remove('hidden');
-        btn.disabled = true;
+        if (btnText) btnText.innerText = "AUTHENTICATING...";
+        if (btnIcon) btnIcon.classList.add('hidden');
+        if (btnSpinner) btnSpinner.classList.remove('hidden');
         
-        e.target.submit();
+        // Prevent double submit race condition without interfering with standard form submission
+        setTimeout(() => {
+            if (btn) btn.disabled = true;
+        }, 50);
+        // Form submits naturally - do not call e.target.submit() here!
     }
 </script>
 {% endblock %}

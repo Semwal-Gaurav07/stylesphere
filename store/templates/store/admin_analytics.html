@@ -17,11 +17,11 @@
     </div>
 
     <!-- Top KPI Metric Cards (Matte Obsidian Layout) -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 mb-10">
         <div class="luxury-card rounded-xl p-5 border border-zinc-800/80 bg-[#111113]">
             <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Gross Revenue</span>
             <div class="text-2xl sm:text-3xl font-bold text-white font-sans mt-1">₹{{ total_revenue }}</div>
-            <span class="text-[11px] text-zinc-500 font-light mt-1 block">Live across all catalog drops</span>
+            <span class="text-[11px] text-zinc-500 font-light mt-1 block">Catalog drops</span>
         </div>
         <div class="luxury-card rounded-xl p-5 border border-zinc-800/80 bg-[#111113]">
             <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Total Orders</span>
@@ -29,14 +29,19 @@
             <span class="text-[11px] text-zinc-500 font-light mt-1 block">Orders recorded</span>
         </div>
         <div class="luxury-card rounded-xl p-5 border border-zinc-800/80 bg-[#111113]">
+            <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Registered Users</span>
+            <div class="text-2xl sm:text-3xl font-bold text-amber-400 font-sans mt-1">{{ total_users }}</div>
+            <span class="text-[11px] text-zinc-500 font-light mt-1 block">Active accounts</span>
+        </div>
+        <div class="luxury-card rounded-xl p-5 border border-zinc-800/80 bg-[#111113]">
             <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Paid Online</span>
             <div class="text-2xl sm:text-3xl font-bold text-emerald-400 font-sans mt-1">{{ paid_orders }}</div>
-            <span class="text-[11px] text-zinc-500 font-light mt-1 block">UPI & Card settlements</span>
+            <span class="text-[11px] text-zinc-500 font-light mt-1 block">Settled payments</span>
         </div>
         <div class="luxury-card rounded-xl p-5 border border-zinc-800/80 bg-[#111113]">
             <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Cash on Delivery</span>
             <div class="text-2xl sm:text-3xl font-bold text-zinc-300 font-sans mt-1">{{ cod_orders }}</div>
-            <span class="text-[11px] text-zinc-500 font-light mt-1 block">Pending courier collection</span>
+            <span class="text-[11px] text-zinc-500 font-light mt-1 block">Pending collection</span>
         </div>
     </div>
 
@@ -77,5 +82,67 @@
         </div>
 
     </div>
+
+    <!-- All Registered Users Directory Table -->
+    <div class="mt-10 luxury-card rounded-2xl p-6 sm:p-8 border border-zinc-800/80 bg-[#111113]">
+        <div class="flex items-center justify-between border-b border-zinc-800/80 pb-4 mb-6">
+            <div>
+                <span class="text-[9px] font-mono tracking-[0.25em] text-amber-400 uppercase block">CLIENT REGISTRY</span>
+                <h3 class="text-base sm:text-lg font-luxury font-bold text-white uppercase tracking-wider mt-0.5">
+                    All Registered Users ({{ total_users }})
+                </h3>
+            </div>
+            <a href="/admin/auth/user/" target="_blank" class="text-xs text-zinc-400 hover:text-white font-mono flex items-center gap-1">
+                Open in Django Admin <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs font-mono">
+                <thead>
+                    <tr class="border-b border-zinc-800 text-zinc-500 uppercase text-[10px] tracking-wider">
+                        <th class="py-3 px-3">ID</th>
+                        <th class="py-3 px-3">Username</th>
+                        <th class="py-3 px-3">Email</th>
+                        <th class="py-3 px-3">Date Joined</th>
+                        <th class="py-3 px-3">Role</th>
+                        <th class="py-3 px-3">Orders</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-900">
+                    {% for u in all_users %}
+                        <tr class="hover:bg-zinc-900/40 transition-colors">
+                            <td class="py-3.5 px-3 text-zinc-500">#{{ u.id }}</td>
+                            <td class="py-3.5 px-3 font-bold text-white flex items-center gap-2">
+                                <span>{{ u.username }}</span>
+                                {% if u.is_superuser %}
+                                    <span class="px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[9px]">ADMIN</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-3.5 px-3 text-zinc-300">{{ u.email|default:"Not specified" }}</td>
+                            <td class="py-3.5 px-3 text-zinc-400">{{ u.date_joined|date:"d M Y, h:i A" }}</td>
+                            <td class="py-3.5 px-3">
+                                {% if u.is_staff %}
+                                    <span class="text-emerald-400 font-semibold">Staff / Executive</span>
+                                {% else %}
+                                    <span class="text-zinc-400">Customer</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-3.5 px-3 text-zinc-300 font-bold">
+                                {{ u.orders.count }}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="py-8 text-center text-zinc-500">
+                                No registered users found in the database.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 {% endblock %}

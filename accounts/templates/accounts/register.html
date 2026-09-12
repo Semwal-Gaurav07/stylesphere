@@ -1,84 +1,80 @@
 {% extends "store/base.html" %}
 
-{% block title %}Client Registration — Style Sphere Atelier{% endblock %}
+{% block title %}Sign Up - Style Sphere{% endblock %}
 
 {% block content %}
-<div class="relative min-h-[80vh] flex items-center justify-center py-6 sm:py-12 px-4">
+<div class="relative min-h-[80vh] flex items-center justify-center py-6 sm:py-10 px-4">
     
-    <!-- Background: Subtle Luxury Warm Amber & Gold Ambient Glow -->
+    <!-- Background: Glowing Red Circuit-like Network Grid & Ambient Laser Orbs -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-luxury-gold/5 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-1/4 left-1/4 w-96 h-96 bg-zinc-800/20 rounded-full blur-3xl"></div>
-        <div class="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:28px_28px]"></div>
+        <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-red-600/15 rounded-full blur-3xl animate-pulseGlow"></div>
+        <div class="absolute bottom-1/4 left-1/4 w-96 h-96 bg-rose-600/15 rounded-full blur-3xl animate-pulseGlow" style="animation-delay: 2s;"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(#ef4444_1px,transparent_1px)] [background-size:32px_32px] opacity-15"></div>
     </div>
 
-    <!-- Main Atelier Registration Container (2-Column Split Layout) -->
-    <div class="relative z-10 max-w-4xl w-full grid grid-cols-1 lg:grid-cols-12 rounded-3xl overflow-hidden bg-[#111114]/90 backdrop-blur-2xl border border-white/[0.08] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.85)]">
+    <!-- Main V5 Sign Up Container (2-Column Split Layout) -->
+    <div class="relative z-10 max-w-4xl w-full grid grid-cols-1 lg:grid-cols-12 rounded-3xl overflow-hidden bg-zinc-950/80 backdrop-blur-2xl border border-zinc-800 shadow-[0_0_50px_-12px_rgba(239,68,68,0.25)]">
         
-        <!-- Left Column: Atelier Statement & Welcome Privilege -->
-        <div class="lg:col-span-5 p-8 sm:p-10 flex flex-col justify-between bg-gradient-to-br from-[#16161a] via-[#0e0e11] to-[#09090b] border-b lg:border-b-0 lg:border-r border-white/[0.08] relative overflow-hidden">
-            <!-- Subtle Gold Hairline Rings -->
-            <div class="absolute -top-12 -left-12 w-48 h-48 border border-luxury-gold/10 rounded-full pointer-events-none"></div>
-            <div class="absolute -bottom-12 -right-12 w-48 h-48 border border-white/5 rounded-full pointer-events-none"></div>
+        <!-- Left Column: Welcome Message & Circuit Glow Card -->
+        <div class="lg:col-span-5 p-8 sm:p-10 flex flex-col justify-between bg-gradient-to-br from-zinc-900/90 via-black to-zinc-950/90 border-b lg:border-b-0 lg:border-r border-zinc-800 relative overflow-hidden">
+            <!-- Red Circuit Accent Lines -->
+            <div class="absolute -top-10 -left-10 w-40 h-40 border border-red-500/20 rounded-full pointer-events-none"></div>
+            <div class="absolute -bottom-10 -right-10 w-40 h-40 border border-red-500/20 rounded-full pointer-events-none"></div>
 
             <div class="space-y-4 relative z-10">
-                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-zinc-900/90 border border-luxury-gold/30 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.2em]">
-                    <span class="w-1.5 h-1.5 rounded-full bg-luxury-gold animate-pulse"></span>
-                    CLIENT MEMBERSHIP
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-red-950/60 border border-red-500/30 text-red-400 text-xs font-cta uppercase tracking-widest">
+                    <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                    BECOME A MEMBER
                 </div>
 
-                <h2 class="text-2xl sm:text-4xl font-luxury font-bold text-white tracking-tight leading-tight">
-                    ENTER THE <br>
-                    <span class="text-zinc-400 font-light">COLLECTIVE.</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white font-heading tracking-tight leading-tight">
+                    JOIN THE <span class="bg-gradient-to-r from-red-500 via-rose-500 to-amber-400 bg-clip-text text-transparent">CREATIVE</span> REVOLUTION.
                 </h2>
-                <p class="text-xs text-zinc-400 leading-relaxed font-light">
-                    Establish your personal profile for automated dispatch alerts, bespoke sizing reservations, and first look at secret drops.
+                <p class="text-xs text-zinc-400 leading-relaxed">
+                    Set up your account to get automatic order tracking, 10% welcome discount, and secret sneaker drops.
                 </p>
             </div>
 
-            <!-- Welcome Privilege Box -->
-            <div class="p-4 rounded-2xl bg-zinc-950/70 border border-white/5 space-y-2.5 my-6 relative z-10">
-                <div class="flex items-center gap-2 text-luxury-gold font-semibold text-xs">
-                    <i class="bi bi-gift text-sm"></i>
-                    <span>CLIENT PRIVILEGE READY</span>
+            <!-- Welcome Benefits Box -->
+            <div class="p-4 rounded-2xl bg-zinc-900/80 border border-red-500/20 space-y-2.5 my-6 relative z-10">
+                <div class="flex items-center gap-2 text-red-400 font-bold text-xs">
+                    <span>🎁 WELCOME PERK READY</span>
                 </div>
-                <p class="text-xs text-zinc-300 font-light">
-                    Apply code <strong class="text-white bg-black px-2 py-0.5 rounded border border-zinc-800 font-mono">FIRST10</strong> for 10% privilege on your debut checkout.
+                <p class="text-xs text-zinc-300">
+                    Use code <strong class="text-white bg-black px-2 py-0.5 rounded border border-zinc-800">FIRST10</strong> for 10% off your first checkout.
                 </p>
-                <div class="text-[11px] text-zinc-400 space-y-1 pt-1 font-light">
-                    <div>✓ Complimentary Express Courier on orders over ₹999</div>
+                <div class="text-[11px] text-zinc-500 space-y-1">
+                    <div>✓ Free Express Shipping on orders over ₹999</div>
                     <div>✓ Doorstep Cash on Delivery (COD) Available</div>
                 </div>
             </div>
 
             <!-- Left Footer Link Switcher -->
-            <div class="pt-4 border-t border-white/[0.08] relative z-10 flex items-center justify-between text-xs text-zinc-400">
+            <div class="pt-4 border-t border-zinc-800/80 relative z-10 flex items-center justify-between text-xs text-zinc-500">
                 <span>Already registered?</span>
-                <a href="{% url 'accounts:login' %}{% if next %}?next={{ next }}{% endif %}" class="text-luxury-gold hover:underline font-semibold tracking-wider uppercase text-[11px]">
-                    Client Login →
+                <a href="{% url 'accounts:login' %}{% if next %}?next={{ next }}{% endif %}" class="text-red-400 hover:text-red-300 font-bold underline">
+                    Login here →
                 </a>
             </div>
         </div>
 
-        <!-- Right Column: Registration Form Container -->
-        <div class="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-center bg-[#111114]/50 backdrop-blur-xl">
-            <div class="max-w-md mx-auto w-full space-y-5">
+        <!-- Right Column: Sign Up Form Container -->
+        <div class="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-center bg-zinc-900/40 backdrop-blur-xl">
+            <div class="max-w-sm mx-auto w-full space-y-5">
                 
-                <!-- Header -->
                 <div>
-                    <span class="text-[9px] font-mono tracking-[0.25em] text-zinc-500 uppercase block">MEMBERSHIP</span>
-                    <h3 class="text-2xl font-luxury font-bold text-white tracking-wide mt-1">Create Client Account</h3>
-                    <p class="text-xs text-zinc-400 mt-1 font-light">Complete the atelier enrollment form below.</p>
+                    <h3 class="text-2xl font-black text-white font-heading tracking-tight">Sign Up</h3>
+                    <p class="text-xs text-zinc-400 mt-1">Create your Style Sphere account below.</p>
                 </div>
 
-                <!-- Django Form -->
-                <form method="post" class="space-y-3.5" id="v5RegisterForm">
+                <!-- Django Registration Form -->
+                <form method="post" action="{% url 'accounts:register' %}" class="space-y-3.5" id="v5RegisterForm">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ next|default:'' }}">
 
                     <!-- Username Field -->
                     <div>
-                        <label class="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">Username</label>
+                        <label class="text-xs font-bold text-zinc-300 block mb-1">Username</label>
                         <div class="relative">
                             {{ form.username }}
                         </div>
@@ -87,18 +83,18 @@
                     <!-- Name Fields (2 Columns) -->
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">First Name</label>
+                            <label class="text-xs font-bold text-zinc-300 block mb-1">First Name</label>
                             {{ form.first_name }}
                         </div>
                         <div>
-                            <label class="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">Last Name</label>
+                            <label class="text-xs font-bold text-zinc-300 block mb-1">Last Name</label>
                             {{ form.last_name }}
                         </div>
                     </div>
 
                     <!-- Email Field -->
                     <div>
-                        <label class="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">Email Address</label>
+                        <label class="text-xs font-bold text-zinc-300 block mb-1">Email Address</label>
                         <div class="relative">
                             {{ form.email }}
                         </div>
@@ -106,7 +102,7 @@
 
                     <!-- Password Field -->
                     <div>
-                        <label class="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">Password</label>
+                        <label class="text-xs font-bold text-zinc-300 block mb-1">Password</label>
                         <div class="relative">
                             {{ form.password }}
                         </div>
@@ -114,24 +110,24 @@
 
                     <!-- Confirm Password -->
                     <div>
-                        <label class="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">Confirm Password</label>
+                        <label class="text-xs font-bold text-zinc-300 block mb-1">Confirm Password</label>
                         <div class="relative">
                             {{ form.password_confirm }}
                         </div>
                     </div>
 
-                    <!-- Elegant White Luxury CTA Button -->
+                    <!-- Prominent Red Interactive CTA Button -->
                     <button type="submit" 
-                            class="w-full py-3.5 bg-white hover:bg-zinc-200 active:scale-[0.98] text-black font-semibold text-xs tracking-[0.2em] uppercase rounded-xl shadow-xl transition-all duration-300 flex items-center justify-center gap-2 mt-4">
-                        <span>ESTABLISH ACCOUNT</span>
-                        <i class="bi bi-arrow-right text-base"></i>
+                            class="w-full py-3.5 bg-red-600 hover:bg-red-500 active:scale-[0.98] text-white font-cta font-bold text-sm tracking-wider rounded-xl shadow-[0_0_25px_-5px_rgba(239,68,68,0.5)] hover:shadow-[0_0_35px_-5px_rgba(239,68,68,0.7)] transition-all duration-300 flex items-center justify-center gap-2 mt-4">
+                        <span>CREATE ACCOUNT</span>
+                        <i class="bi bi-arrow-right text-lg"></i>
                     </button>
                 </form>
 
                 <p class="text-center text-xs text-zinc-400 pt-2">
                     Already have an account? 
-                    <a href="{% url 'accounts:login' %}{% if next %}?next={{ next }}{% endif %}" class="text-luxury-gold font-medium hover:underline ml-1">
-                        Sign In
+                    <a href="{% url 'accounts:login' %}{% if next %}?next={{ next }}{% endif %}" class="text-red-400 font-bold hover:underline ml-1">
+                        Login
                     </a>
                 </p>
 
@@ -142,9 +138,9 @@
 </div>
 
 <script>
-    // Style Django Form Inputs uniformly with Luxury Zinc & Gold Theme
+    // Style Django Form Inputs uniformly with Tailwind Zinc Theme
     document.querySelectorAll('#v5RegisterForm input:not([type="submit"]):not([type="hidden"])').forEach(input => {
-        input.className = "w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-luxury-gold focus:ring-1 focus:ring-luxury-gold/20 transition-all";
+        input.className = "w-full px-4 py-2.5 rounded-xl bg-zinc-950/90 border border-zinc-800 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-300";
     });
 </script>
 {% endblock %}

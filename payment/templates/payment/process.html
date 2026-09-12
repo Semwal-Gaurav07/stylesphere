@@ -1,6 +1,6 @@
 {% extends "store/base.html" %}
 
-{% block title %}Checkout & Payment Suite — Style Sphere Atelier{% endblock %}
+{% block title %}Payment — Google Pay & Cash on Delivery | Style Sphere Atelier{% endblock %}
 
 {% block content %}
 <div class="max-w-2xl mx-auto py-6">
@@ -9,114 +9,139 @@
         <!-- Header -->
         <div class="text-center space-y-2 border-b border-zinc-800/80 pb-6">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400">
-                <span>ORDER #{{ order.id }} • SECURE AIR COURIER DISPATCH</span>
+                <span>ORDER #{{ order.id }} • SECURE CHECKOUT</span>
             </div>
             <h1 class="text-2xl sm:text-3xl font-luxury font-bold text-white tracking-wide">
                 Select Payment Method
             </h1>
             <p class="text-xs text-zinc-400 font-light max-w-md mx-auto">
-                Encrypted end-to-end 256-bit SSL transaction. Choose your preferred checkout method.
+                We accept <span class="text-white font-medium">Google Pay (GPay)</span> and <span class="text-white font-medium">Cash on Delivery (COD)</span>. Card payments are disabled.
             </p>
             
             <div class="p-4 rounded-xl bg-zinc-950 border border-zinc-800/90 flex justify-between items-center my-2 max-w-md mx-auto">
                 <span class="text-xs text-zinc-400 uppercase tracking-wider font-mono">Total Amount Payable:</span>
-                <span class="text-2xl font-bold text-white font-sans">₹{{ order.get_total_cost }}</span>
+                <span class="text-2xl font-bold text-luxury-gold font-sans">₹{{ order.get_total_cost }}</span>
             </div>
         </div>
 
-        <!-- Primary Option: Razorpay Official 1-Click Gateway Modal -->
-        <div class="p-5 rounded-xl bg-zinc-950 border border-zinc-700/80 space-y-3">
+        <!-- Payment Method 1: Google Pay (GPay) -->
+        <div class="rounded-2xl bg-zinc-950 border-2 border-zinc-700/90 p-6 space-y-5 relative overflow-hidden">
             <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2.5">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <strong class="text-white text-xs sm:text-sm font-semibold">Recommended: Razorpay Online Payment</strong>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1.5 shadow-md">
+                        <!-- Google Pay Icon -->
+                        <svg viewBox="0 0 48 48" class="w-full h-full">
+                            <path fill="#4285F4" d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"/>
+                            <path fill="#34A853" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 16.3 2 9.7 7.3 6.3 14.7z"/>
+                            <path fill="#FBBC05" d="M24 46c5.9 0 10.9-2 14.5-5.5l-6.7-5.5c-2.1 1.5-4.8 2.5-7.8 2.5-6 0-10.7-3.1-11.8-8.5L5.4 34.3C8.8 41.5 15.8 46 24 46z"/>
+                            <path fill="#EA4335" d="M44.5 20H24v8.5h11.8c-1.1 3.4-3.4 6-6.4 7.6l6.7 5.5c4-3.7 6.4-9.2 6.4-15.6 0-1.3-.2-2.7-.5-4z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-white text-base font-bold flex items-center gap-2">
+                            Google Pay (GPay)
+                            <span class="px-2 py-0.5 rounded bg-emerald-950 border border-emerald-500/40 text-emerald-400 text-[9px] font-mono tracking-wider uppercase">Instant & Secure</span>
+                        </h2>
+                        <p class="text-[11px] text-zinc-400">Pay directly with your Google Pay app or UPI</p>
+                    </div>
                 </div>
-                <span class="px-2 py-0.5 rounded bg-zinc-900 text-zinc-400 text-[9px] font-mono">Instant UPI & Cards</span>
-            </div>
-            <p class="text-[11px] text-zinc-400 font-light leading-relaxed">
-                Pay seamlessly with Google Pay, PhonePe, Paytm, Any UPI ID, Credit/Debit Cards, or NetBanking with zero transaction surcharge.
-            </p>
-            <button type="button" 
-                    id="razorpayPayBtn" 
-                    onclick="openRazorpayCheckout()" 
-                    class="w-full py-3.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-semibold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2 shadow-lg">
-                <i class="bi bi-shield-lock"></i>
-                <span>Pay ₹{{ order.get_total_cost }} with Razorpay</span>
-            </button>
-        </div>
-
-        <!-- Alternative Options Accordion -->
-        <div class="space-y-3 pt-2">
-            <div class="text-[10px] font-mono uppercase tracking-wider text-zinc-500 text-center">
-                — Or select alternative payment options —
             </div>
 
-            <!-- Option 2: Direct UPI QR Code Transfer -->
-            <div class="collapse collapse-arrow bg-zinc-950 border border-zinc-800/80 rounded-xl">
-                <input type="radio" name="payment_accordion" /> 
-                <div class="collapse-title text-xs sm:text-sm font-semibold text-white flex items-center gap-3">
-                    <i class="bi bi-qr-code text-zinc-400 text-base"></i>
-                    <span>Direct UPI Deep Link & Static QR Code</span>
+            <!-- GPay Options: App Button & QR Code -->
+            <div class="space-y-4 pt-1">
+                <!-- Option A: 1-Click Pay on Mobile (Opens Google Pay App) -->
+                <div class="sm:hidden">
+                    <a href="upi://pay?pa={{ merchant_upi_id }}&pn=StyleSphereAtelier&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" 
+                       class="w-full py-3.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition-colors">
+                        <i class="bi bi-google text-sm"></i>
+                        <span>Open Google Pay App to Pay ₹{{ order.get_total_cost }}</span>
+                    </a>
+                    <span class="block text-[10px] text-zinc-500 text-center mt-1">Tap above if browsing from a mobile device with Google Pay</span>
                 </div>
-                <div class="collapse-content space-y-4 pt-1 text-xs">
-                    <p class="text-zinc-400 font-light">Scan QR or tap your preferred UPI application to complete payment:</p>
+
+                <!-- Option B: 1-Click Razorpay GPay Checkout Modal (Restricted strictly to Google Pay / UPI) -->
+                <button type="button" 
+                        id="gpayGatewayBtn" 
+                        onclick="openGPayGatewayCheckout()" 
+                        class="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition-all">
+                    <i class="bi bi-shield-check text-sm"></i>
+                    <span>Pay ₹{{ order.get_total_cost }} via GPay / UPI Portal</span>
+                </button>
+
+                <!-- Option C: QR Code & UPI ID for Scanner -->
+                <div class="p-4 bg-zinc-900/80 rounded-xl border border-zinc-800 space-y-3">
+                    <div class="text-[11px] text-zinc-300 font-medium text-center">
+                        Or scan the Google Pay QR code with your GPay app:
+                    </div>
                     
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphereAtelier&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="p-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 text-center text-xs font-medium flex items-center justify-center gap-1.5 transition-colors">
-                            <i class="bi bi-google"></i> GPay
-                        </a>
-                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphereAtelier&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="p-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 text-center text-xs font-medium flex items-center justify-center gap-1.5 transition-colors">
-                            <i class="bi bi-wallet2"></i> PhonePe
-                        </a>
-                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphereAtelier&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="p-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 text-center text-xs font-medium flex items-center justify-center gap-1.5 transition-colors">
-                            <i class="bi bi-lightning-charge"></i> Paytm
-                        </a>
-                        <a href="upi://pay?pa=9781855165@upi&pn=StyleSphereAtelier&am={{ order.get_total_cost }}&cu=INR&tn=Order{{ order.id }}" class="p-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 text-center text-xs font-medium flex items-center justify-center gap-1.5 transition-colors">
-                            <i class="bi bi-phone"></i> Any App
-                        </a>
+                    <div class="text-center p-3 bg-white rounded-xl max-w-[170px] mx-auto border border-zinc-300 shadow-inner">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa={{ merchant_upi_id }}&pn=StyleSphereAtelier&am={{ order.get_total_cost }}&cu=INR" 
+                             alt="GPay QR Code" 
+                             class="w-full h-auto mx-auto rounded">
+                        <span class="text-[9px] text-zinc-800 font-mono font-bold block mt-1.5">Scan with Google Pay</span>
                     </div>
 
-                    <!-- Dynamic UPI QR Display -->
-                    <div class="text-center p-4 bg-white rounded-xl max-w-[180px] mx-auto border border-zinc-200">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9781855165@upi&pn=StyleSphereAtelier&am={{ order.get_total_cost }}&cu=INR" alt="UPI Payment QR" class="w-full h-auto mx-auto rounded">
-                        <span class="text-[10px] text-zinc-800 font-mono font-bold block mt-2">VPA: 9781855165@upi</span>
-                    </div>
-
-                    <form method="post" action="{% url 'payment:process' %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="payment_type" value="upi">
-                        <input type="hidden" name="upi_id" value="Direct UPI Transfer">
-                        <button type="submit" class="w-full py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white font-semibold text-xs uppercase tracking-wider transition-colors mt-2">
-                            ✓ Confirm Direct UPI Transfer
+                    <!-- UPI ID with Copy Button -->
+                    <div class="flex items-center justify-between p-2.5 bg-zinc-950 rounded-lg border border-zinc-800 text-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="text-zinc-500 text-[10px] font-mono uppercase">UPI ID:</span>
+                            <span class="font-mono text-white font-semibold" id="upiIdText">{{ merchant_upi_id }}</span>
+                        </div>
+                        <button type="button" onclick="copyUpiId()" id="copyUpiBtn" class="px-2.5 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-[10px] font-mono text-zinc-300 transition-colors">
+                            Copy ID
                         </button>
+                    </div>
+
+                    <!-- Manual Reference Form for GPay Confirmation -->
+                    <form method="post" action="{% url 'payment:process' %}" class="space-y-2 pt-2 border-t border-zinc-800">
+                        {% csrf_token %}
+                        <input type="hidden" name="payment_type" value="gpay">
+                        <label class="block text-[11px] text-zinc-400">
+                            After sending money on Google Pay, enter your 12-digit UPI Ref / UTR number (optional):
+                        </label>
+                        <div class="flex gap-2">
+                            <input type="text" 
+                                   name="utr_number" 
+                                   placeholder="e.g. 328109823412" 
+                                   maxlength="25"
+                                   class="flex-1 px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-lg text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-luxury-gold">
+                            <button type="submit" class="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs uppercase tracking-wider transition-colors">
+                                Confirm GPay
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
-
-            <!-- Option 3: Cash on Delivery (COD) -->
-            <div class="collapse collapse-arrow bg-zinc-950 border border-zinc-800/80 rounded-xl">
-                <input type="radio" name="payment_accordion" /> 
-                <div class="collapse-title text-xs sm:text-sm font-semibold text-white flex items-center gap-3">
-                    <i class="bi bi-cash-stack text-zinc-400 text-base"></i>
-                    <span>Cash on Delivery (Doorstep COD Available)</span>
-                </div>
-                <div class="collapse-content pt-2 text-xs space-y-3">
-                    <p class="text-zinc-400 font-light leading-relaxed">
-                        Pay cash directly to the courier partner upon receipt of your tamper-evident atelier package.
-                    </p>
-                    <form method="post" action="{% url 'payment:process' %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="payment_type" value="cod">
-                        <button type="submit" class="w-full py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white font-semibold text-xs uppercase tracking-wider transition-colors">
-                            Confirm Order with Cash on Delivery (COD)
-                        </button>
-                    </form>
-                </div>
-            </div>
-
         </div>
 
-        <!-- Hidden Razorpay Callback Form -->
+        <!-- Payment Method 2: Cash on Delivery (COD) -->
+        <div class="rounded-2xl bg-zinc-950 border border-zinc-800 p-6 space-y-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 text-emerald-400 flex items-center justify-center text-xl">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-white text-base font-bold flex items-center gap-2">
+                            Cash on Delivery (COD)
+                            <span class="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400 text-[9px] font-mono tracking-wider uppercase">Pay at Doorstep</span>
+                        </h2>
+                        <p class="text-[11px] text-zinc-400 font-light">Pay cash directly to our delivery courier upon receiving your package.</p>
+                    </div>
+                </div>
+            </div>
+
+            <form method="post" action="{% url 'payment:process' %}">
+                {% csrf_token %}
+                <input type="hidden" name="payment_type" value="cod">
+                <button type="submit" class="w-full py-3.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+                    <i class="bi bi-box-seam"></i>
+                    <span>Confirm Order with Cash on Delivery (₹{{ order.get_total_cost }})</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Hidden Razorpay Callback Form for GPay Gateway verification -->
         <form id="razorpayCallbackForm" action="{% url 'payment:verify' %}?order_id={{ order.id }}" method="post" class="hidden">
             {% csrf_token %}
             <input type="hidden" name="razorpay_payment_id" id="rzpPaymentId">
@@ -134,35 +159,75 @@
     </div>
 </div>
 
-<!-- Razorpay Standard Checkout Script -->
+<!-- Razorpay Standard Checkout Script (Configured exclusively for Google Pay / UPI, Cards Removed) -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-    function openRazorpayCheckout() {
+    function copyUpiId() {
+        const upiId = document.getElementById('upiIdText').innerText.trim();
+        navigator.clipboard.writeText(upiId).then(() => {
+            const btn = document.getElementById('copyUpiBtn');
+            btn.innerText = 'Copied!';
+            btn.classList.add('text-emerald-400');
+            setTimeout(() => {
+                btn.innerText = 'Copy ID';
+                btn.classList.remove('text-emerald-400');
+            }, 2500);
+        });
+    }
+
+    function openGPayGatewayCheckout() {
+        // Strict method lockdown: Card, Netbanking, Wallet, EMI are explicitly disabled
         const options = {
             "key": "{{ razorpay_key }}",
             "amount": "{{ amount_in_paise }}",
             "currency": "INR",
             "name": "Style Sphere Atelier",
-            "description": "Order #{{ order.id }} Payment",
+            "description": "Order #{{ order.id }} — Google Pay / UPI",
             "image": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=200&auto=format&fit=crop&q=80",
             "order_id": "{{ razorpay_order_id }}",
             "handler": function (response) {
                 document.getElementById('rzpPaymentId').value = response.razorpay_payment_id;
                 document.getElementById('rzpOrderId').value = response.razorpay_order_id || "{{ razorpay_order_id }}";
-                document.getElementById('rzpSignature').value = response.razorpay_signature || "verified_sig";
+                document.getElementById('rzpSignature').value = response.razorpay_signature || "verified_gpay_sig";
                 document.getElementById('razorpayCallbackForm').submit();
             },
             "prefill": {
                 "name": "{{ order.first_name }} {{ order.last_name }}",
                 "email": "{{ order.email }}",
-                "contact": "9781855165"
+                "contact": "{{ order.phone_number|default:merchant_phone }}",
+                "method": "upi"
+            },
+            "notes": {
+                "order_id": "{{ order.id }}",
+                "preferred_channel": "Google Pay"
             },
             "theme": {
                 "color": "#18181b"
             },
+            // Explicitly disable card, netbanking, wallets, etc. Only allow UPI / Google Pay
+            "config": {
+                "display": {
+                    "blocks": {
+                        "upi": {
+                            "name": "Google Pay / UPI",
+                            "instruments": [
+                                {
+                                    "method": "upi",
+                                    "flows": ["intent", "qr", "collect"],
+                                    "apps": ["google_pay"]
+                                }
+                            ]
+                        }
+                    },
+                    "sequence": ["block.upi"],
+                    "preferences": {
+                        "show_default_blocks": false
+                    }
+                }
+            },
             "modal": {
                 "ondismiss": function() {
-                    console.log("Razorpay checkout window closed.");
+                    console.log("Google Pay checkout window closed.");
                 }
             }
         };
@@ -170,14 +235,14 @@
         try {
             const rzp = new Razorpay(options);
             rzp.on('payment.failed', function (response) {
-                alert("Payment unsuccessful: " + response.error.description);
+                alert("Payment unsuccessful: " + (response.error.description || "Please check your Google Pay app."));
             });
             rzp.open();
         } catch (e) {
-            console.log("Razorpay script offline or test key mode. Triggering simulated callback.");
-            document.getElementById('rzpPaymentId').value = "pay_simulated_" + Date.now();
+            console.log("Razorpay script simulated mode for Google Pay.");
+            document.getElementById('rzpPaymentId').value = "pay_gpay_simulated_" + Date.now();
             document.getElementById('rzpOrderId').value = "{{ razorpay_order_id }}";
-            document.getElementById('rzpSignature').value = "sig_simulated_ok";
+            document.getElementById('rzpSignature').value = "gpay_sig_ok";
             document.getElementById('razorpayCallbackForm').submit();
         }
     }

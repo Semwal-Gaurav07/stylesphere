@@ -2,6 +2,15 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
 
+try:
+    from rest_framework_simplejwt.views import (
+        TokenObtainPairView,
+        TokenRefreshView,
+    )
+    HAS_SIMPLE_JWT = True
+except ImportError:
+    HAS_SIMPLE_JWT = False
+
 router = DefaultRouter()
 router.register(r'categories', views.CategoryViewSet, basename='category')
 router.register(r'products', views.ProductViewSet, basename='product')
@@ -12,5 +21,17 @@ app_name = 'api'
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('orders/', views.OrderCreateAPIView.as_view(), name='order_create_api'),
+
+    # Order Management Endpoints
+    path('orders/', views.OrderListCreateAPIView.as_view(), name='order_list_create_api'),
+    path('orders/<int:pk>/', views.OrderDetailAPIView.as_view(), name='order_detail_api'),
+    path('orders/<int:pk>/cancel/', views.OrderCancelAPIView.as_view(), name='order_cancel_api'),
+    path('orders/track/<str:tracking_number>/', views.OrderTrackingAPIView.as_view(), name='order_tracking_api'),
 ]
+
+# Conditionally mount JWT token endpoints if package is installed
+if HAS_SIMPLE_JWT:
+    urlpatterns += [
+        path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+        path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    ]
