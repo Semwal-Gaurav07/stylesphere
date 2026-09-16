@@ -67,7 +67,6 @@
 
     <style>
         .hidden { display: none !important; }
-        /* Mobile-First Product Grid & Image Resilience */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -111,7 +110,6 @@
             object-fit: contain !important;
             display: block !important;
         }
-        /* Active Drawer State */
         #mobileNavDrawer.drawer-open {
             transform: translateX(0) !important;
         }
@@ -130,7 +128,6 @@
         .font-luxury { font-family: 'Cinzel', serif; letter-spacing: 0.08em; }
         .font-serif-luxury { font-family: 'Cormorant Garamond', serif; }
 
-        /* Minimalist Luxury Glass Navbar */
         .luxury-nav {
             background: rgba(9, 9, 11, 0.85);
             backdrop-filter: blur(20px);
@@ -138,7 +135,6 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.07);
         }
 
-        /* Clean Luxury Card */
         .luxury-card {
             background: #111114;
             border: 1px solid rgba(255, 255, 255, 0.07);
@@ -150,20 +146,17 @@
             box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6);
         }
 
-        /* Subtle Gold Shimmer Accent */
         .gold-gradient-text {
             background: linear-gradient(135deg, #f5e8c7 0%, #d4af37 50%, #aa8429 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* Custom Subtle Scrollbar */
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #09090b; }
         ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
     
-        /* Mobile Instagram Story Bubbles */
         .cat-bubble-container {
             display: flex;
             gap: 16px;
@@ -217,8 +210,8 @@
         .cat-bubble.active .cat-bubble-text {
             color: #ffffff;
         }
-    
-        /* Boutique Cursor-Following Spotlight Glow */
+
+        /* Boutique Cursor Spotlight Glow */
         .spotlight-card {
             position: relative;
             overflow: hidden;
@@ -240,13 +233,13 @@
 </head>
 <body class="bg-luxury-black text-luxury-platinum antialiased min-h-screen flex flex-col justify-between selection:bg-luxury-gold selection:text-black pb-16 md:pb-0">
 
-    <!-- Minimalist Luxury Top Notification Strip -->
+    <!-- Top Notification Strip -->
     <div class="bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 text-zinc-200 text-xs sm:text-sm py-2.5 px-4 font-semibold text-center border-b border-white/5 tracking-wider uppercase">
         <span class="inline-block w-1.5 h-1.5 rounded-full bg-luxury-gold mr-2 animate-pulse"></span>
         Complimentary Insured Shipping Across India on Orders Above ₹999 • Atelier Code <strong class="text-luxury-gold font-bold">FIRST10</strong>
     </div>
 
-    <!-- Header Navigation (Simple, Intuitive & Luxury) -->
+    <!-- Header Navigation -->
     <header class="sticky top-0 z-40 luxury-nav transition-all duration-300">
         <div class="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 sm:h-20">
@@ -258,7 +251,7 @@
                     </button>
                 </div>
 
-                <!-- Brand Logo: Official Atelier Icon & Luxury Typography -->
+                <!-- Brand Logo -->
                 <div class="flex items-center flex-shrink-0">
                     <a href="{% url 'store:product_list' %}" class="flex items-center group gap-2.5">
                         <img src="{% static 'images/stylesphere_icon.png' %}" 
@@ -304,20 +297,12 @@
                         </ul>
                     </div>
 
-                    <a href="#whoWeAre" class="hover:text-white transition-colors">
-                        About
-                    </a>
-
-                    <a href="#howItsMade" class="hover:text-white transition-colors">
-                        Our values
-                    </a>
-
-                    <a href="#contactFooter" class="hover:text-white transition-colors">
-                        Contact
-                    </a>
+                    <a href="#whoWeAre" class="hover:text-white transition-colors">About</a>
+                    <a href="#howItsMade" class="hover:text-white transition-colors">Our values</a>
+                    <a href="#contactFooter" class="hover:text-white transition-colors">Contact</a>
                 </nav>
 
-                <!-- Right: Utility Actions (Search, Wishlist, Bag, Account / Auth) -->
+                <!-- Right: Utility Actions (Guaranteed Visible on All Laptops) -->
                 <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-shrink-0">
                     
                     <!-- Search Toggle Button -->
@@ -345,13 +330,13 @@
                         {% endwith %}
                     </a>
 
-                    <!-- Subtle Luxury Divider -->
+                    <!-- Divider -->
                     <div class="h-5 w-px bg-white/10 hidden sm:block"></div>
 
-                    <!-- Laptop / Desktop Account & Auth Section (Guaranteed Visible on all Laptops) -->
+                    <!-- Laptop / Desktop Account Section -->
                     <div class="hidden sm:flex items-center gap-2.5">
                         {% if user.is_authenticated %}
-                            <!-- Logged In: Prominent Profile Logo & Status Badge -->
+                            <!-- Logged In: Profile Badge Dropdown -->
                             <div class="dropdown dropdown-end">
                                 <label tabindex="0" class="cursor-pointer py-1.5 px-3 sm:px-4 rounded-xl bg-zinc-900 border border-zinc-700 hover:border-luxury-gold/50 text-sm font-semibold text-white flex items-center gap-2.5 transition-all shadow-md">
                                     <div class="relative">
@@ -377,15 +362,13 @@
                                 </ul>
                             </div>
                         {% else %}
-                            <!-- Logged Out: Dedicated Account Icon + Login & Sign Up Buttons -->
+                            <!-- Logged Out: Dedicated Account Icon + Buttons -->
                             <div class="dropdown dropdown-end">
                                 <label tabindex="0" class="cursor-pointer p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-900 border border-transparent hover:border-zinc-800 transition-all flex items-center" title="Client Account">
                                     <i class="bi bi-person-circle text-xl text-zinc-300 hover:text-white"></i>
                                 </label>
                                 <ul tabindex="0" class="dropdown-content z-50 menu p-3 shadow-2xl bg-zinc-950 border border-zinc-800 rounded-2xl w-56 mt-2 text-xs divide-y divide-zinc-900">
-                                    <li class="px-3 py-2 text-zinc-400 font-mono text-[10px] uppercase tracking-wider">
-                                        Atelier Membership
-                                    </li>
+                                    <li class="px-3 py-2 text-zinc-400 font-mono text-[10px] uppercase tracking-wider">Atelier Membership</li>
                                     <li><a href="{% url 'accounts:login' %}" class="py-2.5 text-white font-semibold flex items-center gap-2"><i class="bi bi-box-arrow-in-right text-luxury-gold"></i> Sign In to Account</a></li>
                                     <li><a href="{% url 'accounts:register' %}" class="py-2.5 text-white font-semibold flex items-center gap-2"><i class="bi bi-person-plus text-luxury-gold"></i> Register New Client</a></li>
                                 </ul>
@@ -420,14 +403,14 @@
                 </div>
             </div>
 
-            <!-- Expandable Search Bar (Slides down smoothly) -->
+            <!-- Search Bar -->
             <div id="navSearchBar" class="hidden pb-4 pt-1 transition-all duration-300">
                 <form action="{% url 'store:product_list' %}" method="get" class="relative max-w-2xl mx-auto flex items-center">
                     <input type="text" 
                            name="q" 
                            id="navSearchInput"
                            value="{{ query|default:'' }}" 
-                           placeholder="Search pieces by title, fabric, or series (e.g. Anime, 240 GSM, Oversized)..." 
+                           placeholder="Search pieces by title, fabric, or series..." 
                            class="w-full bg-zinc-950 border border-zinc-700 rounded-full py-2.5 pl-11 pr-10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-luxury-gold shadow-2xl">
                     <i class="bi bi-search absolute left-4 text-zinc-400 text-xs"></i>
                     <button type="button" onclick="toggleSearchBar()" class="absolute right-3.5 text-zinc-500 hover:text-white" title="Close Search">
@@ -439,12 +422,11 @@
         </div>
     </header>
 
-    <!-- Slide-Out Mobile Navigation Drawer -->
+    <!-- Slide-Out Mobile Drawer -->
     <div id="mobileDrawerBackdrop" onclick="toggleMobileMenu()" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm transition-opacity duration-300 md:hidden" style="display: none;"></div>
 
     <aside id="mobileNavDrawer" class="fixed top-0 left-0 bottom-0 w-72 z-50 bg-zinc-950 border-r border-zinc-800 p-6 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden shadow-2xl overflow-y-auto" style="transform: translateX(-100%);">
         <div class="space-y-6">
-            <!-- Drawer Header -->
             <div class="flex items-center justify-between border-b border-zinc-900 pb-4">
                 <div>
                     <span class="text-base font-luxury font-black text-white tracking-[0.15em] block">STYLE SPHERE</span>
@@ -455,13 +437,11 @@
                 </button>
             </div>
 
-            <!-- Drawer Search Bar -->
             <form action="{% url 'store:product_list' %}" method="get" class="relative">
                 <input type="text" name="q" placeholder="Search collection..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-2 pl-9 pr-3 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-luxury-gold">
                 <i class="bi bi-search absolute left-3 top-2.5 text-zinc-500 text-xs"></i>
             </form>
 
-            <!-- Primary Navigation Links -->
             <div class="space-y-1">
                 <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block px-3 mb-1">Navigation</span>
                 <a href="{% url 'store:product_list' %}" onclick="toggleMobileMenu()" class="flex items-center justify-between px-3 py-2.5 text-xs font-semibold text-zinc-300 hover:text-white rounded-xl hover:bg-zinc-900">
@@ -478,7 +458,6 @@
                 </a>
             </div>
 
-            <!-- Collections Links -->
             <div class="space-y-1">
                 <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block px-3 mb-1">Curated Collections</span>
                 {% for c in categories %}
@@ -490,7 +469,6 @@
             </div>
         </div>
 
-        <!-- Drawer Footer (Account State & Concierge) -->
         <div class="border-t border-zinc-900 pt-5 space-y-4">
             {% if user.is_authenticated %}
                 <div class="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-1">
@@ -529,7 +507,6 @@
 
             const isClosed = drawer.classList.contains('-translate-x-full') && !drawer.classList.contains('drawer-open');
             if (isClosed) {
-                // OPEN SIDEBAR DRAWER
                 drawer.classList.remove('-translate-x-full');
                 drawer.classList.add('drawer-open');
                 drawer.style.transform = 'translateX(0px)';
@@ -538,7 +515,6 @@
                 backdrop.style.display = 'block';
                 document.body.style.overflow = 'hidden';
             } else {
-                // CLOSE SIDEBAR DRAWER
                 drawer.classList.add('-translate-x-full');
                 drawer.classList.remove('drawer-open');
                 drawer.style.transform = 'translateX(-100%)';
@@ -576,51 +552,30 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Heritage & Trust Assurance Strip -->
+    <!-- Heritage Trust Strip -->
     <section id="atelierTrust" class="border-t border-zinc-900 bg-zinc-950/80 py-12">
         <div class="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center sm:text-left">
-                
                 <div class="space-y-2">
-                    <div class="text-luxury-gold text-xl mb-1">
-                        <i class="bi bi-award"></i>
-                    </div>
+                    <div class="text-luxury-gold text-xl mb-1"><i class="bi bi-award"></i></div>
                     <h4 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Authenticity Guaranteed</h4>
-                    <p class="text-[11px] text-zinc-500 leading-relaxed">
-                        100% Certified 240+ GSM Combed French Terry Cotton. Bio-washed for a heavy, luxurious drape.
-                    </p>
+                    <p class="text-[11px] text-zinc-500 leading-relaxed">100% Certified 240+ GSM Combed French Terry Cotton. Bio-washed.</p>
                 </div>
-
                 <div class="space-y-2">
-                    <div class="text-luxury-gold text-xl mb-1">
-                        <i class="bi bi-shield-check"></i>
-                    </div>
+                    <div class="text-luxury-gold text-xl mb-1"><i class="bi bi-shield-check"></i></div>
                     <h4 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Encrypted Transactions</h4>
-                    <p class="text-[11px] text-zinc-500 leading-relaxed">
-                        Protected end-to-end payments with UPI, Major Credit Cards, NetBanking, and Doorstep Cash on Delivery (COD).
-                    </p>
+                    <p class="text-[11px] text-zinc-500 leading-relaxed">Protected payments with UPI, Credit Cards, NetBanking, and COD.</p>
                 </div>
-
                 <div class="space-y-2">
-                    <div class="text-luxury-gold text-xl mb-1">
-                        <i class="bi bi-box-seam"></i>
-                    </div>
+                    <div class="text-luxury-gold text-xl mb-1"><i class="bi bi-box-seam"></i></div>
                     <h4 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Insured Express Transit</h4>
-                    <p class="text-[11px] text-zinc-500 leading-relaxed">
-                        Each garment is inspected and dispatched in tamper-evident luxury packaging within 24 business hours.
-                    </p>
+                    <p class="text-[11px] text-zinc-500 leading-relaxed">Dispatched in tamper-evident luxury packaging within 24h.</p>
                 </div>
-
                 <div class="space-y-2">
-                    <div class="text-luxury-gold text-xl mb-1">
-                        <i class="bi bi-arrow-repeat"></i>
-                    </div>
+                    <div class="text-luxury-gold text-xl mb-1"><i class="bi bi-arrow-repeat"></i></div>
                     <h4 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Complimentary Exchanges</h4>
-                    <p class="text-[11px] text-zinc-500 leading-relaxed">
-                        30-day hassle-free doorstep size exchange and refund guarantee if the tailoring does not match your standard.
-                    </p>
+                    <p class="text-[11px] text-zinc-500 leading-relaxed">30-day hassle-free doorstep size exchange and refund guarantee.</p>
                 </div>
-
             </div>
         </div>
     </section>
@@ -628,54 +583,29 @@
     <!-- Luxury Footer -->
     <footer class="bg-[#0b0b0e] text-zinc-400 border-t border-zinc-800 py-16" id="contactFooter">
         <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-            
-            <!-- Tier 1: Split Top Row (About us on Left + Email address newsletter on Right) -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 pb-12 border-b border-zinc-800/80" id="aboutUsSection">
-                
-                <!-- Left: About us -->
                 <div class="lg:col-span-7 space-y-3">
-                    <h3 class="text-xl font-luxury font-bold text-white tracking-wide">
-                        About us
-                    </h3>
+                    <h3 class="text-xl font-luxury font-bold text-white tracking-wide">About us</h3>
                     <p class="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed max-w-xl">
-                        Style Sphere Atelier was born from an obsession with heavyweight cotton and bespoke graphics. We believe menswear should be permanent, not disposable. Every piece is engineered from 240+ GSM French Terry cotton with dropped shoulders and bio-wash permanence to elevate everyday streetwear for the better.
+                        Style Sphere Atelier was born from an obsession with heavyweight cotton and bespoke graphics. Every piece is engineered from 240+ GSM French Terry cotton with dropped shoulders and bio-wash permanence.
                     </p>
                 </div>
-
-                <!-- Right: Email address Newsletter Form -->
                 <div class="lg:col-span-5 space-y-3">
-                    <h4 class="text-sm font-semibold text-white uppercase tracking-wider font-mono text-[11px]">
-                        Email address
-                    </h4>
-                    <form onsubmit="event.preventDefault(); alert('Thank you for subscribing to Style Sphere Atelier privilege drops.'); this.reset();" class="space-y-3">
+                    <h4 class="text-sm font-semibold text-white uppercase tracking-wider font-mono text-[11px]">Email address</h4>
+                    <form onsubmit="event.preventDefault(); alert('Thank you for subscribing to Style Sphere Atelier drops.'); this.reset();" class="space-y-3">
                         <div class="w-full">
-                            <input type="email" 
-                                   required 
-                                   placeholder="Your email address" 
-                                   class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-400 transition-colors rounded-none">
+                            <input type="email" required placeholder="Your email address" class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-400 transition-colors rounded-none">
                         </div>
-                        <button type="submit" class="px-8 py-3 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold text-xs uppercase tracking-[0.2em] border border-zinc-600 transition-colors">
-                            SUBMIT
-                        </button>
+                        <button type="submit" class="px-8 py-3 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold text-xs uppercase tracking-[0.2em] border border-zinc-600 transition-colors">SUBMIT</button>
                     </form>
                 </div>
-
             </div>
 
-            <!-- Tier 2: 4 Clean Columns (Address, Contact us, Follow, Info) -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-xs font-light">
-                
-                <!-- Column 1: Address -->
                 <div class="space-y-3">
                     <h5 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Address</h5>
-                    <p class="text-zinc-400 leading-relaxed text-[11px]">
-                        Industrial Area Phase 2,<br>
-                        Panchkula, Haryana,<br>
-                        Post code 134113, India
-                    </p>
+                    <p class="text-zinc-400 leading-relaxed text-[11px]">Industrial Area Phase 2,<br>Panchkula, Haryana,<br>Post code 134113, India</p>
                 </div>
-
-                <!-- Column 2: Contact us -->
                 <div class="space-y-3">
                     <h5 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Contact us</h5>
                     <div class="space-y-1.5 text-[11px] text-zinc-400">
@@ -684,8 +614,6 @@
                         <div class="text-zinc-500 text-[10px] font-mono">Mon–Sat • 10:00 AM – 7:00 PM IST</div>
                     </div>
                 </div>
-
-                <!-- Column 3: Follow -->
                 <div class="space-y-3">
                     <h5 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Follow</h5>
                     <ul class="space-y-1.5 text-[11px] text-zinc-400">
@@ -694,8 +622,6 @@
                         <li><a href="{% url 'accounts:profile' %}" class="hover:text-white transition-colors">Atelier Archive</a></li>
                     </ul>
                 </div>
-
-                <!-- Column 4: Info -->
                 <div class="space-y-3">
                     <h5 class="text-xs font-luxury font-bold text-white uppercase tracking-wider">Info</h5>
                     <ul class="space-y-1.5 text-[11px] text-zinc-400">
@@ -705,38 +631,31 @@
                         <li><a href="{% url 'store:terms_of_service' %}" class="hover:text-white transition-colors">Terms conditions</a></li>
                     </ul>
                 </div>
-
             </div>
 
-            <!-- Bottom Copyright Line -->
             <div class="pt-8 border-t border-zinc-900 text-[10px] font-mono text-zinc-600 flex flex-col sm:flex-row justify-between items-center gap-2">
                 <span>&copy; {% now "Y" %} STYLE SPHERE ATELIER INC. ALL RIGHTS RESERVED.</span>
                 <span>DESIGNED WITH RESTRAINT • CRAFTED FOR ENDURANCE</span>
             </div>
-
         </div>
     </footer>
 
-    <!-- Minimalist Mobile Bottom Nav Bar -->
+    <!-- Mobile Bottom Nav -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#09090b]/95 backdrop-blur-2xl border-t border-white/[0.08] flex justify-around items-center h-16 pb-[env(safe-area-inset-bottom,0px)] shadow-[0_-10px_25px_rgba(0,0,0,0.7)]">
         <button type="button" onclick="toggleMobileMenu()" class="flex flex-col items-center text-[10px] font-semibold tracking-wider uppercase text-zinc-400 hover:text-white transition-colors focus:outline-none">
-            <i class="bi bi-grid text-base mb-0.5"></i>
-            <span>Menu</span>
+            <i class="bi bi-grid text-base mb-0.5"></i><span>Menu</span>
         </button>
         <a href="{% url 'store:product_list' %}" class="flex flex-col items-center text-[10px] font-semibold tracking-wider uppercase {% if request.path == '/' %}text-luxury-gold font-bold{% else %}text-zinc-400{% endif %}">
-            <i class="bi bi-house text-base mb-0.5"></i>
-            <span>Atelier</span>
+            <i class="bi bi-house text-base mb-0.5"></i><span>Atelier</span>
         </a>
         <a href="{% url 'store:wishlist_detail' %}" class="relative flex flex-col items-center text-[10px] font-semibold tracking-wider uppercase {% if 'wishlist' in request.path %}text-luxury-gold font-bold{% else %}text-zinc-400{% endif %}">
-            <i class="bi bi-heart text-base mb-0.5"></i>
-            <span>Saved</span>
+            <i class="bi bi-heart text-base mb-0.5"></i><span>Saved</span>
             {% if user.is_authenticated and user.wishlist.count > 0 %}
                 <span class="absolute -top-1 right-2 w-1.5 h-1.5 rounded-full bg-luxury-gold"></span>
             {% endif %}
         </a>
         <a href="{% url 'store:cart_detail' %}" class="relative flex flex-col items-center text-[10px] font-semibold tracking-wider uppercase {% if 'cart' in request.path %}text-luxury-gold font-bold{% else %}text-zinc-400{% endif %}">
-            <i class="bi bi-bag text-base mb-0.5"></i>
-            <span>Bag</span>
+            <i class="bi bi-bag text-base mb-0.5"></i><span>Bag</span>
             {% with total_items=cart|length %}
                 {% if total_items > 0 %}
                     <span class="absolute -top-1 right-2 w-3.5 h-3.5 rounded-full bg-luxury-gold text-black text-[9px] font-black flex items-center justify-center bag-counter-badge">
@@ -747,25 +666,275 @@
         </a>
         {% if user.is_authenticated %}
             <a href="{% url 'accounts:profile' %}" class="flex flex-col items-center text-[10px] font-semibold tracking-wider uppercase {% if 'profile' in request.path %}text-luxury-gold font-bold{% else %}text-zinc-400{% endif %}">
-                <i class="bi bi-person text-base mb-0.5"></i>
-                <span>Account</span>
+                <i class="bi bi-person text-base mb-0.5"></i><span>Account</span>
             </a>
         {% else %}
             <a href="{% url 'accounts:login' %}" class="flex flex-col items-center text-[10px] font-semibold tracking-wider uppercase text-zinc-400 hover:text-white">
-                <i class="bi bi-person text-base mb-0.5"></i>
-                <span>Sign In</span>
+                <i class="bi bi-person text-base mb-0.5"></i><span>Sign In</span>
             </a>
         {% endif %}
     </nav>
 
+    <!-- =======================================================
+         SELF-CONTAINED INTERACTIVE ATELIER COMPONENTS & LOGIC
+         (Inlined directly to prevent 500 TemplateDoesNotExist errors)
+         ======================================================= -->
 
-    <!-- Interactive Fabric Weave Inspector Modal Component -->
-    {% include "store/components/fabric_inspector_modal.html" %}
+    <!-- Interactive Fabric Weave Inspector Modal -->
+    <div id="fabricInspectorModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="fabricModalTitle" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-black/85 backdrop-blur-md transition-opacity" onclick="closeFabricInspector()"></div>
+        <div class="flex min-h-screen items-center justify-center p-4 sm:p-6 text-center">
+            <div class="relative w-full max-w-2xl transform overflow-hidden rounded-3xl bg-[#0c0c0f] border border-white/10 p-6 sm:p-8 text-left align-middle shadow-[0_25px_70px_rgba(0,0,0,0.9)] transition-all">
+                <div class="flex items-start justify-between border-b border-white/[0.08] pb-4 mb-6">
+                    <div class="space-y-1">
+                        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-luxury-gold/10 border border-luxury-gold/30 text-luxury-gold text-[9px] font-mono uppercase tracking-[0.2em]">
+                            <span class="w-1.5 h-1.5 rounded-full bg-luxury-gold animate-pulse"></span>
+                            TEXTILE ARCHIVE LAB
+                        </div>
+                        <h3 class="text-xl sm:text-2xl font-luxury font-bold text-white tracking-wide" id="fabricModalTitle">
+                            240+ GSM Heavyweight French Terry
+                        </h3>
+                        <p class="text-xs text-zinc-400 font-light" id="fabricModalPieceName">
+                            Piece Specification & Macro Weave Inspection
+                        </p>
+                    </div>
+                    <button type="button" onclick="closeFabricInspector()" class="p-2 rounded-xl bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+                        <i class="bi bi-x-lg text-sm"></i>
+                    </button>
+                </div>
 
-    <!-- Luxury Floating Toast Notification System -->
-    {% include "store/components/toast_system.html" %}
+                <div class="space-y-4">
+                    <div class="relative w-full h-48 sm:h-56 rounded-2xl overflow-hidden bg-[#070709] border border-zinc-800 flex flex-col justify-between p-4">
+                        <div id="fabricTextureCanvas" class="absolute inset-0 opacity-80 transition-all duration-500" 
+                             style="background: radial-gradient(circle at center, rgba(212,175,55,0.08) 0%, transparent 70%), repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px), repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(212,175,55,0.04) 2px, rgba(212,175,55,0.04) 4px); background-size: 100% 100%, 6px 6px, 6px 6px;">
+                        </div>
+                        <div class="relative z-10 flex items-center justify-between text-[10px] font-mono">
+                            <span class="px-2.5 py-1 rounded bg-black/80 border border-white/10 text-white flex items-center gap-1.5">
+                                <i class="bi bi-zoom-in text-luxury-gold"></i>
+                                <span id="zoomLevelDisplay">50X OPTICAL MACRO</span>
+                            </span>
+                            <span id="fabricGradeBadge" class="px-2.5 py-1 rounded bg-luxury-gold text-black font-bold tracking-wider uppercase">
+                                240 GSM BESPOKE
+                            </span>
+                        </div>
+                        <div class="relative z-10 text-center space-y-1 my-auto">
+                            <div class="text-2xl sm:text-3xl font-luxury font-black text-white tracking-widest" id="gsmReadout">
+                                240+ GSM
+                            </div>
+                            <p class="text-[11px] text-zinc-400 font-mono tracking-wider uppercase" id="gsmSubtext">
+                                Heavyweight Loopback Weave • Bio-Washed Combed Cotton
+                            </p>
+                        </div>
+                        <div class="relative z-10 flex justify-between items-center text-[10px] text-zinc-500 font-mono">
+                            <span>STITCH TENSION: DENSE</span>
+                            <span>SHRINKAGE: &lt; 1.5%</span>
+                        </div>
+                    </div>
 
-    <!-- Master Interactive Atelier Script -->
-    <script src="{% static 'js/atelier.js' %}"></script>
+                    <div class="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-2">
+                        <div class="flex justify-between text-xs font-mono">
+                            <span class="text-zinc-400">Standard 160 GSM Commercial</span>
+                            <span class="text-luxury-gold font-bold">Style Sphere 240+ GSM</span>
+                        </div>
+                        <input type="range" id="fabricGsmSlider" min="160" max="280" value="240" step="10" 
+                               oninput="updateFabricSimulator(this.value)"
+                               class="w-full accent-luxury-gold cursor-pointer">
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3 text-xs">
+                        <div class="p-3 rounded-xl bg-zinc-900/60 border border-white/5 space-y-1">
+                            <span class="text-[9px] font-mono text-zinc-500 uppercase block">YARN</span>
+                            <strong class="text-white text-xs block">24s Long-Staple</strong>
+                        </div>
+                        <div class="p-3 rounded-xl bg-zinc-900/60 border border-white/5 space-y-1">
+                            <span class="text-[9px] font-mono text-zinc-500 uppercase block">FINISH</span>
+                            <strong class="text-white text-xs block">Bio-Enzyme Wash</strong>
+                        </div>
+                        <div class="p-3 rounded-xl bg-zinc-900/60 border border-white/5 space-y-1">
+                            <span class="text-[9px] font-mono text-zinc-500 uppercase block">RIB COLLAR</span>
+                            <strong class="text-white text-xs block">320 GSM 1x1</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-white/[0.08] flex items-center justify-between">
+                    <span class="text-[11px] text-zinc-400 font-mono">✓ Preshrunk for permanent fit retention</span>
+                    <button type="button" onclick="closeFabricInspector()" class="px-5 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold uppercase tracking-wider transition-colors shadow">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Luxury Toast Container -->
+    <div id="atelierToastContainer" class="fixed bottom-20 sm:bottom-8 right-4 sm:right-8 z-50 pointer-events-none flex flex-col gap-2.5 max-w-sm w-full"></div>
+
+    <!-- Master Interactive Atelier Script Inlined (Zero Missing Manifest Errors) -->
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function initBoutiqueSpotlight() {
+            const cards = document.querySelectorAll('.luxury-card, .spotlight-card');
+            cards.forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                });
+            });
+        }
+
+        function openFabricInspector(pieceName = 'Heavyweight Atelier Piece', gsm = 240) {
+            const modal = document.getElementById('fabricInspectorModal');
+            const title = document.getElementById('fabricModalPieceName');
+            const slider = document.getElementById('fabricGsmSlider');
+            if (!modal) return;
+
+            if (title) title.innerText = `${pieceName} • Heavyweight Specification`;
+            if (slider) {
+                slider.value = gsm;
+                updateFabricSimulator(gsm);
+            }
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeFabricInspector() {
+            const modal = document.getElementById('fabricInspectorModal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function updateFabricSimulator(val) {
+            val = parseInt(val, 10);
+            const canvas = document.getElementById('fabricTextureCanvas');
+            const readout = document.getElementById('gsmReadout');
+            const subtext = document.getElementById('gsmSubtext');
+            const gradeBadge = document.getElementById('fabricGradeBadge');
+            const zoomDisplay = document.getElementById('zoomLevelDisplay');
+
+            if (readout) readout.innerText = `${val}+ GSM`;
+            if (canvas) {
+                const step = Math.max(2, Math.round(14 - (val / 25)));
+                canvas.style.backgroundSize = `100% 100%, ${step}px ${step}px, ${step}px ${step}px`;
+            }
+
+            if (val < 190) {
+                if (subtext) subtext.innerText = "Commercial Single-Jersey • Translucent Hand-Feel";
+                if (gradeBadge) gradeBadge.innerText = "STANDARD COMMERCIAL";
+                if (zoomDisplay) zoomDisplay.innerText = "20X OPTICAL MACRO";
+            } else if (val < 230) {
+                if (subtext) subtext.innerText = "Mid-Weight Combed Cotton • Standard Casual Fit";
+                if (gradeBadge) gradeBadge.innerText = "MID-WEIGHT TEE";
+                if (zoomDisplay) zoomDisplay.innerText = "35X OPTICAL MACRO";
+            } else {
+                if (subtext) subtext.innerText = "Heavy French Terry Loopback • Boxy Tailored Drape";
+                if (gradeBadge) gradeBadge.innerText = `${val} GSM ATELIER BESPOKE`;
+                if (zoomDisplay) zoomDisplay.innerText = "60X OPTICAL MACRO";
+            }
+        }
+
+        async function toggleWishlistAjax(event, productId, url) {
+            if (event) event.preventDefault();
+            const btn = event.currentTarget || event.target.closest('a');
+            const icon = btn ? btn.querySelector('i') : null;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.status === 'ok') {
+                        if (data.action === 'added') {
+                            if (icon) icon.className = 'bi bi-heart-fill text-luxury-gold scale-125 transition-transform duration-300';
+                            showAtelierToast(data.message || 'Piece added to your Private Archive', 'wishlist');
+                        } else {
+                            if (icon) icon.className = 'bi bi-heart text-zinc-400 transition-colors';
+                            showAtelierToast(data.message || 'Piece removed from your Wishlist', 'info');
+                        }
+                    }
+                } else {
+                    window.location.href = url;
+                }
+            } catch (err) {
+                window.location.href = url;
+            }
+        }
+
+        function setCatalogView(mode) {
+            const grid = document.getElementById('piecesCatalogGrid');
+            const gridBtn = document.getElementById('viewGridBtn');
+            const runwayBtn = document.getElementById('viewRunwayBtn');
+            if (!grid) return;
+
+            if (mode === 'runway') {
+                grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12';
+                if (runwayBtn) runwayBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-all bg-white text-black font-bold shadow-md';
+                if (gridBtn) gridBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-all text-zinc-400 hover:text-white';
+                localStorage.setItem('atelier_catalog_view', 'runway');
+            } else {
+                grid.className = 'grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-6 lg:gap-8';
+                if (gridBtn) gridBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-all bg-white text-black font-bold shadow-md';
+                if (runwayBtn) runwayBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-all text-zinc-400 hover:text-white';
+                localStorage.setItem('atelier_catalog_view', 'grid');
+            }
+        }
+
+        function showAtelierToast(message, type = 'info') {
+            let container = document.getElementById('atelierToastContainer');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = 'pointer-events-auto p-4 rounded-2xl bg-[#111114]/95 backdrop-blur-2xl border border-luxury-gold/40 text-white shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex items-center justify-between gap-3 transform translate-y-4 opacity-0 transition-all duration-300';
+            toast.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center flex-shrink-0">
+                        <i class="bi bi-gem text-luxury-gold text-base"></i>
+                    </div>
+                    <div class="flex flex-col text-left">
+                        <span class="text-[9px] font-mono text-luxury-gold uppercase tracking-widest">ATELIER NOTICE</span>
+                        <span class="text-xs font-semibold text-zinc-100">${message}</span>
+                    </div>
+                </div>
+                <button type="button" class="text-zinc-500 hover:text-white p-1" onclick="this.parentElement.remove()">
+                    <i class="bi bi-x text-sm"></i>
+                </button>
+            `;
+            container.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.remove('translate-y-4', 'opacity-0'));
+            setTimeout(() => {
+                toast.classList.add('translate-y-4', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initBoutiqueSpotlight();
+            const saved = localStorage.getItem('atelier_catalog_view');
+            if (saved === 'runway') setCatalogView('runway');
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') closeFabricInspector();
+            });
+        });
+    </script>
 </body>
 </html>
