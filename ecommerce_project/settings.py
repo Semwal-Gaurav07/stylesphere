@@ -30,6 +30,8 @@ raw_hosts = os.environ.get(
     'stylesphere-store.onrender.com,localhost,127.0.0.1'
 )
 ALLOWED_HOSTS = [h.strip() for h in raw_hosts.split(',') if h.strip()]
+if '.onrender.com' not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append('.onrender.com')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -114,6 +116,15 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
@@ -126,6 +137,7 @@ LOGIN_REDIRECT_URL = 'store:product_list'
 LOGOUT_REDIRECT_URL = 'store:product_list'
 
 CSRF_TRUSTED_ORIGINS = [
+    'https://*.onrender.com',
     'https://stylesphere-store.onrender.com',
     'http://127.0.0.1:8000',
     'http://localhost:8000',
@@ -253,6 +265,7 @@ USE_X_FORWARDED_HOST = True
 # Production Security Hardening
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
+    SECURE_REDIRECT_EXEMPT = [r'^healthz/?$', r'^health/?$']
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True

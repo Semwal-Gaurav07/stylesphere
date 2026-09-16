@@ -27,6 +27,7 @@ urlpatterns = [
     path('orders/<int:pk>/', views.OrderDetailAPIView.as_view(), name='order_detail_api'),
     path('orders/<int:pk>/cancel/', views.OrderCancelAPIView.as_view(), name='order_cancel_api'),
     path('orders/track/<str:tracking_number>/', views.OrderTrackingAPIView.as_view(), name='order_tracking_api'),
+    path('pincode/', views.PincodeCheckAPIView.as_view(), name='pincode_check_api'),
 ]
 
 # Conditionally mount JWT token endpoints if package is installed

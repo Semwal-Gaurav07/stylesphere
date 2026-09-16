@@ -78,6 +78,8 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
 
     def whatsapp_dispatch_link(self, obj):
+        if not obj or not getattr(obj, 'pk', None):
+            return '-'
         url = generate_admin_whatsapp_url(obj)
         return format_html('<a href="{}" target="_blank" style="padding: 4px 8px; background: #25D366; color: white; border-radius: 4px; font-weight: bold; text-decoration: none;">💬 WhatsApp Alert</a>', url)
     whatsapp_dispatch_link.short_description = 'WhatsApp Customer'

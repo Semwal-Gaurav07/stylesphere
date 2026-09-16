@@ -12,6 +12,19 @@ class OrderCreateForm(forms.ModelForm):
         model = Order
         fields = ['first_name', 'last_name', 'email', 'phone_number', 'address', 'postal_code', 'city']
 
+    def clean_postal_code(self):
+        postal_code = self.cleaned_data.get('postal_code', '').strip()
+        if not postal_code.isdigit() or len(postal_code) != 6:
+            raise forms.ValidationError('Please enter a valid 6-digit Indian postal pincode.')
+        return postal_code
+
+    def clean_phone_number(self):
+        phone = self.cleaned_data.get('phone_number', '').strip()
+        digits = ''.join(c for c in phone if c.isdigit())
+        if len(digits) < 10:
+            raise forms.ValidationError('Please enter a valid 10-digit mobile number.')
+        return phone
+
 class CouponApplyForm(forms.Form):
     code = forms.CharField(label='Promo Code', widget=forms.TextInput(attrs={
         'class': 'w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white uppercase',

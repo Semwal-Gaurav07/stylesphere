@@ -10,6 +10,14 @@ class UserRegistrationForm(forms.ModelForm):
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
 
+    def clean_username(self):
+        username = self.cleaned_data.get('username', '').strip()
+        if not username:
+            raise forms.ValidationError('Username is required.')
+        if User.objects.filter(username__iexact=username).exists():
+            raise forms.ValidationError('A user with that username already exists.')
+        return username
+
     def clean_email(self):
         email = self.cleaned_data.get('email', '').strip().lower()
         if not email:

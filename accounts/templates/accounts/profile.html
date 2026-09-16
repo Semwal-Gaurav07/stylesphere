@@ -200,6 +200,14 @@
                                         <a href="{% url 'store:order_invoice' order.id %}" target="_blank" class="px-3 py-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[11px] font-medium text-zinc-300 rounded-lg transition-colors flex items-center gap-1.5">
                                             <i class="bi bi-file-earmark-text"></i> Invoice
                                         </a>
+                                        {% if order.status == 'Placed' or order.status == 'Processing' %}
+                                        <form method="post" action="{% url 'store:order_cancel' order.id %}" onsubmit="return confirm('Cancel Order #{{ order.id }}? Reserved inventory will be returned.');" class="inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="px-3 py-1 bg-red-950/40 hover:bg-red-900/60 border border-red-800/60 text-[11px] font-medium text-red-400 rounded-lg transition-colors flex items-center gap-1.5">
+                                                <i class="bi bi-x-circle"></i> Cancel
+                                            </button>
+                                        </form>
+                                        {% endif %}
                                     </div>
                                 </div>
 

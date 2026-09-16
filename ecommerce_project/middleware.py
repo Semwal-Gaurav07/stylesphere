@@ -14,7 +14,10 @@ class CSRFOriginFixMiddleware:
     def __call__(self, request):
         origin = request.META.get('HTTP_ORIGIN')
         if origin == 'null' or not origin:
-            host = request.get_host()
+            try:
+                host = request.get_host()
+            except Exception:
+                host = 'localhost'
             is_ssl = request.is_secure() or request.META.get('HTTP_X_FORWARDED_PROTO') == 'https'
             scheme = 'https' if is_ssl else 'http'
             request.META['HTTP_ORIGIN'] = f"{scheme}://{host}"

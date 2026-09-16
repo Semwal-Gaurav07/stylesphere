@@ -32,7 +32,8 @@ def product_list(request, category_slug=None):
             Q(name__icontains=query) | 
             Q(description__icontains=query) |
             Q(print_type__icontains=query) |
-            Q(fit_type__icontains=query)
+            Q(fit_type__icontains=query) |
+            Q(category__name__icontains=query)
         )
 
     print_filter = request.GET.get('print_type')
@@ -148,8 +149,8 @@ def cart_add(request, product_id):
     except (ValueError, TypeError):
         quantity = 1
     size = request.POST.get('size', 'M')
-    override = request.POST.get('override') == 'True'
-    buy_now = request.POST.get('buy_now') == 'true'
+    override = request.POST.get('override', '').lower() in ('true', '1', 'yes')
+    buy_now = request.POST.get('buy_now', '').lower() in ('true', '1', 'yes')
 
     # Inventory & Per-Size Variant Out-of-Stock Guard
     size_stock = product.get_stock_for_size(size)
@@ -157,9 +158,16 @@ def cart_add(request, product_id):
         messages.error(request, f'Sorry, size {size} of "{product.name}" is currently sold out.')
         return redirect(product.get_absolute_url())
 
-    if quantity > size_stock:
-        quantity = size_stock
-        messages.warning(request, f'Adjusted to maximum available atelier inventory for size {size} ({size_stock} pieces).')
+    current_qty = cart.cart.get(f"{product.id}_{size}", {}).get('quantity', 0) if not override else 0
+    if current_qty + quantity > size_stock:
+        if override:
+            quantity = size_stock
+        else:
+            if current_qty >= size_stock:
+                messages.warning(request, f'You already have the maximum available stock ({size_stock} pieces) of size {size} in your bag.')
+                return redirect('store:cart_detail')
+            quantity = max(1, size_stock - current_qty)
+            messages.warning(request, f'Adjusted to maximum available inventory for size {size} ({size_stock} pieces).')
 
     cart.add(product=product, quantity=quantity, size=size, override_quantity=override)
 
@@ -228,6 +236,10 @@ def review_add(request, product_id):
         review.user = request.user
         review.save()
         messages.success(request, 'Your t-shirt review has been submitted!')
+    else:
+        for field, errs in form.errors.items():
+            for err in errs:
+                messages.error(request, f'{field.title()}: {err}')
     return redirect(product.get_absolute_url())
 
 @login_required
@@ -240,7 +252,8 @@ def wishlist_toggle(request, product_id):
     else:
         Wishlist.objects.create(user=request.user, product=product)
         messages.success(request, f'Added "{product.name}" to your Wishlist!')
-    return redirect(request.META.get('HTTP_REFERER', 'store:product_list'))
+    referer = request.META.get('HTTP_REFERER')
+    return redirect(referer if referer else 'store:product_list')
 
 @login_required
 def wishlist_detail(request):
@@ -318,8 +331,9 @@ def order_create(request):
                             id=size_variant.id,
                             stock__gte=qty
                         ).update(stock=F('stock') - qty)
-                        # Also sync global counter
-                        Product.objects.filter(id=product.id).update(stock=F('stock') - qty)
+                        # Also sync global counter safely (non-negative)
+                        Product.objects.filter(id=product.id, stock__gte=qty).update(stock=F('stock') - qty)
+                        Product.objects.filter(id=product.id, stock__lt=qty).update(stock=0)
                     else:
                         rows_updated = Product.objects.filter(
                             id=product.id,
@@ -351,6 +365,11 @@ def order_create(request):
                 return redirect('payment:process')
     else:
         form = OrderCreateForm(initial=initial_data)
+    if request.method == 'POST' and not form.is_valid():
+        for field, errs in form.errors.items():
+            for err in errs:
+                field_label = form.fields[field].label if field in form.fields and form.fields[field].label else field.replace('_', ' ').title()
+                messages.error(request, f'{field_label}: {err}')
     return render(request, 'store/orders/create.html', {
         'cart': cart,
         'form': form,
@@ -371,11 +390,9 @@ def admin_analytics(request):
     total_users = User.objects.count()
     all_users = User.objects.all().order_by('-date_joined')
     total_orders = Order.objects.count()
-    revenue_agg = OrderItem.objects.filter(order__paid=True).aggregate(
-        rev=Sum(F('price') * F('quantity'))
-    )
-    total_revenue = revenue_agg['rev'] or Decimal('0.00')
-    paid_orders = Order.objects.filter(paid=True).count()
+    paid_active_orders = Order.objects.filter(paid=True).exclude(status='Cancelled')
+    total_revenue = sum(o.get_total_cost() for o in paid_active_orders)
+    paid_orders = paid_active_orders.count()
     cod_orders = Order.objects.filter(payment_method__icontains='COD').count()
     low_stock_products = Product.objects.filter(stock__lte=3)
     
@@ -510,10 +527,7 @@ def order_cancel(request, order_id):
     with transaction.atomic():
         # Restore stock for each item
         for item in order.items.all():
-            variant = item.product.variants.filter(size=item.size).first()
-            if variant:
-                variant.stock = F('stock') + item.quantity
-                variant.save()
+            item.product.variants.filter(size=item.size).update(stock=F('stock') + item.quantity)
             Product.objects.filter(id=item.product.id).update(stock=F('stock') + item.quantity)
             Product.objects.filter(id=item.product.id, available=False).update(available=True)
 

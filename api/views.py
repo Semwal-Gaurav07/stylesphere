@@ -117,13 +117,20 @@ class OrderCancelAPIView(APIView):
 
         with transaction.atomic():
             for item in order.items.all():
-                variant = item.product.variants.filter(size=item.size).first()
-                if variant:
-                    variant.stock = F('stock') + item.quantity
-                    variant.save()
+                item.product.variants.filter(size=item.size).update(stock=F('stock') + item.quantity)
                 Product.objects.filter(id=item.product.id).update(stock=F('stock') + item.quantity)
                 Product.objects.filter(id=item.product.id, available=False).update(available=True)
             order.status = 'Cancelled'
             order.save()
 
         return Response({'message': f'Order #{order.id} cancelled successfully and inventory returned.', 'status': 'Cancelled'})
+
+
+class PincodeCheckAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        from store.utils import check_pincode_serviceability
+        pincode = request.query_params.get('pincode', '')
+        data = check_pincode_serviceability(pincode)
+        return Response(data)

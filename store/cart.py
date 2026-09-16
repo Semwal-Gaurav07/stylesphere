@@ -36,9 +36,14 @@ class Cart:
         else:
             removed = False
             for k in list(self.cart.keys()):
-                if k == item_key or k.startswith(f"{item_key}_"):
+                if k == item_key:
                     del self.cart[k]
                     removed = True
+            if not removed:
+                for k in list(self.cart.keys()):
+                    if k.startswith(f"{item_key}_"):
+                        del self.cart[k]
+                        removed = True
             if removed:
                 self.save()
 
@@ -69,6 +74,11 @@ class Cart:
                 except (ValueError, IndexError):
                     continue
             product = products.get(pid)
+            if not product or not product.available:
+                if key in self.cart:
+                    del self.cart[key]
+                    self.save()
+                continue
             if product:
                 item_copy = item.copy()
                 item_copy['product'] = product

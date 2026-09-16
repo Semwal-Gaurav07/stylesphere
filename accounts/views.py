@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.core.mail import send_mail
 from django.conf import settings
 from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
@@ -28,6 +29,8 @@ def register(request):
         return redirect('accounts:profile')
     
     next_url = request.GET.get('next') or request.POST.get('next') or 'store:product_list'
+    if next_url and not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+        next_url = 'store:product_list'
 
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
@@ -35,7 +38,7 @@ def register(request):
             new_user = form.save(commit=False)
             new_user.set_password(form.cleaned_data['password'])
             new_user.save()
-            Profile.objects.create(user=new_user)
+            Profile.objects.get_or_create(user=new_user)
             login(request, new_user)
             messages.success(request, f'Welcome, {new_user.username}! Your VIP account is active.')
             return redirect(next_url)
@@ -49,6 +52,8 @@ def user_login(request):
         return redirect('accounts:profile')
     
     next_url = request.GET.get('next') or request.POST.get('next') or 'store:product_list'
+    if next_url and not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+        next_url = 'store:product_list'
 
     if request.method == 'POST':
         identifier = request.POST.get('username', '').strip()
@@ -56,7 +61,7 @@ def user_login(request):
 
         if not identifier or not password:
             messages.error(request, 'Please enter both your username/email and password.')
-            return render(request, 'accounts/login.html', {'next': next_url})
+            return render(request, 'accounts/login.html', {'form': AuthenticationForm(), 'next': next_url})
 
         # 1. Authenticate directly by username
         user = authenticate(username=identifier, password=password)
@@ -86,10 +91,10 @@ def user_login(request):
     form = AuthenticationForm()
     return render(request, 'accounts/login.html', {'form': form, 'next': next_url})
 
-@login_required
 def user_logout(request):
-    logout(request)
-    messages.info(request, 'You have been logged out.')
+    if request.user.is_authenticated:
+        logout(request)
+        messages.info(request, 'You have been logged out.')
     return redirect('store:product_list')
 
 @login_required
@@ -103,6 +108,12 @@ def profile(request):
             p_form.save()
             messages.success(request, 'Shipping details updated successfully!')
             return redirect('accounts:profile')
+        else:
+            for form in [u_form, p_form]:
+                for field, errs in form.errors.items():
+                    for err in errs:
+                        field_label = form.fields[field].label if field in form.fields and form.fields[field].label else field.replace('_', ' ').title()
+                        messages.error(request, f'{field_label}: {err}')
     else:
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=profile)
@@ -341,7 +352,9 @@ def password_reset_view(request):
         elif post_step == '3':
             # Strict security check: User MUST have a verified OTP and session reset_step == 3
             current_session_step = int(request.session.get('reset_step', 1))
-            verified_otp_exists = user.reset_otps.filter(is_verified=True).exists() if user else False
+            from django.utils import timezone
+            now = timezone.now()
+            verified_otp_exists = user.reset_otps.filter(is_verified=True, created_at__gte=now - timedelta(minutes=15)).exists() if user else False
 
             if not user or current_session_step != 3 or not verified_otp_exists:
                 messages.error(request, 'Unauthorized password reset attempt. You must verify the OTP code first.')

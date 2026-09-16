@@ -40,8 +40,10 @@ def check_pincode_serviceability(pincode):
 def generate_admin_whatsapp_url(order):
     """
     Generates a WhatsApp notification link with full order details for the store admin.
-    Safe against missing phone numbers.
+    Safe against missing phone numbers and unsaved model instances.
     """
+    if not order or not getattr(order, 'pk', None):
+        return ''
     admin_number = getattr(settings, 'ADMIN_WHATSAPP_NUMBER', '919781855165')
     items_list = "\n".join([f"• {item.product.name} ({item.size}) x {item.quantity} - ₹{item.get_cost()}" for item in order.items.all()])
     cust_phone = getattr(order, 'phone_number', '') or 'Not provided'

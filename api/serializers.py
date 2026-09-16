@@ -75,6 +75,8 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         items_data = validated_data.pop('order_items', [])
+        if not items_data:
+            raise serializers.ValidationError({'order_items': 'At least one order item is required.'})
         from django.db import transaction
         from django.db.models import F
 
@@ -91,7 +93,9 @@ class OrderSerializer(serializers.ModelSerializer):
                 size_variant = product.variants.filter(size=size).first()
                 if size_variant:
                     rows = product.variants.filter(id=size_variant.id, stock__gte=qty).update(stock=F('stock') - qty)
-                    Product.objects.filter(id=product.id).update(stock=F('stock') - qty)
+                    # Safe non-negative sync for global counter
+                    Product.objects.filter(id=product.id, stock__gte=qty).update(stock=F('stock') - qty)
+                    Product.objects.filter(id=product.id, stock__lt=qty).update(stock=0)
                 else:
                     rows = Product.objects.filter(id=product.id, stock__gte=qty).update(stock=F('stock') - qty)
 

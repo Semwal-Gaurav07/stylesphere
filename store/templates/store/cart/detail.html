@@ -24,7 +24,7 @@
                         <span class="text-luxury-gold font-mono font-bold">₹0 FEE</span>
                     {% else %}
                         <span class="text-zinc-400 font-light flex items-center gap-2">
-                            <i class="bi bi-truck text-luxury-gold"></i> Add ₹{{ 999|stringformat:"d"|add:"-"|add:total|stringformat:"d" }} more to unlock Complimentary Shipping
+                            <i class="bi bi-truck text-luxury-gold"></i> Add ₹{{ cart.get_free_shipping_needed }} more to unlock Complimentary Shipping
                         </span>
                         <span class="text-zinc-500 font-mono text-[11px]">Threshold: ₹999</span>
                     {% endif %}
@@ -56,7 +56,7 @@
                             <input type="hidden" name="size" value="{{ item.size }}">
                             <input type="hidden" name="override" value="True">
                             <select name="quantity" onchange="this.form.submit()" class="py-1.5 px-3 rounded-lg bg-zinc-900 border border-zinc-800 text-xs font-semibold text-white focus:outline-none focus:border-luxury-gold">
-                                {% for q in "1,2,3,4,5"|make_list %}
+                                {% for q in "12345"|make_list %}
                                     <option value="{{ q }}" {% if item.quantity|stringformat:"s" == q %}selected{% endif %}>{{ q }}</option>
                                 {% endfor %}
                             </select>
