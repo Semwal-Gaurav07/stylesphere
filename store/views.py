@@ -171,6 +171,18 @@ def cart_add(request, product_id):
 
     cart.add(product=product, quantity=quantity, size=size, override_quantity=override)
 
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.POST.get('ajax') == '1':
+        return JsonResponse({
+            'status': 'ok',
+            'action': 'added',
+            'product_name': product.name,
+            'size': size,
+            'quantity': quantity,
+            'total_items': len(cart),
+            'total_price': float(cart.get_total_price()),
+            'message': f'Added {product.name} ({size}) to your bag.'
+        })
+
     if buy_now:
         return redirect('store:order_create')
     return redirect('store:cart_detail')
@@ -248,10 +260,18 @@ def wishlist_toggle(request, product_id):
     wishlist_item = Wishlist.objects.filter(user=request.user, product=product).first()
     if wishlist_item:
         wishlist_item.delete()
-        messages.info(request, f'Removed "{product.name}" from your Wishlist.')
+        action = 'removed'
+        msg = f'Removed "{product.name}" from your Wishlist.'
     else:
         Wishlist.objects.create(user=request.user, product=product)
-        messages.success(request, f'Added "{product.name}" to your Wishlist!')
+        action = 'added'
+        msg = f'Added "{product.name}" to your Wishlist!'
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.GET.get('ajax') == '1':
+        total = Wishlist.objects.filter(user=request.user).count()
+        return JsonResponse({'status': 'ok', 'action': action, 'message': msg, 'total_wishlist': total})
+
+    messages.info(request, msg)
     referer = request.META.get('HTTP_REFERER')
     return redirect(referer if referer else 'store:product_list')
 

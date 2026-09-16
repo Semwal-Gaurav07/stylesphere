@@ -50,17 +50,20 @@
 
             <!-- Subdued Luxury Fabric Badges -->
             <div class="absolute top-3.5 left-3.5 sm:top-5 sm:left-5 flex flex-col gap-1.5 sm:gap-2 z-10">
-                <span class="px-3 py-1 rounded-md bg-black/80 border border-white/10 text-xs font-mono font-bold tracking-wider text-zinc-200 backdrop-blur-md">
-                    {{ product.gsm }} GSM HEAVYWEIGHT
-                </span>
+                <button type="button" onclick="openFabricInspector('{{ product.name|escapejs }}', {{ product.gsm|default:240 }})" 
+                        class="px-3 py-1 rounded-md bg-black/90 hover:bg-zinc-900 border border-luxury-gold/50 hover:border-luxury-gold text-xs font-mono font-bold tracking-wider text-luxury-gold hover:text-white backdrop-blur-md transition-all flex items-center gap-1.5 shadow-lg">
+                    <i class="bi bi-eye text-xs text-luxury-gold"></i>
+                    <span>{{ product.gsm|default:"240" }} GSM WEAVE INSPECT →</span>
+                </button>
                 <span class="px-3 py-1 rounded-md bg-black/80 border border-white/10 text-xs font-mono font-bold tracking-wider text-luxury-gold backdrop-blur-md">
                     {{ product.print_type }}
                 </span>
             </div>
 
-            <!-- Wishlist Button -->
+            <!-- Wishlist Button (AJAX) -->
             <a href="{% url 'store:wishlist_toggle' product.id %}" 
-               class="absolute top-3.5 right-3.5 sm:top-5 sm:right-5 w-8 h-8 sm:w-10 sm:h-10 z-10 rounded-full bg-black/80 border border-zinc-800 text-zinc-400 hover:text-luxury-gold flex items-center justify-center text-base backdrop-blur-md transition-all hover:scale-110">
+               onclick="toggleWishlistAjax(event, {{ product.id }}, '{% url 'store:wishlist_toggle' product.id %}')"
+               class="absolute top-3.5 right-3.5 sm:top-5 sm:right-5 w-8 h-8 sm:w-10 sm:h-10 z-10 rounded-full bg-black/80 border border-zinc-800 text-zinc-400 hover:text-luxury-gold flex items-center justify-center text-base backdrop-blur-md transition-all hover:scale-110 shadow-lg">
                 {% if in_wishlist %}
                     <i class="bi bi-heart-fill text-luxury-gold"></i>
                 {% else %}
@@ -150,7 +153,7 @@
         </div>
 
         <!-- Purchase & Size Selection Form (S, M, L, XL, XXL) -->
-        <form action="{% url 'store:cart_add' product.id %}" method="post" id="luxuryBuyForm" class="space-y-6">
+        <form action="{% url 'store:cart_add' product.id %}" method="post" id="luxuryBuyForm" onsubmit="addToBagAjax(event, this)" class="space-y-6">
             {% csrf_token %}
 
             <!-- Size Selector with Size Chart -->
@@ -195,6 +198,28 @@
                         </div>
                     </label>
                 </div>
+            </div>
+
+            <!-- Interactive Boxy Fit Silhouette Simulator -->
+            <div class="p-4 rounded-2xl bg-[#111114] border border-white/5 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-mono uppercase text-zinc-400 tracking-wider">SILHOUETTE DRAPE SELECTOR</span>
+                    <span id="recommendedSizeDisplay" class="text-[10px] font-mono text-luxury-gold font-bold">RECOMMENDED: L (SIGNATURE)</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <button type="button" id="fitBtn_clean" onclick="selectFitSilhouette('clean')" class="silhouette-toggle-btn py-2 px-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-400 hover:text-white transition-all text-center">
+                        Clean Street
+                    </button>
+                    <button type="button" id="fitBtn_boxy" onclick="selectFitSilhouette('boxy')" class="silhouette-toggle-btn py-2 px-2.5 rounded-xl bg-white text-black font-bold text-[11px] font-mono shadow transition-all text-center">
+                        Boxy Drape ★
+                    </button>
+                    <button type="button" id="fitBtn_baggy" onclick="selectFitSilhouette('baggy')" class="silhouette-toggle-btn py-2 px-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-400 hover:text-white transition-all text-center">
+                        Runway Baggy
+                    </button>
+                </div>
+                <p id="silhouetteNote" class="text-[11px] text-zinc-400 font-light leading-relaxed">
+                    <strong>Signature Atelier Boxy Drape:</strong> 2.5-inch dropped shoulder with wide chest box. True to modern luxury oversized proportions.
+                </p>
             </div>
 
             <!-- Action Buttons: Add to Bag & Instant Checkout -->

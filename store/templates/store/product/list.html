@@ -202,35 +202,50 @@
                     {% if category %}{{ category.name }}{% else %}Featured Releases{% endif %}
                 </h2>
             </div>
-            <div class="text-xs text-zinc-400 font-mono">
-                Showing <span class="text-white font-bold">{{ products|length }}</span> curated silhouettes
+            <div class="flex items-center gap-3">
+                <span class="text-xs text-zinc-400 font-mono hidden sm:inline">
+                    <span class="text-white font-bold">{{ products|length }}</span> Pieces
+                </span>
+                <!-- Lookbook Grid vs Runway View Switcher -->
+                <div class="inline-flex p-1 rounded-xl bg-zinc-900/90 border border-zinc-800">
+                    <button id="viewGridBtn" type="button" onclick="setCatalogView('grid')" class="px-3 py-1.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-all bg-white text-black font-bold shadow-md">
+                        <i class="bi bi-grid-fill mr-1"></i> Lookbook
+                    </button>
+                    <button id="viewRunwayBtn" type="button" onclick="setCatalogView('runway')" class="px-3 py-1.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-all text-zinc-400 hover:text-white">
+                        <i class="bi bi-view-stacked mr-1"></i> Runway
+                    </button>
+                </div>
             </div>
         </div>
 
         <!-- Product Cards Grid -->
-        <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-6 lg:gap-8">
+        <div id="piecesCatalogGrid" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-6 lg:gap-8">
             {% for product in products %}
-                <div class="luxury-card rounded-2xl overflow-hidden flex flex-col group relative">
+                <div class="luxury-card spotlight-card rounded-2xl overflow-hidden flex flex-col group relative">
                     
                     <!-- Portrait Image Frame (4:5 Ratio) -->
                     <div class="relative w-full aspect-[4/5] bg-[#0d0d10] p-3 sm:p-5 flex items-center justify-center overflow-hidden border-b border-zinc-800/60">
                         
-                        <!-- Badges -->
-                        <div class="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 pointer-events-none flex items-center gap-1 sm:gap-1.5 z-10">
-                            <span class="px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded bg-zinc-900/90 border border-zinc-800 text-[8px] sm:text-[9px] font-mono tracking-wider text-zinc-400">
-                                {{ product.gsm|default:"240" }} GSM
-                            </span>
+                        <!-- Badges & Interactive Fabric Inspector -->
+                        <div class="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 flex items-center gap-1 sm:gap-1.5 z-10">
+                            <button type="button" onclick="openFabricInspector('{{ product.name|escapejs }}', {{ product.gsm|default:240 }})" 
+                                    class="px-2 py-0.5 rounded bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800 hover:border-luxury-gold/50 text-[8px] sm:text-[9px] font-mono tracking-wider text-zinc-300 hover:text-luxury-gold transition-colors flex items-center gap-1 shadow" 
+                                    title="Inspect 240+ GSM Textile Weave">
+                                <i class="bi bi-eye text-[8px] text-luxury-gold"></i>
+                                <span>{{ product.gsm|default:"240" }} GSM</span>
+                            </button>
                             {% if product.stock <= 0 or not product.available %}
-                                <span class="px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded bg-zinc-950/95 border border-zinc-700 text-[8px] sm:text-[9px] font-mono tracking-wider text-rose-400 font-bold">
+                                <span class="px-1.5 py-0.5 rounded bg-zinc-950/95 border border-zinc-700 text-[8px] sm:text-[9px] font-mono tracking-wider text-rose-400 font-bold">
                                     SOLD OUT
                                 </span>
                             {% endif %}
                         </div>
 
-                        <!-- Wishlist Toggle Button -->
+                        <!-- Zero-Reload AJAX Wishlist Button -->
                         <a href="{% url 'store:wishlist_toggle' product.id %}" 
-                           class="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-luxury-gold flex items-center justify-center text-[11px] sm:text-xs transition-colors z-10" 
-                           title="Save to Wishlist">
+                           onclick="toggleWishlistAjax(event, {{ product.id }}, '{% url 'store:wishlist_toggle' product.id %}')"
+                           class="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-luxury-gold flex items-center justify-center text-[11px] sm:text-xs transition-all z-10 shadow" 
+                           title="Save Piece to Archive">
                             <i class="bi bi-heart"></i>
                         </a>
 

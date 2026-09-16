@@ -217,6 +217,25 @@
         .cat-bubble.active .cat-bubble-text {
             color: #ffffff;
         }
+    
+        /* Boutique Cursor-Following Spotlight Glow */
+        .spotlight-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .spotlight-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(450px circle at var(--mouse-x, -500px) var(--mouse-y, -500px), rgba(212, 175, 55, 0.12), transparent 45%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 5;
+        }
+        .spotlight-card:hover::before {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-luxury-black text-luxury-platinum antialiased min-h-screen flex flex-col justify-between selection:bg-luxury-gold selection:text-black pb-16 md:pb-0">
@@ -319,7 +338,7 @@
                         <i class="bi bi-bag text-base"></i>
                         {% with total_items=cart|length %}
                             {% if total_items > 0 %}
-                                <span class="bg-luxury-gold text-black text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center -ml-1">
+                                <span class="bg-luxury-gold text-black text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center -ml-1 bag-counter-badge">
                                     {{ total_items }}
                                 </span>
                             {% endif %}
@@ -720,7 +739,7 @@
             <span>Bag</span>
             {% with total_items=cart|length %}
                 {% if total_items > 0 %}
-                    <span class="absolute -top-1 right-2 w-3.5 h-3.5 rounded-full bg-luxury-gold text-black text-[9px] font-black flex items-center justify-center">
+                    <span class="absolute -top-1 right-2 w-3.5 h-3.5 rounded-full bg-luxury-gold text-black text-[9px] font-black flex items-center justify-center bag-counter-badge">
                         {{ total_items }}
                     </span>
                 {% endif %}
@@ -739,5 +758,14 @@
         {% endif %}
     </nav>
 
+
+    <!-- Interactive Fabric Weave Inspector Modal Component -->
+    {% include "store/components/fabric_inspector_modal.html" %}
+
+    <!-- Luxury Floating Toast Notification System -->
+    {% include "store/components/toast_system.html" %}
+
+    <!-- Master Interactive Atelier Script -->
+    <script src="{% static 'js/atelier.js' %}"></script>
 </body>
 </html>
