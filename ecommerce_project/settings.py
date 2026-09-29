@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
     
     # Third-Party
     'rest_framework',
@@ -278,3 +279,32 @@ if not DEBUG:
 MERCHANT_UPI_ID = os.environ.get('MERCHANT_UPI_ID', 'stylesphere@upi')
 MERCHANT_PHONE_NUMBER = os.environ.get('MERCHANT_PHONE_NUMBER', '+91 9781855165')
 ADMIN_WHATSAPP_NUMBER = os.environ.get('ADMIN_WHATSAPP_NUMBER', '919781855165')
+
+
+# -----------------------------------------------------------------------------
+# Caching Architecture (Redis with automatic In-Memory LocMem fallback)
+# -----------------------------------------------------------------------------
+REDIS_URL = os.environ.get('REDIS_URL', '').strip()
+if REDIS_URL:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': REDIS_URL,
+            'TIMEOUT': 300,
+        }
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'stylesphere-luxury-cache',
+            'TIMEOUT': 300,
+        }
+    }
+
+# -----------------------------------------------------------------------------
+# Security Headers & Content Sniffing Protection
+# -----------------------------------------------------------------------------
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'

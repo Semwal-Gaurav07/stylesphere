@@ -44,6 +44,17 @@ def product_list(request, category_slug=None):
     if fit_filter:
         products = products.filter(fit_type__icontains=fit_filter)
 
+    gsm_filter = request.GET.get('gsm')
+    if gsm_filter:
+        try:
+            products = products.filter(gsm=int(gsm_filter))
+        except (ValueError, TypeError):
+            pass
+
+    size_filter = request.GET.get('size')
+    if size_filter:
+        products = products.filter(variants__size__iexact=size_filter, variants__stock__gt=0).distinct()
+
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
     if min_price:
@@ -106,20 +117,25 @@ def product_list(request, category_slug=None):
         'rating_filter': rating_filter,
         'print_filter': print_filter,
         'fit_filter': fit_filter,
+        'gsm_filter': gsm_filter,
+        'size_filter': size_filter,
         'user_wishlist_ids': user_wishlist_ids
     })
 
 def product_detail(request, id, slug):
-    product = Product.objects.filter(id=id, slug=slug, available=True).first()
+    queryset = Product.objects.filter(available=True).select_related('category').prefetch_related('images', 'variants', 'reviews__user')
+    product = queryset.filter(id=id, slug=slug).first()
     if not product:
-        product = Product.objects.filter(slug=slug, available=True).first()
+        product = queryset.filter(slug=slug).first()
     if not product:
-        product = get_object_or_404(Product, id=id, available=True)
+        product = get_object_or_404(queryset, id=id)
 
-    related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
+    related_products = Product.objects.filter(category=product.category, available=True).exclude(id=product.id).select_related('category').prefetch_related('images')[:4]
     cart_product_form = CartAddProductForm()
     review_form = ReviewForm()
-    reviews = product.reviews.all()
+    reviews = product.reviews.select_related('user').all()
+    avg_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 5.0
+    
     in_wishlist = False
     if request.user.is_authenticated:
         in_wishlist = Wishlist.objects.filter(user=request.user, product=product).exists()
@@ -134,6 +150,7 @@ def product_detail(request, id, slug):
         'cart_product_form': cart_product_form,
         'review_form': review_form,
         'reviews': reviews,
+        'avg_rating': avg_rating,
         'in_wishlist': in_wishlist,
         'delivery_date': delivery_date
     })
@@ -285,20 +302,18 @@ def order_create(request):
     if len(cart) == 0:
         return redirect('store:product_list')
 
-    if not request.user.is_authenticated:
-        messages.info(request, 'Please sign in or create an account to complete your printed t-shirt order.')
-        return redirect('/accounts/register/?next=/orders/create/')
-
-    profile, _ = Profile.objects.get_or_create(user=request.user)
-    initial_data = {
-        'first_name': request.user.first_name,
-        'last_name': request.user.last_name,
-        'email': request.user.email,
-        'phone_number': profile.phone_number,
-        'address': profile.address,
-        'city': profile.city,
-        'postal_code': profile.postal_code,
-    }
+    initial_data = {}
+    if request.user.is_authenticated:
+        profile, _ = Profile.objects.get_or_create(user=request.user)
+        initial_data = {
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+            'email': request.user.email,
+            'phone_number': profile.phone_number,
+            'address': profile.address,
+            'city': profile.city,
+            'postal_code': profile.postal_code,
+        }
 
     coupon_id = request.session.get('coupon_id')
     discount = 0
@@ -320,7 +335,10 @@ def order_create(request):
         if form.is_valid():
             with transaction.atomic():
                 order = form.save(commit=False)
-                order.user = request.user
+                if request.user.is_authenticated:
+                    order.user = request.user
+                else:
+                    order.user = None
                 order.discount = discount
                 order.awb_code = f"SS-EXP-{random.randint(100000, 999999)}"
                 order.tracking_number = order.awb_code
@@ -329,13 +347,15 @@ def order_create(request):
                 if coupon:
                     Coupon.objects.filter(id=coupon.id).update(used_count=F('used_count') + 1)
 
-                if not profile.address:
-                    profile.address = order.address
-                    profile.city = order.city
-                    profile.postal_code = order.postal_code
-                if not profile.phone_number and order.phone_number:
-                    profile.phone_number = order.phone_number
-                profile.save()
+                if request.user.is_authenticated:
+                    profile, _ = Profile.objects.get_or_create(user=request.user)
+                    if not profile.address:
+                        profile.address = order.address
+                        profile.city = order.city
+                        profile.postal_code = order.postal_code
+                    if not profile.phone_number and order.phone_number:
+                        profile.phone_number = order.phone_number
+                    profile.save()
 
                 from django.db.models import F
                 insufficient_stock = False
@@ -398,10 +418,18 @@ def order_create(request):
 
 @login_required
 def order_invoice(request, order_id):
+    queryset = Order.objects.prefetch_related('items__product')
     if request.user.is_staff:
-        order = get_object_or_404(Order, id=order_id)
+        order = get_object_or_404(queryset, id=order_id)
+    elif request.user.is_authenticated:
+        order = get_object_or_404(queryset, id=order_id, user=request.user)
     else:
-        order = get_object_or_404(Order, id=order_id, user=request.user)
+        session_order_id = request.session.get('order_id')
+        if session_order_id and str(session_order_id) == str(order_id):
+            order = get_object_or_404(queryset, id=order_id)
+        else:
+            messages.info(request, 'Please sign in to access your order invoice.')
+            return redirect('accounts:login')
     return render(request, 'store/orders/invoice.html', {'order': order})
 
 @user_passes_test(lambda u: u.is_staff)

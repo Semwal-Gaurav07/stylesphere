@@ -27,6 +27,7 @@ Create an environment configuration on your hosting provider (e.g. Render Dashbo
 | `CLOUDINARY_CLOUD_NAME` | Cloudinary Cloud Name (Optional) | `stylesphere-atelier` |
 | `CLOUDINARY_API_KEY` | Cloudinary API Key | `...` |
 | `CLOUDINARY_API_SECRET` | Cloudinary Secret | `...` |
+| `REDIS_URL` | Redis Cache Instance URL (Optional) | `rediss://default:pass@redis-host:6379` |
 
 ---
 

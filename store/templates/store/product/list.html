@@ -218,6 +218,87 @@
             </div>
         </div>
 
+                <!-- Faceted Merchandising & Attribute Filter Controls -->
+        <div class="luxury-card rounded-2xl p-4 sm:p-5 border border-zinc-800/80 bg-zinc-950/60 backdrop-blur-md">
+            <form method="get" action="" class="space-y-4">
+                {% if query %}
+                    <input type="hidden" name="q" value="{{ query }}">
+                {% endif %}
+                {% if category %}
+                    <input type="hidden" name="category" value="{{ category.slug }}">
+                {% endif %}
+
+                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                    <!-- Sort Selection -->
+                    <div>
+                        <label class="text-[10px] font-mono tracking-widest text-zinc-400 uppercase block mb-1.5">Sort Sequence</label>
+                        <select name="sort" onchange="this.form.submit()" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-luxury-gold transition-colors">
+                            <option value="newest" {% if sort == 'newest' or not sort %}selected{% endif %}>Latest Releases</option>
+                            <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                            <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                        </select>
+                    </div>
+
+                    <!-- Fabric Weight (GSM) -->
+                    <div>
+                        <label class="text-[10px] font-mono tracking-widest text-zinc-400 uppercase block mb-1.5">Fabric Weight</label>
+                        <select name="gsm" onchange="this.form.submit()" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-luxury-gold transition-colors">
+                            <option value="" {% if not gsm_filter %}selected{% endif %}>All GSM Weights</option>
+                            <option value="240" {% if gsm_filter == '240' %}selected{% endif %}>240 GSM (Midweight)</option>
+                            <option value="260" {% if gsm_filter == '260' %}selected{% endif %}>260 GSM (Heavyweight)</option>
+                            <option value="280" {% if gsm_filter == '280' %}selected{% endif %}>280 GSM (Ultra-Heavy)</option>
+                            <option value="320" {% if gsm_filter == '320' %}selected{% endif %}>320 GSM (Winter French Terry)</option>
+                        </select>
+                    </div>
+
+                    <!-- Silhouette Fit Type -->
+                    <div>
+                        <label class="text-[10px] font-mono tracking-widest text-zinc-400 uppercase block mb-1.5">Silhouette Fit</label>
+                        <select name="fit_type" onchange="this.form.submit()" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-luxury-gold transition-colors">
+                            <option value="" {% if not fit_filter %}selected{% endif %}>All Fits</option>
+                            <option value="Oversized" {% if 'Oversized' in fit_filter|default:'' %}selected{% endif %}>Oversized Drop Shoulder</option>
+                            <option value="Boxy" {% if 'Boxy' in fit_filter|default:'' %}selected{% endif %}>Boxy Streetwear Fit</option>
+                            <option value="Relaxed" {% if 'Relaxed' in fit_filter|default:'' %}selected{% endif %}>Relaxed Fit</option>
+                        </select>
+                    </div>
+
+                    <!-- Print Craft -->
+                    <div>
+                        <label class="text-[10px] font-mono tracking-widest text-zinc-400 uppercase block mb-1.5">Artisan Print</label>
+                        <select name="print_type" onchange="this.form.submit()" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-luxury-gold transition-colors">
+                            <option value="" {% if not print_filter %}selected{% endif %}>All Print Crafts</option>
+                            <option value="Puff" {% if 'Puff' in print_filter|default:'' %}selected{% endif %}>High-Density Puff Print</option>
+                            <option value="DTG" {% if 'DTG' in print_filter|default:'' %}selected{% endif %}>Ultra-HD DTG Print</option>
+                            <option value="Distressed" {% if 'Distressed' in print_filter|default:'' %}selected{% endif %}>Vintage Distressed</option>
+                            <option value="Neon" {% if 'Neon' in print_filter|default:'' %}selected{% endif %}>Reflective Neon</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Active Filter Tags & Clear Filters Button -->
+                {% if gsm_filter or fit_filter or print_filter or sort or query %}
+                    <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-zinc-900 text-xs">
+                        <span class="text-[10px] font-mono uppercase text-zinc-500">Active Criteria:</span>
+                        {% if query %}
+                            <span class="px-2 py-0.5 rounded-md bg-zinc-900 text-zinc-300 text-[11px] font-mono">Query: "{{ query }}"</span>
+                        {% endif %}
+                        {% if gsm_filter %}
+                            <span class="px-2 py-0.5 rounded-md bg-zinc-900 text-amber-300 text-[11px] font-mono">{{ gsm_filter }} GSM</span>
+                        {% endif %}
+                        {% if fit_filter %}
+                            <span class="px-2 py-0.5 rounded-md bg-zinc-900 text-emerald-300 text-[11px] font-mono">{{ fit_filter }}</span>
+                        {% endif %}
+                        {% if print_filter %}
+                            <span class="px-2 py-0.5 rounded-md bg-zinc-900 text-purple-300 text-[11px] font-mono">{{ print_filter }}</span>
+                        {% endif %}
+                        <a href="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'store:product_list' %}{% endif %}" class="ml-auto text-[11px] text-zinc-400 hover:text-white underline font-mono">
+                            Reset All Filters
+                        </a>
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+
         <!-- Product Cards Grid -->
         <div id="piecesCatalogGrid" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-6 lg:gap-8">
             {% for product in products %}

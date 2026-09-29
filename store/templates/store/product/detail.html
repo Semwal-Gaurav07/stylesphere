@@ -22,6 +22,41 @@
 
 {% endblock %}
 
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.name|escapejs }}",
+  "image": [
+    "{{ product.image_url }}"
+  ],
+  "description": "{{ product.description|striptags|truncatewords:35|escapejs }}",
+  "sku": "STYLE-{{ product.id }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "StyleSphere Atelier"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ request.build_absolute_uri }}",
+    "priceCurrency": "INR",
+    "price": "{{ product.price }}",
+    "itemCondition": "https://schema.org/NewCondition",
+    "availability": "{% if product.available and product.stock > 0 %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+  }
+  {% if reviews %}
+  ,
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{ avg_rating|default:5.0|floatformat:1 }}",
+    "reviewCount": "{{ reviews|length }}"
+  }
+  {% endif %}
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <!-- Minimalist Breadcrumb -->
 <nav class="flex items-center gap-2.5 text-xs sm:text-sm font-mono uppercase tracking-wider text-zinc-400 mb-8 overflow-x-auto whitespace-nowrap py-1">

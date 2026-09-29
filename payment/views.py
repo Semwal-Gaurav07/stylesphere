@@ -132,10 +132,11 @@ def payment_verify(request):
                 verified = False
 
             if verified:
-                order.paid = True
-                order.payment_method = f"Razorpay Verified (Payment ID: {payment_id})"
-                order.status = 'Placed'
-                order.save()
+                with transaction.atomic():
+                    order.paid = True
+                    order.payment_method = f"Razorpay Verified (Payment ID: {payment_id})"
+                    order.status = 'Placed'
+                    order.save()
                 send_order_confirmation_email(order)
                 request.session['order_id'] = order.id
                 messages.success(request, 'Payment verified successfully! Your order has been placed.')

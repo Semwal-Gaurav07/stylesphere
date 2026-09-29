@@ -21,6 +21,18 @@
                     <p class="text-xs text-zinc-400 mt-1 font-light">Please enter your verified delivery address for secure courier dispatch.</p>
                 </div>
 
+                                {% if not request.user.is_authenticated %}
+                    <div class="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                        <div class="flex items-center gap-2 text-zinc-300">
+                            <i class="bi bi-person-check text-amber-400"></i>
+                            <span>Checking out as <strong>Guest Client</strong>.</span>
+                        </div>
+                        <a href="{% url 'accounts:login' %}?next={% url 'store:order_create' %}" class="text-[11px] font-mono text-amber-400 hover:text-white underline">
+                            Sign In to Use Saved Address →
+                        </a>
+                    </div>
+                {% endif %}
+
                 <form method="post" class="space-y-4" id="checkoutForm">
                     {% csrf_token %}
 
