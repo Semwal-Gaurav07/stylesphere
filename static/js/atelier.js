@@ -518,7 +518,7 @@ function initLiveSearchAutocomplete() {
                             suggestionBox.innerHTML = '<div class="p-3 text-xs text-zinc-500 text-center font-mono">No matching editions found</div>';
                         } else {
                             suggestionBox.innerHTML = results.slice(0, 5).map(p => `
-                                <a href="/${p.id}/${p.slug}/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-zinc-900 transition-all text-left group">
+                                <a href="/product/${p.id}/${p.slug}/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-zinc-900 transition-all text-left group">
                                     <div class="w-10 h-10 rounded bg-zinc-800 overflow-hidden flex-shrink-0">
                                         ${p.image ? `<img src="${p.image}" class="w-full h-full object-cover">` : '<div class="w-full h-full flex items-center justify-center text-[10px] text-zinc-500">No Img</div>'}
                                     </div>
@@ -550,6 +550,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initTextileLoupe();
     initExitIntentPrivilege();
     initLiveSearchAutocomplete();
+    initFlashSaleTimer();
 
     // Hook size buttons to sensory click
     document.querySelectorAll('.size-selector-btn, .size-pill, button, a[href*="add"]').forEach(el => {
@@ -567,3 +568,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// --- 14. Flash Sale Live Countdown Timer ---
+function initFlashSaleTimer() {
+    const timerEl = document.getElementById('flashSaleTimer');
+    if (!timerEl) return;
+
+    let totalSeconds = 5 * 3600 + 38 * 60 + 42;
+    setInterval(() => {
+        if (totalSeconds > 0) totalSeconds--;
+        const h = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+        const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+        const s = String(totalSeconds % 60).padStart(2, '0');
+        timerEl.innerText = `${h}h : ${m}m : ${s}s`;
+    }, 1000);
+}
