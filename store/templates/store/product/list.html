@@ -32,62 +32,220 @@
     </div>
 
 
-    <!-- 1. EDITORIAL HERO BANNER (Ventora Inspired with Dual CTA) -->
-    <section class="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#16161a] via-[#0f0f12] to-[#09090b] border border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
-        <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[460px] sm:min-h-[540px]">
+    <!-- 1. MYNTRA-STYLE DYNAMIC HERO BANNER CAROUSEL & CAMPAIGN SHOWCASE -->
+    <section class="relative rounded-3xl overflow-hidden border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.85)] bg-[#0c0c0f]" id="heroCarouselContainer">
+        
+        <!-- Slides Wrapper -->
+        <div id="heroCarouselTrack" class="relative w-full min-h-[440px] sm:min-h-[520px] lg:min-h-[560px]">
             
-            <!-- Left Content Area -->
-            <div class="lg:col-span-7 p-6 sm:p-12 md:p-16 flex flex-col justify-center space-y-6 relative z-10">
-                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-zinc-900/90 border border-luxury-gold/30 text-luxury-gold text-[10px] font-mono uppercase tracking-[0.22em] w-fit">
-                    <span class="w-1.5 h-1.5 rounded-full bg-luxury-gold animate-pulse"></span>
-                    NEW SEASON DROP • 240+ GSM
-                </div>
+            <!-- Slide 1: Streetwear Festival -->
+            <div class="hero-slide absolute inset-0 transition-opacity duration-700 ease-in-out opacity-100 z-10 flex items-center bg-gradient-to-r from-black via-black/80 to-transparent">
+                <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=1600&auto=format&fit=crop&q=85" 
+                     alt="Heavyweight Streetwear Festival" 
+                     class="absolute inset-0 w-full h-full object-cover object-center lg:object-right opacity-40 mix-blend-luminosity">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent"></div>
 
-                <div class="space-y-3">
-                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-luxury font-black text-white tracking-tight leading-[1.1]">
-                        TIMELESS STYLE. <br>
-                        <span class="gold-gradient-text">MODERN LIVING.</span>
-                    </h1>
-                    <p class="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed max-w-lg">
-                        Curated heavyweight French Terry silhouettes for every moment. Engineered with dropped shoulders, bio-washed permanence, and zero-crack graphic pigments.
-                    </p>
-                </div>
+                <div class="relative z-20 max-w-2xl px-6 sm:px-12 lg:px-16 py-10 space-y-5">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400 text-black font-extrabold text-[10px] tracking-widest uppercase shadow-lg">
+                        <i class="bi bi-lightning-charge-fill"></i> GRAND DROP FESTIVAL
+                    </div>
 
-                <!-- Dual Action Buttons (Ventora Signature) -->
-                <div class="flex flex-wrap items-center gap-3 pt-2">
-                    <a href="#piecesCatalog" class="px-6 sm:px-8 py-3.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold uppercase tracking-[0.18em] flex items-center gap-2 shadow-xl active:scale-95 transition-all">
-                        <span>Shop Collection</span>
-                        <i class="bi bi-arrow-right text-sm"></i>
-                    </a>
-                    <a href="{% url 'store:product_list' %}?q=Oversized" class="px-6 sm:px-8 py-3.5 rounded-xl bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 hover:text-white text-xs font-semibold uppercase tracking-[0.18em] flex items-center gap-2 transition-all">
-                        <span>Explore New In</span>
-                        <span class="text-luxury-gold font-mono text-[10px]">→</span>
-                    </a>
-                </div>
+                    <div class="space-y-2">
+                        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-luxury font-black text-white tracking-tight leading-[1.05]">
+                            HEAVYWEIGHT <br>
+                            <span class="gold-gradient-text">STREETWEAR DROP.</span>
+                        </h1>
+                        <p class="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed max-w-lg">
+                            240+ GSM French Terry cotton with 0.8mm 3D puff pigments. Oversized drop-shoulder silhouettes designed for effortless drape.
+                        </p>
+                    </div>
 
-                <!-- Micro Stats Strip -->
-                <div class="pt-6 border-t border-white/[0.08] flex items-center gap-6 text-xs text-zinc-400 font-mono">
-                    <div><strong class="text-white font-sans text-sm">240+</strong> GSM</div>
-                    <div class="w-1 h-1 rounded-full bg-zinc-700"></div>
-                    <div><strong class="text-white font-sans text-sm">100%</strong> Bio-Wash Cotton</div>
-                    <div class="w-1 h-1 rounded-full bg-zinc-700"></div>
-                    <div><strong class="text-luxury-gold font-sans text-sm">10,000+</strong> Clients</div>
+                    <!-- Price & Discount Ribbon -->
+                    <div class="flex items-center gap-3 pt-1">
+                        <div class="px-4 py-2 rounded-xl bg-rose-600/90 border border-rose-500/50 text-white font-extrabold text-sm sm:text-base tracking-wide shadow-lg">
+                            FLAT 50% - 70% OFF
+                        </div>
+                        <span class="text-xs sm:text-sm font-mono text-amber-300 font-medium">Starting at ₹699</span>
+                    </div>
+
+                    <!-- CTAs -->
+                    <div class="flex flex-wrap items-center gap-3 pt-2">
+                        <a href="#piecesCatalog" class="px-7 py-3.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-2xl active:scale-95 transition-all">
+                            <span>Shop The Festival</span>
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                        <a href="{% url 'store:product_list' %}?gsm=240" class="px-6 py-3.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 hover:text-white text-xs font-semibold uppercase tracking-wider flex items-center gap-2 transition-all">
+                            <span>Explore 240+ GSM</span>
+                            <span class="text-amber-400 font-mono">→</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 
-            <!-- Right Visual Banner Area -->
-            <div class="lg:col-span-5 relative bg-[#0b0b0e] overflow-hidden flex items-center justify-center p-6 border-t lg:border-t-0 lg:border-l border-white/[0.08]">
-                <div class="absolute inset-0 bg-radial-gradient from-luxury-gold/5 via-transparent to-transparent pointer-events-none"></div>
-                <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=85" 
-                     alt="Style Sphere Atelier Piece" 
-                     class="w-full h-full object-cover rounded-2xl opacity-90 hover:scale-105 transition-transform duration-700 ease-out" loading="lazy">
-                <span class="absolute bottom-4 right-4 px-3 py-1 rounded-lg bg-black/80 backdrop-blur-md border border-white/10 text-[10px] font-mono text-zinc-300">
-                    LOOKBOOK VOL. IV
-                </span>
+            <!-- Slide 2: Neo-Tokyo Graphic Archive -->
+            <div class="hero-slide absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 z-0 flex items-center bg-gradient-to-r from-black via-black/80 to-transparent pointer-events-none">
+                <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=1600&auto=format&fit=crop&q=85" 
+                     alt="Neo-Tokyo Graphic Archive" 
+                     class="absolute inset-0 w-full h-full object-cover object-center lg:object-right opacity-35 mix-blend-luminosity">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent"></div>
+
+                <div class="relative z-20 max-w-2xl px-6 sm:px-12 lg:px-16 py-10 space-y-5">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500 text-white font-extrabold text-[10px] tracking-widest uppercase shadow-lg">
+                        <i class="bi bi-brush-fill"></i> ANIME & CYBER EDITION
+                    </div>
+
+                    <div class="space-y-2">
+                        <h2 class="text-3xl sm:text-5xl lg:text-6xl font-luxury font-black text-white tracking-tight leading-[1.05]">
+                            NEO-TOKYO <br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300">GRAPHIC ARCHIVE.</span>
+                        </h2>
+                        <p class="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed max-w-lg">
+                            Bespoke manga panels and distressed screen prints. Ultra-HD Japanese typography printed on bio-washed heavyweight cotton.
+                        </p>
+                    </div>
+
+                    <div class="flex items-center gap-3 pt-1">
+                        <div class="px-4 py-2 rounded-xl bg-purple-600/90 border border-purple-500/50 text-white font-extrabold text-sm sm:text-base tracking-wide shadow-lg">
+                            BUY 2 GET 10% OFF
+                        </div>
+                        <span class="text-xs sm:text-sm font-mono text-purple-300 font-medium">Use Code: ATELIER10</span>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-3 pt-2">
+                        <a href="{% url 'store:product_list' %}?q=Anime" class="px-7 py-3.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-2xl active:scale-95 transition-all">
+                            <span>View Anime Drops</span>
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                        <a href="{% url 'store:product_list' %}?print_type=DTG" class="px-6 py-3.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 hover:text-white text-xs font-semibold uppercase tracking-wider flex items-center gap-2 transition-all">
+                            <span>Ultra-HD DTG</span>
+                            <span class="text-purple-400 font-mono">→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Boxy Oversized Essentials -->
+            <div class="hero-slide absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 z-0 flex items-center bg-gradient-to-r from-black via-black/80 to-transparent pointer-events-none">
+                <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=1600&auto=format&fit=crop&q=85" 
+                     alt="Boxy Oversized Essentials" 
+                     class="absolute inset-0 w-full h-full object-cover object-center lg:object-right opacity-35 mix-blend-luminosity">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent"></div>
+
+                <div class="relative z-20 max-w-2xl px-6 sm:px-12 lg:px-16 py-10 space-y-5">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500 text-black font-extrabold text-[10px] tracking-widest uppercase shadow-lg">
+                        <i class="bi bi-stars"></i> EVERYDAY ESSENTIALS
+                    </div>
+
+                    <div class="space-y-2">
+                        <h2 class="text-3xl sm:text-5xl lg:text-6xl font-luxury font-black text-white tracking-tight leading-[1.05]">
+                            MINIMALIST <br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300">BOXY SILHOUETTES.</span>
+                        </h2>
+                        <p class="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed max-w-lg">
+                            Understated street tailoring. Seamless rib collar construction that never curls, with heavy 280 GSM mineral wash cotton.
+                        </p>
+                    </div>
+
+                    <div class="flex items-center gap-3 pt-1">
+                        <div class="px-4 py-2 rounded-xl bg-emerald-600/90 border border-emerald-500/50 text-white font-extrabold text-sm sm:text-base tracking-wide shadow-lg">
+                            UNDER ₹799 STORE
+                        </div>
+                        <span class="text-xs sm:text-sm font-mono text-emerald-300 font-medium">Limited Run Pieces</span>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-3 pt-2">
+                        <a href="{% url 'store:product_list' %}?fit_type=Boxy" class="px-7 py-3.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-2xl active:scale-95 transition-all">
+                            <span>Shop Boxy Fits</span>
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                        <a href="{% url 'store:product_list' %}?max_price=799" class="px-6 py-3.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 hover:text-white text-xs font-semibold uppercase tracking-wider flex items-center gap-2 transition-all">
+                            <span>Under ₹799</span>
+                            <span class="text-emerald-400 font-mono">→</span>
+                        </a>
+                    </div>
+                </div>
             </div>
 
         </div>
+
+        <!-- Carousel Navigation Controls -->
+        <!-- Prev Button -->
+        <button type="button" onclick="moveHeroSlide(-1)" class="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-black/90 backdrop-blur-md border border-white/20 text-white flex items-center justify-center text-sm z-30 transition-all active:scale-90" aria-label="Previous Slide">
+            <i class="bi bi-chevron-left"></i>
+        </button>
+
+        <!-- Next Button -->
+        <button type="button" onclick="moveHeroSlide(1)" class="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-black/90 backdrop-blur-md border border-white/20 text-white flex items-center justify-center text-sm z-30 transition-all active:scale-90" aria-label="Next Slide">
+            <i class="bi bi-chevron-right"></i>
+        </button>
+
+        <!-- Slide Indicators (Dots) -->
+        <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2 z-30 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+            <button type="button" onclick="setHeroSlide(0)" class="hero-dot w-6 h-1.5 rounded-full bg-white transition-all" aria-label="Slide 1"></button>
+            <button type="button" onclick="setHeroSlide(1)" class="hero-dot w-2 h-1.5 rounded-full bg-zinc-600 transition-all" aria-label="Slide 2"></button>
+            <button type="button" onclick="setHeroSlide(2)" class="hero-dot w-2 h-1.5 rounded-full bg-zinc-600 transition-all" aria-label="Slide 3"></button>
+        </div>
+
     </section>
+
+    <!-- MYNTRA-STYLE 4-CARD CAMPAIGN DEALS STRIP ("CRAZY DEALS TO BAG") -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <!-- Deal Card 1 -->
+        <a href="{% url 'store:product_list' %}?gsm=240" class="group relative rounded-2xl overflow-hidden bg-gradient-to-br from-amber-500/10 via-zinc-900 to-zinc-950 p-4 border border-amber-500/25 hover:border-amber-400 transition-all shadow-lg flex flex-col justify-between min-h-[110px] sm:min-h-[125px]">
+            <div>
+                <span class="text-[9px] font-mono tracking-widest text-amber-400 font-extrabold uppercase">HEAVYWEIGHT DEALS</span>
+                <h3 class="text-base sm:text-lg font-black text-white mt-0.5 group-hover:text-amber-300 transition-colors">FLAT 50% OFF</h3>
+                <p class="text-[11px] text-zinc-400">240+ GSM Combed Cotton</p>
+            </div>
+            <div class="flex items-center justify-between text-[11px] font-bold text-amber-300 pt-2 border-t border-amber-500/20">
+                <span>From ₹699</span>
+                <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i>
+            </div>
+        </a>
+
+        <!-- Deal Card 2 -->
+        <a href="{% url 'store:product_list' %}?print_type=Puff" class="group relative rounded-2xl overflow-hidden bg-gradient-to-br from-purple-500/10 via-zinc-900 to-zinc-950 p-4 border border-purple-500/25 hover:border-purple-400 transition-all shadow-lg flex flex-col justify-between min-h-[110px] sm:min-h-[125px]">
+            <div>
+                <span class="text-[9px] font-mono tracking-widest text-purple-400 font-extrabold uppercase">TACTILE PUFF PRINT</span>
+                <h3 class="text-base sm:text-lg font-black text-white mt-0.5 group-hover:text-purple-300 transition-colors">MIN. 40% OFF</h3>
+                <p class="text-[11px] text-zinc-400">0.8mm High-Density Relief</p>
+            </div>
+            <div class="flex items-center justify-between text-[11px] font-bold text-purple-300 pt-2 border-t border-purple-500/20">
+                <span>Explore Drops</span>
+                <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i>
+            </div>
+        </a>
+
+        <!-- Deal Card 3 -->
+        <a href="{% url 'store:product_list' %}?max_price=799" class="group relative rounded-2xl overflow-hidden bg-gradient-to-br from-rose-500/10 via-zinc-900 to-zinc-950 p-4 border border-rose-500/25 hover:border-rose-400 transition-all shadow-lg flex flex-col justify-between min-h-[110px] sm:min-h-[125px]">
+            <div>
+                <span class="text-[9px] font-mono tracking-widest text-rose-400 font-extrabold uppercase">BUDGET STREETWEAR</span>
+                <h3 class="text-base sm:text-lg font-black text-white mt-0.5 group-hover:text-rose-300 transition-colors">UNDER ₹799 STORE</h3>
+                <p class="text-[11px] text-zinc-400">Daily Oversized Rotation</p>
+            </div>
+            <div class="flex items-center justify-between text-[11px] font-bold text-rose-300 pt-2 border-t border-rose-500/20">
+                <span>Grab Deal</span>
+                <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i>
+            </div>
+        </a>
+
+        <!-- Deal Card 4 -->
+        <a href="{% url 'store:cart_detail' %}" class="group relative rounded-2xl overflow-hidden bg-gradient-to-br from-emerald-500/10 via-zinc-900 to-zinc-950 p-4 border border-emerald-500/25 hover:border-emerald-400 transition-all shadow-lg flex flex-col justify-between min-h-[110px] sm:min-h-[125px]">
+            <div>
+                <span class="text-[9px] font-mono tracking-widest text-emerald-400 font-extrabold uppercase">BUNDLE & SAVE</span>
+                <h3 class="text-base sm:text-lg font-black text-white mt-0.5 group-hover:text-emerald-300 transition-colors">BUY 2 GET 10% OFF</h3>
+                <p class="text-[11px] text-zinc-400">Coupon: <strong>ATELIER10</strong></p>
+            </div>
+            <div class="flex items-center justify-between text-[11px] font-bold text-emerald-300 pt-2 border-t border-emerald-500/20">
+                <span>View Bag</span>
+                <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i>
+            </div>
+        </a>
+    </section>
+
 
     <!-- 2. VALUE PROPOSITION & TRUST BAR (4 Icon Benefit Cards) -->
     <section class="grid grid-cols-2 md:grid-cols-4 gap-3.5 sm:gap-6">

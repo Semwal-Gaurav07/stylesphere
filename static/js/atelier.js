@@ -551,6 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initExitIntentPrivilege();
     initLiveSearchAutocomplete();
     initFlashSaleTimer();
+    initHeroCarousel();
 
     // Hook size buttons to sensory click
     document.querySelectorAll('.size-selector-btn, .size-pill, button, a[href*="add"]').forEach(el => {
@@ -582,4 +583,84 @@ function initFlashSaleTimer() {
         const s = String(totalSeconds % 60).padStart(2, '0');
         timerEl.innerText = `${h}h : ${m}m : ${s}s`;
     }, 1000);
+}
+
+
+// --- 15. Myntra-Style Hero Carousel Engine ---
+let currentHeroSlide = 0;
+let heroSlideTimer = null;
+
+function showHeroSlide(index) {
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.hero-dot');
+    if (!slides.length) return;
+
+    if (index >= slides.length) currentHeroSlide = 0;
+    else if (index < 0) currentHeroSlide = slides.length - 1;
+    else currentHeroSlide = index;
+
+    slides.forEach((slide, i) => {
+        if (i === currentHeroSlide) {
+            slide.classList.remove('opacity-0', 'pointer-events-none');
+            slide.classList.add('opacity-100', 'z-10');
+        } else {
+            slide.classList.remove('opacity-100', 'z-10');
+            slide.classList.add('opacity-0', 'pointer-events-none');
+        }
+    });
+
+    dots.forEach((dot, i) => {
+        if (i === currentHeroSlide) {
+            dot.className = 'hero-dot w-6 h-1.5 rounded-full bg-white transition-all';
+        } else {
+            dot.className = 'hero-dot w-2 h-1.5 rounded-full bg-zinc-600 transition-all';
+        }
+    });
+}
+
+function moveHeroSlide(step) {
+    showHeroSlide(currentHeroSlide + step);
+    resetHeroTimer();
+}
+
+function setHeroSlide(index) {
+    showHeroSlide(index);
+    resetHeroTimer();
+}
+
+function startHeroTimer() {
+    clearInterval(heroSlideTimer);
+    heroSlideTimer = setInterval(() => {
+        moveHeroSlide(1);
+    }, 4800);
+}
+
+function resetHeroTimer() {
+    startHeroTimer();
+}
+
+function initHeroCarousel() {
+    const container = document.getElementById('heroCarouselContainer');
+    if (!container) return;
+
+    showHeroSlide(0);
+    startHeroTimer();
+
+    // Pause on hover
+    container.addEventListener('mouseenter', () => clearInterval(heroSlideTimer));
+    container.addEventListener('mouseleave', () => startHeroTimer());
+
+    // Touch swipe support for mobile
+    let touchStartX = 0;
+    container.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    container.addEventListener('touchend', (e) => {
+        const diff = touchStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 40) {
+            if (diff > 0) moveHeroSlide(1);
+            else moveHeroSlide(-1);
+        }
+    }, { passive: true });
 }
